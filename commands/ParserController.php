@@ -572,7 +572,7 @@ class ParserController extends Controller
 
                         $images = $crawler->filterXPath($regImages->regular);
 
-                        $path = \Yii::$app->basePath . '/web/uploads/images/' . $id . '/';
+                        $path = \Yii::$app->basePath . '/web/uploads/images/' . $id;
 
                         mkdir($path, 0777, TRUE);
 
@@ -647,7 +647,7 @@ class ParserController extends Controller
 
                             $images = $resource->getCrawler()->filterXpath($regImages->regular);
 
-                            $path = \Yii::$app->basePath . '/web/uploads/images/' . $id . '/';
+                            $path = \Yii::$app->basePath . '/web/uploads/images/' . $id ;
 
                             mkdir($path, 0777, TRUE);
 
