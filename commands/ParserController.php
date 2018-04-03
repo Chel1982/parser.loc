@@ -1155,22 +1155,26 @@ class ParserController extends Controller
         $nameGroup = Xpath::findOne(['sites_id' => $idSite, 'name_regular_id' => 2]);
         $href = Xpath::findOne(['sites_id' => $idSite, 'name_regular_id' => 3]);
         $pagination = Xpath::findOne(['sites_id' => $idSite, 'name_regular_id' => 4]);
-        $countQueue = Sites::findOne($idSite);
+        $sites = Sites::findOne($idSite);
 
         $spider->getDiscovererSet()->set(new XPathExpressionDiscoverer($firstBlock->regular));
 
-        if ($countQueue->queue != 0){
-            $spider->getQueueManager()->maxQueueSize = $countQueue->queue;
+        if ($sites->queue != 0){
+            $spider->getQueueManager()->maxQueueSize = $sites->queue;
         }
 
         // Execute crawl
         $spider->crawl();
 
-        $spider->getDownloader()->getPersistenceHandler()->deleteBaseUrlResources();
+        $resources = $spider->getDownloader()->getPersistenceHandler();
 
-        foreach ($spider->getDownloader()->getPersistenceHandler() as $resource) {
+        foreach ($resources as $resource) {
 
             $uri = $resource->getCrawler()->getUri();
+
+            if ($sites->down_url == $uri){
+                continue;
+            }
 
             try {
 
@@ -1191,7 +1195,7 @@ class ParserController extends Controller
 
                 if (!Groups::find()->where(['url_group' => $uri])->exists()) {
 
-                    echo 'Имени группы товаров присвоено: ' . $uri . PHP_EOL;
+                    /* если отсутствует имя группы товаров, то имени присваиваем ссылку на группы товаров */
 
                     $group = new Groups();
                     $group->name = $uri;
