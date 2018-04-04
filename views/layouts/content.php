@@ -21,9 +21,6 @@ use dmstr\widgets\Alert;
 </div>
 
 <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-        <b>Version</b> 2.0
-    </div>
     <strong>Copyright &copy; 2004-<?= date('Y') ?> Beatom studio.</strong> All rights
     reserved.
 </footer>
