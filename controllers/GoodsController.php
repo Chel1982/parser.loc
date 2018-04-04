@@ -108,12 +108,15 @@ class GoodsController extends Controller
     {
         $model = $this->findModel($id);
         $path = Yii::getAlias("@app/web/uploads/images/" . $model->id);
-        $files = array_diff(scandir($path), array('.','..'));
 
-        foreach ($files as $file) {
-            (is_dir("$path/$file")) ? rmdir("$path/$file") : unlink("$path/$file");
+        if (file_exists($path)) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            foreach ($files as $file) {
+                (is_dir("$path/$file")) ? rmdir("$path/$file") : unlink("$path/$file");
+            }
+            rmdir($path);
         }
-        rmdir($path);
 
         $this->findModel($id)->delete();
 
