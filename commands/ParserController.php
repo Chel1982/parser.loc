@@ -574,11 +574,14 @@ class ParserController extends Controller
 
                         $path = \Yii::$app->basePath . '/web/uploads/images/' . $id . '/';
 
-                        mkdir($path, 0777, TRUE);
-
                         foreach ($images as $item) {
 
                             if (isset($uriNoImages->regular) && $item->value !== $uriNoImages->regular) {
+
+                                if (!file_exists($path)){
+                                    mkdir($path, 0777, TRUE);
+                                    chmod($path,0777);
+                                }
 
                                 $item->value = str_replace(' ', '%20', $item->value);
 
@@ -587,6 +590,8 @@ class ParserController extends Controller
                                 $nameFile = substr($item->value, $lastPos + 1);
 
                                 if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
+
+                                    chmod($path . $nameFile,0777);
 
                                     $image = new Images();
                                     $image->name = $nameFile;
@@ -605,6 +610,11 @@ class ParserController extends Controller
 
                             } else {
 
+                                if (!file_exists($path)){
+                                    mkdir($path, 0777, TRUE);
+                                    chmod($path,0777);
+                                }
+
                                 $item->value = str_replace(' ', '%20', $item->value);
 
                                 $lastPos = strripos($item->value, '/');
@@ -612,6 +622,8 @@ class ParserController extends Controller
                                 $nameFile = substr($item->value, $lastPos + 1);
 
                                 if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
+
+                                    chmod($path . $nameFile,0777);
 
                                     $image = new Images();
                                     $image->name = $nameFile;
@@ -649,11 +661,14 @@ class ParserController extends Controller
 
                             $path = \Yii::$app->basePath . '/web/uploads/images/' . $id . '/';
 
-                            mkdir($path, 0777, TRUE);
-
                             foreach ($images as $item) {
 
                                 if (isset($uriNoImages->regular) && $item->value !== $uriNoImages->regular) {
+
+                                    if (!file_exists($path)){
+                                        mkdir($path, 0777, TRUE);
+                                        chmod($path,0777);
+                                    }
 
                                     $item->value = str_replace(' ', '%20', $item->value);
 
@@ -662,6 +677,8 @@ class ParserController extends Controller
                                     $nameFile = substr($item->value, $lastPos + 1);
 
                                     if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
+
+                                        chmod($path . $nameFile,0777);
 
                                         $image = new Images();
                                         $image->name = $nameFile;
@@ -680,6 +697,11 @@ class ParserController extends Controller
 
                                 } else {
 
+                                    if (!file_exists($path)){
+                                        mkdir($path, 0777, TRUE);
+                                        chmod($path,0777);
+                                    }
+
                                     $item->value = str_replace(' ', '%20', $item->value);
 
                                     $lastPos = strripos($item->value, '/');
@@ -687,6 +709,8 @@ class ParserController extends Controller
                                     $nameFile = substr($item->value, $lastPos + 1);
 
                                     if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
+
+                                        chmod($path . $nameFile,0777);
 
                                         $image = new Images();
                                         $image->name = $nameFile;
