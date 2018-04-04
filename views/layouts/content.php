@@ -24,7 +24,7 @@ use dmstr\widgets\Alert;
     <div class="pull-right hidden-xs">
         <b>Version</b> 2.0
     </div>
-    <strong>Copyright &copy; 2008-<?= date('Y') ?> <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights
+    <strong>Copyright &copy; 2004-<?= date('Y') ?> Beatom studio.</strong> All rights
     reserved.
 </footer>
 
