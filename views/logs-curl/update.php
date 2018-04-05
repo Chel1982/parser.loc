@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\LogsCurl */
 
-$this->title = 'Update Logs Curl: {nameAttribute}';
+$this->title = 'Обновить Logs Curl: ';
 $this->params['breadcrumbs'][] = ['label' => 'Logs Curls', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';

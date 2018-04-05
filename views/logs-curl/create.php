@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\LogsCurl */
 
-$this->title = 'Create Logs Curl';
+$this->title = 'Создать Logs Curl';
 $this->params['breadcrumbs'][] = ['label' => 'Logs Curls', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

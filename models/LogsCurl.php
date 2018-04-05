@@ -46,10 +46,10 @@ class LogsCurl extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'name_daemons' => 'Name Daemons',
-            'goods_id' => 'Goods ID',
-            'sites_id' => 'Sites ID',
+            'name' => 'Название ошибки',
+            'name_daemons' => 'Название демона',
+            'goods_id' => 'ID товара',
+            'sites_id' => 'Название сайта',
         ];
     }
 
