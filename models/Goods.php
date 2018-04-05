@@ -68,7 +68,7 @@ class Goods extends \yii\db\ActiveRecord
             'created_at' => 'Дата скачивания',
             'sites_id' => 'Название сайта товара',
             'groups_id' => 'Groups ID',
-            'groups_name' => 'Названию группы товара',
+            'groups_name' => 'Название группы товара',
         ];
     }
 
