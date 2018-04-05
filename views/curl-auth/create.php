@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\CurlAuth */
 
-$this->title = 'Create Curl Auth';
+$this->title = 'Создать Curl Auth';
 $this->params['breadcrumbs'][] = ['label' => 'Curl Auths', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

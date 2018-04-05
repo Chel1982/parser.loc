@@ -46,10 +46,10 @@ class CurlAuth extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'key' => 'Key',
-            'value' => 'Value',
-            'status' => 'Status',
-            'sites_id' => 'Sites ID',
+            'key' => 'Ключ',
+            'value' => 'Значение',
+            'status' => 'Статус',
+            'sites_id' => 'Название сайта',
         ];
     }
 
