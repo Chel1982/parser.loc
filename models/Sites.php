@@ -50,13 +50,13 @@ class Sites extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'url' => 'Url',
-            'down_url' => 'Down Url',
-            'queue' => 'Queue',
-            'status' => 'Status',
-            'usleep_start' => 'Usleep Start',
-            'usleep_stop' => 'Usleep Stop',
+            'name' => 'Название сайта',
+            'url' => 'Url сайта',
+            'down_url' => 'Url для скачивания',
+            'queue' => 'Ширина очереди',
+            'status' => 'Статус',
+            'usleep_start' => 'Старт задержки',
+            'usleep_stop' => 'Остановка задержки',
         ];
     }
 

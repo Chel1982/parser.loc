@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\search\SitesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sites';
+$this->title = 'Сайты';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="sites-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Sites', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать сайт', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

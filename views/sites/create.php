@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Sites */
 
-$this->title = 'Create Sites';
-$this->params['breadcrumbs'][] = ['label' => 'Sites', 'url' => ['index']];
+$this->title = 'Создать Сайт';
+$this->params['breadcrumbs'][] = ['label' => 'Сайты', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="sites-create">
