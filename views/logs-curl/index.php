@@ -1,5 +1,7 @@
 <?php
 
+use app\models\Sites;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\StringHelper;
@@ -35,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     return StringHelper::truncate($model->sites->name, 35);
                 },
+                'filter' => ArrayHelper::map(Sites::find()->all(), 'id', 'name'),
             ],
 
             ['class' => 'yii\grid\ActionColumn'],
