@@ -43,7 +43,7 @@ class Images extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Назв. картинки',
             'goods_id' => 'Goods ID',
         ];
     }

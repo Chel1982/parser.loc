@@ -43,7 +43,7 @@ class ProductAttributes extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'content' => 'Content',
+            'content' => 'Атр. продукции',
             'goods_id' => 'Goods ID',
         ];
     }
