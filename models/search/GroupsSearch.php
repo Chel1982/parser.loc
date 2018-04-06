@@ -41,7 +41,7 @@ class GroupsSearch extends Groups
      */
     public function search($params)
     {
-        $query = Groups::find();
+        $query = Groups::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
