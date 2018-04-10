@@ -1290,39 +1290,39 @@ class ParserController extends Controller
             }
 
             /* Производим запись кууков, что бы в дальнейшем не аутентифицироваться каждый раз в деманах */
-//            if (CurlAuth::find()->where(['sites_id' => $idSite])->exists()) {
-//
-//                $params = CurlAuth::find()->where(['sites_id' => $idSite])->asArray()->all();
-//
-//                $curl_arr = [];
-//
-//                foreach ($params as $param) {
-//
-//                    if (stristr($param['value'], '=>')) {
-//
-//                        $array1 = [];
-//                        $array2 = explode(',', $param['value']);
-//
-//                        foreach ($array2 as $str) {
-//
-//                            list($key, $value) = explode('=>', $str);
-//                            $array1[$key] = $value;
-//
-//                        }
-//
-//                        $key = constant($param['key']);
-//                        $curl_arr[$key] = $array1;
-//
-//                    } else {
-//
-//                        $key = constant($param['key']);
-//                        $curl_arr[$key] = $param['value'];
-//
-//                    }
-//                }
-//
-//                $this->actionCurl($curl_arr,null, $idSite);
-//            }
+            if (CurlAuth::find()->where(['sites_id' => $idSite])->exists()) {
+
+                $params = CurlAuth::find()->where(['sites_id' => $idSite])->asArray()->all();
+
+                $curl_arr = [];
+
+                foreach ($params as $param) {
+
+                    if (stristr($param['value'], '=>')) {
+
+                        $array1 = [];
+                        $array2 = explode(',', $param['value']);
+
+                        foreach ($array2 as $str) {
+
+                            list($key, $value) = explode('=>', $str);
+                            $array1[$key] = $value;
+
+                        }
+
+                        $key = constant($param['key']);
+                        $curl_arr[$key] = $array1;
+
+                    } else {
+
+                        $key = constant($param['key']);
+                        $curl_arr[$key] = $param['value'];
+
+                    }
+                }
+
+                $this->actionCurl($curl_arr,null, $idSite);
+            }
 
             $hrefCount = $resource->getCrawler()->filterXpath($href->regular)->count();
 
