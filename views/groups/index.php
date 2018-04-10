@@ -46,25 +46,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'id',
             'name',
-//            [
-//                'attribute' => 'name',
-//                'format' => 'raw',
-//                'value' => function($data){
-//                    return Html::a(
-//                        $data->name,
-//                        $data->url_group,
-//                        [
-//                            'title' => 'Смелей, вперед!',
-//                            'target' => '_blank'
-//                        ]
-//                    );
-//                }
-//            ],
-       //     'created_at',
-            'url_group:url',
-
+            [
+                'attribute' => 'url_group',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a(
+                        $data->url_group,
+                        $data->url_group,
+                        [
+                            'title' => 'Смелей, вперед!',
+                            'target' => '_blank'
+                        ]
+                    );
+                }
+            ],
 
             [
                 'class' => 'yii\grid\ActionColumn',
