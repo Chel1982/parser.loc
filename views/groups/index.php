@@ -47,23 +47,23 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-           // 'name',
-            [
-                'attribute' => 'name',
-                'format' => 'raw',
-                'value' => function($data){
-                    return Html::a(
-                        $data->name,
-                        $data->url_group,
-                        [
-                            'title' => 'Смелей, вперед!',
-                            'target' => '_blank'
-                        ]
-                    );
-                }
-            ],
+            'name',
+//            [
+//                'attribute' => 'name',
+//                'format' => 'raw',
+//                'value' => function($data){
+//                    return Html::a(
+//                        $data->name,
+//                        $data->url_group,
+//                        [
+//                            'title' => 'Смелей, вперед!',
+//                            'target' => '_blank'
+//                        ]
+//                    );
+//                }
+//            ],
        //     'created_at',
-         //   'url_group:url',
+            'url_group:url',
 
 
             [
