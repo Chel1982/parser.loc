@@ -29,12 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
+            'name_goods',
             [
-                'attribute' => 'name_goods',
+                'attribute' => 'uri_goods',
                 'format' => 'raw',
                 'value' => function($data){
                     return Html::a(
-                        $data->name_goods,
+                        $data->uri_goods,
                         $data->uri_goods,
                         [
                             'title' => 'Смелей, вперед!',
@@ -43,7 +44,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     );
                 }
             ],
-            'uri_goods',
             'created_at',
             'sites.name',
             'groups.name',
