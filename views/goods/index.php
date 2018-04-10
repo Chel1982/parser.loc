@@ -22,10 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Создать товар', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?php
 
     echo ExportMenu::widget([
@@ -57,34 +53,36 @@ $this->params['breadcrumbs'][] = $this->title;
             'firstPageLabel' => 'Первая',
             'lastPageLabel' => 'Последняя',
         ],
+
         'columns' => [
+
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
             [
                 'attribute' => 'name_goods',
-                'value' => function ($model) {
-                    return StringHelper::truncate($model->name_goods, 35);
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a(
+                        $data->name_goods,
+                        $data->uri_goods,
+                        [
+                            'title' => 'Смелей, вперед!',
+                            'target' => '_blank'
+                        ]
+                    );
                 }
-
-            ],
-            [
-                'attribute' => 'uri_goods',
-                'value' => function ($model) {
-                    return StringHelper::truncate($model->uri_goods, 35);
-                }
-
             ],
             [
                 'attribute' => 'sites_id',
                 'value' => function ($model) {
-                    return StringHelper::truncate($model->sites->name, 35);
+                    return $model->sites->name;
                 },
             ],
 
-            'created_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' =>'{view} {delete}',
+            ],
         ],
     ]); ?>
 

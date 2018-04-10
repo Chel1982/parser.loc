@@ -101,7 +101,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getImages()
     {
-        return $this->hasMany(Images::className(), ['goods_id' => 'id']);
+        return $this->hasOne(Images::className(), ['goods_id' => 'id']);
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Images;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -15,7 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Обновить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -29,12 +29,42 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'name_goods',
+            [
+                'attribute' => 'name_goods',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a(
+                        $data->name_goods,
+                        $data->uri_goods,
+                        [
+                            'title' => 'Смелей, вперед!',
+                            'target' => '_blank'
+                        ]
+                    );
+                }
+            ],
             'uri_goods',
             'created_at',
             'sites.name',
             'groups.name',
+            'descriptions.main',
+            'descriptions.additional',
+            'prices.price',
+            'manufacturers.name',
+            'productAttributes.content',
         ],
-    ]) ?>
+    ]);
+
+    $images = Images::find()->where(['goods_id' => $model->id])->asArray()->all();
+
+    if($images != null){
+        echo '<b> Изображение продукции </b> <br>';
+    }
+    foreach ($images as $image) {
+      echo  Html::img('@web/uploads/images/' . $model->id . '/' . $image['name'], ['alt' => $image['name']]);
+      echo '  ';
+    }
+
+    ?>
 
 </div>
