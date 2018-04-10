@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'queue',
             'usleep_start',
             'usleep_stop',
-            'status',
+            'status:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

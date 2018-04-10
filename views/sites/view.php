@@ -33,9 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'url:url',
             'down_url:url',
             'queue',
-            'status',
             'usleep_start',
             'usleep_stop',
+            'status:boolean',
         ],
     ]) ?>
 
