@@ -715,6 +715,8 @@ class ParserController extends Controller
 
                         $price = trim($price);
 
+                        $price = preg_replace("/[^0-9]/", '', $price);
+
                         $goods = Goods::findOne(['uri_goods' => $link]);
 
                         $pr = new Price();
@@ -743,6 +745,8 @@ class ParserController extends Controller
                         $price = $crawler->filterXPath($regPrice->regular)->text();
 
                         $price = trim($price);
+
+                        $price = preg_replace("/[^0-9]/", '', $price);
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
 
@@ -1012,7 +1016,7 @@ class ParserController extends Controller
         $spider->getDiscovererSet()->set(new XPathExpressionDiscoverer($firstBlock->regular));
 
         if ($sites->queue != 0){
-            $spider->getQueueManager()->maxQueueSize = $sites->queue;
+            $spider->getQueueManager()->maxQueueSize = $sites->queue + 1;
         }
 
         // Execute crawl
@@ -1236,7 +1240,7 @@ class ParserController extends Controller
         $spider->getDiscovererSet()->set(new XPathExpressionDiscoverer($firstBlock->regular));
 
         if ($sites->queue != 0){
-            $spider->getQueueManager()->maxQueueSize = $sites->queue;
+            $spider->getQueueManager()->maxQueueSize = $sites->queue + 1;
         }
 
         // Execute crawl
@@ -1286,39 +1290,39 @@ class ParserController extends Controller
             }
 
             /* Производим запись кууков, что бы в дальнейшем не аутентифицироваться каждый раз в деманах */
-            if (CurlAuth::find()->where(['sites_id' => $idSite])->exists()) {
-
-                $params = CurlAuth::find()->where(['sites_id' => $idSite])->asArray()->all();
-
-                $curl_arr = [];
-
-                foreach ($params as $param) {
-
-                    if (stristr($param['value'], '=>')) {
-
-                        $array1 = [];
-                        $array2 = explode(',', $param['value']);
-
-                        foreach ($array2 as $str) {
-
-                            list($key, $value) = explode('=>', $str);
-                            $array1[$key] = $value;
-
-                        }
-
-                        $key = constant($param['key']);
-                        $curl_arr[$key] = $array1;
-
-                    } else {
-
-                        $key = constant($param['key']);
-                        $curl_arr[$key] = $param['value'];
-
-                    }
-                }
-
-                $this->actionCurl($curl_arr,null, $idSite);
-            }
+//            if (CurlAuth::find()->where(['sites_id' => $idSite])->exists()) {
+//
+//                $params = CurlAuth::find()->where(['sites_id' => $idSite])->asArray()->all();
+//
+//                $curl_arr = [];
+//
+//                foreach ($params as $param) {
+//
+//                    if (stristr($param['value'], '=>')) {
+//
+//                        $array1 = [];
+//                        $array2 = explode(',', $param['value']);
+//
+//                        foreach ($array2 as $str) {
+//
+//                            list($key, $value) = explode('=>', $str);
+//                            $array1[$key] = $value;
+//
+//                        }
+//
+//                        $key = constant($param['key']);
+//                        $curl_arr[$key] = $array1;
+//
+//                    } else {
+//
+//                        $key = constant($param['key']);
+//                        $curl_arr[$key] = $param['value'];
+//
+//                    }
+//                }
+//
+//                $this->actionCurl($curl_arr,null, $idSite);
+//            }
 
             $hrefCount = $resource->getCrawler()->filterXpath($href->regular)->count();
 
@@ -1382,9 +1386,9 @@ class ParserController extends Controller
 
                         $this->queue->publish($data, 'analyze_desc_add');
 
-                        $this->queue->publish($link, 'analyze_img');
-
                         $this->queue->publish($data, 'analyze_price');
+
+                        $this->queue->publish($link, 'analyze_img');
 
                         $this->queue->publish($data, 'analyze_manufacturer');
 
