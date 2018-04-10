@@ -18,10 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Создать группу', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?php
 
     $gridColumn = [
@@ -51,12 +47,29 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'name',
-            'created_at',
-            'url_group:url',
+           // 'name',
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a(
+                        $data->name,
+                        $data->url_group,
+                        [
+                            'title' => 'Смелей, вперед!',
+                            'target' => '_blank'
+                        ]
+                    );
+                }
+            ],
+       //     'created_at',
+         //   'url_group:url',
 
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' =>'{view} {delete}',
+            ],
         ],
     ]); ?>
 
