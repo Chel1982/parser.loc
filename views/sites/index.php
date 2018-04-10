@@ -27,8 +27,34 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'id',
             'name',
-            'url:url',
-            'down_url:url',
+            [
+                'attribute' => 'url',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a(
+                        $data->url,
+                        $data->url,
+                        [
+                            'title' => 'Смелей, вперед!',
+                            'target' => '_blank'
+                        ]
+                    );
+                }
+            ],
+            [
+                'attribute' => 'down_url',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a(
+                        $data->down_url,
+                        $data->down_url,
+                        [
+                            'title' => 'Смелей, вперед!',
+                            'target' => '_blank'
+                        ]
+                    );
+                }
+            ],
             'queue',
             'usleep_start',
             'usleep_stop',
