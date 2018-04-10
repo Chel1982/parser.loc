@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Мар 23 2018 г., 17:18
+-- Время создания: Апр 10 2018 г., 15:10
 -- Версия сервера: 5.7.21-0ubuntu0.16.04.1
--- Версия PHP: 7.0.28-1+ubuntu16.04.1+deb.sury.org+1
+-- Версия PHP: 7.0.29-1+ubuntu16.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -30,7 +30,6 @@ CREATE TABLE `curl` (
   `id` int(10) UNSIGNED NOT NULL,
   `key` text,
   `value` text,
-  `status` tinyint(1) DEFAULT '1',
   `sites_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -38,15 +37,12 @@ CREATE TABLE `curl` (
 -- Дамп данных таблицы `curl`
 --
 
-INSERT INTO `curl` (`id`, `key`, `value`, `status`, `sites_id`) VALUES
-(3, 'CURLOPT_REFERER', 'https://dealer.equip.center/personal/', 1, 4),
-(4, 'CURLOPT_POST', '0', 1, 4),
-(5, 'CURLOPT_USERAGENT', 'Mozilla/4.0 (Windows; U; Windows NT 5.0; En; rv:1.8.0.2) Gecko/20070306 Firefox/1.0.0.4', 1, 4),
-(6, 'CURLOPT_RETURNTRANSFER', '1', 1, 4),
-(7, 'CURLOPT_COOKIEFILE', 'cookie-dealer', 1, 4),
-(8, 'CURLOPT_RETURNTRANSFER', '1', 1, 8),
-(9, 'CURLOPT_PROXY', '80.85.157.168:3128', 1, 8),
-(10, 'CURLOPT_CONNECTTIMEOUT', '15', 1, 8);
+INSERT INTO `curl` (`id`, `key`, `value`, `sites_id`) VALUES
+(3, 'CURLOPT_REFERER', 'https://dealer.equip.center/personal/', 4),
+(4, 'CURLOPT_POST', '0', 4),
+(5, 'CURLOPT_USERAGENT', 'Mozilla/4.0 (Windows; U; Windows NT 5.0; En; rv:1.8.0.2) Gecko/20070306 Firefox/1.0.0.4', 4),
+(6, 'CURLOPT_RETURNTRANSFER', '1', 4),
+(7, 'CURLOPT_COOKIEFILE', 'cookie-dealer', 4);
 
 -- --------------------------------------------------------
 
@@ -58,7 +54,6 @@ CREATE TABLE `curl_auth` (
   `id` int(10) UNSIGNED NOT NULL,
   `key` text,
   `value` text,
-  `status` tinyint(1) DEFAULT '1',
   `sites_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -66,14 +61,14 @@ CREATE TABLE `curl_auth` (
 -- Дамп данных таблицы `curl_auth`
 --
 
-INSERT INTO `curl_auth` (`id`, `key`, `value`, `status`, `sites_id`) VALUES
-(1, 'CURLOPT_URL', 'https://dealer.equip.center/personal/?login=yes', 1, 4),
-(2, 'CURLOPT_REFERER', 'https://dealer.equip.center/personal/', 1, 4),
-(3, 'CURLOPT_POST', '1', 1, 4),
-(4, 'CURLOPT_POSTFIELDS', 'AUTH_FORM=>Y,TYPE=>AUTH,backurl=>/personal/,USER_LOGIN=>info@imkuh.ru,USER_PASSWORD=>info@imkuh.ru,Login=>Войти', 1, 4),
-(5, 'CURLOPT_USERAGENT', 'Mozilla/4.0 (Windows; U; Windows NT 5.0; En; rv:1.8.0.2) Gecko/20070306 Firefox/1.0.0.4', 1, 4),
-(6, 'CURLOPT_RETURNTRANSFER', '1', 1, 4),
-(7, 'CURLOPT_COOKIEJAR', 'cookie-dealer', 1, 4);
+INSERT INTO `curl_auth` (`id`, `key`, `value`, `sites_id`) VALUES
+(1, 'CURLOPT_URL', 'https://dealer.equip.center/personal/?login=yes', 4),
+(2, 'CURLOPT_REFERER', 'https://dealer.equip.center/personal/', 4),
+(3, 'CURLOPT_POST', '1', 4),
+(4, 'CURLOPT_POSTFIELDS', 'AUTH_FORM=>Y,TYPE=>AUTH,backurl=>/personal/,USER_LOGIN=>info@imkuh.ru,USER_PASSWORD=>info@imkuh.ru,Login=>Войти', 4),
+(5, 'CURLOPT_USERAGENT', 'Mozilla/4.0 (Windows; U; Windows NT 5.0; En; rv:1.8.0.2) Gecko/20070306 Firefox/1.0.0.4', 4),
+(6, 'CURLOPT_RETURNTRANSFER', '1', 4),
+(7, 'CURLOPT_COOKIEJAR', 'cookie-dealer', 4);
 
 -- --------------------------------------------------------
 
@@ -155,7 +150,6 @@ CREATE TABLE `logs` (
 CREATE TABLE `logs_curl` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` text,
-  `name_daemons` varchar(255) DEFAULT NULL,
   `goods_id` int(11) DEFAULT NULL,
   `sites_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -250,11 +244,11 @@ INSERT INTO `sites` (`id`, `name`, `url`, `down_url`, `queue`, `status`, `usleep
 (1, 'Gemlux kush ', 'http://gemlux.ru', 'http://gemlux.ru/catalog/household-appliances/', 0, 0, 0, 0),
 (2, 'Gemlux comm без серии 700', 'http://gemlux.ru', 'http://gemlux.ru/catalog/commercial/', 0, 0, 0, 0),
 (3, 'Gemlux comm с серий 700', 'http://gemlux.ru', 'http://gemlux.ru/catalog/commercial/modular-heating-equipment/series-700/', 0, 0, 0, 0),
-(4, 'Эквип-центр', 'https://dealer.equip.center', 'https://dealer.equip.center/', 0, 0, 0, 0),
+(4, 'Эквип-центр', 'https://dealer.equip.center', 'https://dealer.equip.center/', 3, 1, 0, 0),
 (5, 'Gastrorag без ножей и кухонной посуды', 'http://gastrorag.ru', 'http://gastrorag.ru/katalog-oborudovaniya/', 0, 0, 0, 0),
 (6, 'Gastrorag с ножами', 'http://gastrorag.ru', 'http://gastrorag.ru/katalog-oborudovaniya/Posuda-inventar/nozhi/', 0, 0, 0, 0),
 (7, 'Gastrorag с кухонной посудой', 'http://gastrorag.ru', 'http://gastrorag.ru/katalog-oborudovaniya/Posuda-inventar/Kukhonnaya-naplitnaya-posuda/', 0, 0, 0, 0),
-(8, 'Центр оборудования', 'http://centr-oborudovaniya.ru', 'http://centr-oborudovaniya.ru/', 2, 1, 3000, 5000),
+(8, 'Центр оборудования', 'http://centr-oborudovaniya.ru', 'http://centr-oborudovaniya.ru/', 3, 0, 1000000, 3000000),
 (9, 'Chudokreslo', 'http://www.chudokreslo.com', 'http://www.chudokreslo.com/', 0, 0, 0, 0);
 
 -- --------------------------------------------------------
@@ -480,32 +474,32 @@ ALTER TABLE `curl_auth`
 -- AUTO_INCREMENT для таблицы `description`
 --
 ALTER TABLE `description`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=762;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=626;
 --
 -- AUTO_INCREMENT для таблицы `goods`
 --
 ALTER TABLE `goods`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1019;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2710;
 --
 -- AUTO_INCREMENT для таблицы `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=433;
 --
 -- AUTO_INCREMENT для таблицы `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=662;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2195;
 --
 -- AUTO_INCREMENT для таблицы `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1019;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2710;
 --
 -- AUTO_INCREMENT для таблицы `logs_curl`
 --
 ALTER TABLE `logs_curl`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=444;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
 --
 -- AUTO_INCREMENT для таблицы `manufacturer`
 --
@@ -520,12 +514,12 @@ ALTER TABLE `name_regular`
 -- AUTO_INCREMENT для таблицы `price`
 --
 ALTER TABLE `price`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=740;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблицы `product_attributes`
 --
 ALTER TABLE `product_attributes`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=743;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=277;
 --
 -- AUTO_INCREMENT для таблицы `sites`
 --
