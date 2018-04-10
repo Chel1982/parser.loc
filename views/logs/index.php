@@ -16,10 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Создать Logs', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?php Pjax::begin() ?>
 
     <?= GridView::widget([
@@ -42,7 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'prod_attr:ntext',
             'goods_id',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' =>'{view} {delete}',
+            ],
         ],
     ]); ?>
 
