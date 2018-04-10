@@ -44,7 +44,7 @@ class Description extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'main' => 'Осн описание',
+            'main' => 'Осн. описание',
             'additional' => 'Доп. описание',
             'goods_id' => 'Goods ID',
         ];
