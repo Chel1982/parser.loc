@@ -36,7 +36,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'price:ntext',
             'manufactured:ntext',
             'prod_attr:ntext',
-            'goods_id',
+            [
+                'attribute' => 'goods_id',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a(
+                        $data->goods->id,
+                        $data->goods->uri_goods,
+                        [
+                            'title' => 'Смелей, вперед!',
+                            'target' => '_blank'
+                        ]
+                    );
+                }
+            ],
 
             [
                 'class' => 'yii\grid\ActionColumn',
