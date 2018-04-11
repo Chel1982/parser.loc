@@ -509,6 +509,8 @@ class ParserController extends Controller
 
                                 $nameFile = substr($item->value, $lastPos + 1);
 
+                                $nameFile = str_replace('%20', '', $nameFile);
+
                                 if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
 
                                     chmod($path . $nameFile,0777);
@@ -540,6 +542,8 @@ class ParserController extends Controller
                                 $lastPos = strripos($item->value, '/');
 
                                 $nameFile = substr($item->value, $lastPos + 1);
+
+                                $nameFile = str_replace('%20', '', $nameFile);
 
                                 if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
 
@@ -596,6 +600,8 @@ class ParserController extends Controller
 
                                     $nameFile = substr($item->value, $lastPos + 1);
 
+                                    $nameFile = str_replace('%20', '', $nameFile);
+
                                     if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
 
                                         chmod($path . $nameFile,0777);
@@ -627,6 +633,8 @@ class ParserController extends Controller
                                     $lastPos = strripos($item->value, '/');
 
                                     $nameFile = substr($item->value, $lastPos + 1);
+
+                                    $nameFile = str_replace('%20', '', $nameFile);
 
                                     if (file_put_contents($path . $nameFile, file_get_contents($baseUrl . $item->value))) {
 
