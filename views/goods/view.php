@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= DetailView::widget([
         'model' => $model,
+        'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => ''],
         'attributes' => [
             'id',
             'name_goods',
@@ -47,11 +48,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'created_at',
             'sites.name',
             'groups.name',
-            'descriptions.main',
-            'descriptions.additional',
+            [
+                'attribute' => 'descriptions.main',
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'descriptions.additional',
+                'format' => 'raw',
+            ],
             'prices.price',
             'manufacturers.name',
-            'productAttributes.content',
+            [
+                'attribute' => 'productAttributes.content',
+                'format' => 'raw',
+            ],
         ],
     ]);
 
