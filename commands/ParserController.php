@@ -466,10 +466,6 @@ class ParserController extends Controller
 
                     $goodsId = Goods::findOne(['uri_goods' => $link])->id;
 
-                    if ($sites->usleep_stop != 0){
-                        usleep(rand($sites->usleep_start, $sites->usleep_stop));
-                    }
-
                     $params = Curl::find()->where(['sites_id' => $sites->id])->asArray()->all();
 
                     $curl_arr = [];
@@ -568,10 +564,6 @@ class ParserController extends Controller
                     }
 
                 }else{
-
-                    if ($sites->usleep_stop != 0){
-                        usleep(rand($sites->usleep_start, $sites->usleep_stop));
-                    }
 
                     try {
 
@@ -1081,6 +1073,14 @@ class ParserController extends Controller
 
                 foreach ($resource->getCrawler()->filterXpath($href->regular) as $item) {
 
+                    if (stristr( $item->value, $baseUrl)) {
+                        $item->value = str_replace($baseUrl, '', $item->value);
+                    }
+
+                    if (stristr( $item->value, 'img')) {
+                        continue;
+                    }
+
                     $uriGoods = $baseUrl . $item->value;
                     $marker[] = $item->value;
 
@@ -1175,6 +1175,14 @@ class ParserController extends Controller
                         $uriGoodPage = $baseUrl . $itemPage->value;
 
                         if (!Goods::find()->where(['uri_goods' => $uriGoodPage])->exists()) {
+
+                            if (stristr( $itemPage->value, $baseUrl)) {
+                                $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
+                            }
+
+                            if (stristr( $item->value, 'img')) {
+                                continue;
+                            }
 
                             $link = $baseUrl . $itemPage->value;
 
@@ -1340,6 +1348,14 @@ class ParserController extends Controller
 
                 foreach ($resource->getCrawler()->filterXpath($href->regular) as $item) {
 
+                    if (stristr( $item->value, $baseUrl)) {
+                        $item->value = str_replace($baseUrl, '', $item->value);
+                    }
+
+                    if (stristr( $item->value, 'img')) {
+                        continue;
+                    }
+
                     $uriGoods = $baseUrl . $item->value;
                     $marker[] = $item->value;
 
@@ -1446,6 +1462,14 @@ class ParserController extends Controller
                         $uriGoodPage = $baseUrl . $itemPage->value;
 
                         if (!Goods::find()->where(['uri_goods' => $uriGoodPage])->exists()) {
+
+                            if (stristr( $itemPage->value, $baseUrl)) {
+                                $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
+                            }
+
+                            if (stristr( $item->value, 'img')) {
+                                continue;
+                            }
 
                             $link = $baseUrl . $itemPage->value;
 
