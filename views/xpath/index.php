@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'sites_id',
                 'value' => function ($model) {
-                    return StringHelper::truncate($model->sites->name, 35);
+                    return StringHelper::truncate($model->sites->name, 120);
                 },
                 'filter' => ArrayHelper::map(Sites::find()->all(), 'id', 'name'),
             ],
