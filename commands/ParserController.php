@@ -1077,9 +1077,11 @@ class ParserController extends Controller
                         $item->value = str_replace($baseUrl, '', $item->value);
                     }
 
-                    if (stristr( $item->value, 'img')) {
+                    if (stristr( $item->value, 'img') or stristr($item->value, '.pdf')) {
                         continue;
                     }
+
+
 
                     $uriGoods = $baseUrl . $item->value;
                     $marker[] = $item->value;
@@ -1133,7 +1135,6 @@ class ParserController extends Controller
 
                     }
                 }
-            }
 
             $i = 0;
 
@@ -1180,7 +1181,7 @@ class ParserController extends Controller
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
                             }
 
-                            if (stristr( $item->value, 'img')) {
+                            if (stristr( $itemPage->value, 'img') or stristr($itemPage->value, '.pdf')) {
                                 continue;
                             }
 
@@ -1232,6 +1233,9 @@ class ParserController extends Controller
                         }
                     }
                 }
+            }
+            }else{
+                continue;
             }
         }
 
@@ -1352,7 +1356,7 @@ class ParserController extends Controller
                         $item->value = str_replace($baseUrl, '', $item->value);
                     }
 
-                    if (stristr( $item->value, 'img')) {
+                    if (stristr( $item->value, 'img') or stristr( $item->value, '.pdf')) {
                         continue;
                     }
 
@@ -1420,7 +1424,7 @@ class ParserController extends Controller
 
                     }
                 }
-            }
+
 
             $i = 0;
 
@@ -1467,7 +1471,7 @@ class ParserController extends Controller
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
                             }
 
-                            if (stristr( $item->value, 'img')) {
+                            if (stristr( $itemPage->value, 'img') or stristr( $itemPage->value, '.pdf')) {
                                 continue;
                             }
 
@@ -1530,6 +1534,9 @@ class ParserController extends Controller
                         }
                     }
                 }
+            }
+            }else{
+                continue;
             }
         }
 
