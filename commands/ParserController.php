@@ -22,7 +22,10 @@ use app\models\Xpath;
 use Exception;
 use Symfony\Component\DomCrawler\Crawler;
 use VDB\Spider\Discoverer\XPathExpressionDiscoverer;
+use VDB\Spider\Event\SpiderEvents;
+use VDB\Spider\EventListener\PolitenessPolicyListener;
 use VDB\Spider\Spider;
+use VDB\Spider\StatsHandler;
 use yii\console\Controller;
 
 /**
@@ -1015,8 +1018,12 @@ class ParserController extends Controller
 
         $spider->getDiscovererSet()->set(new XPathExpressionDiscoverer($firstBlock->regular));
 
-        if ($sites->queue != 0){
-            $spider->getQueueManager()->maxQueueSize = $sites->queue + 1;
+        if ($sites->delay_parsing != 0){
+            $politenessPolicyEventListener = new PolitenessPolicyListener($sites->delay_parsing  * 1000);
+            $spider->getDownloader()->getDispatcher()->addListener(
+                SpiderEvents::SPIDER_CRAWL_PRE_REQUEST,
+                array($politenessPolicyEventListener, 'onCrawlPreRequest')
+            );
         }
 
         // Execute crawl
@@ -1077,7 +1084,7 @@ class ParserController extends Controller
                         $item->value = str_replace($baseUrl, '', $item->value);
                     }
 
-                    if (stristr( $item->value, 'img') or stristr($item->value, '.pdf')) {
+                    if (stristr( $item->value, 'img') or stristr($item->value, '.pdf')  or stristr( $item->value, 'ru#')) {
                         continue;
                     }
 
@@ -1096,7 +1103,7 @@ class ParserController extends Controller
                          */
 
                         if ($sites->usleep_stop != 0){
-                            usleep(rand($sites->usleep_start, $sites->usleep_stop));
+                            usleep(rand($sites->usleep_start * 1000000, $sites->usleep_stop * 1000000));
                         }
 
                         $spiderPage = new Spider($link);
@@ -1181,7 +1188,7 @@ class ParserController extends Controller
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
                             }
 
-                            if (stristr( $itemPage->value, 'img') or stristr($itemPage->value, '.pdf')) {
+                            if (stristr( $itemPage->value, 'img') or stristr($itemPage->value, '.pdf')  or stristr( $item->value, 'ru#')) {
                                 continue;
                             }
 
@@ -1193,7 +1200,7 @@ class ParserController extends Controller
                              */
 
                             if ($sites->usleep_stop != 0){
-                                usleep(rand($sites->usleep_start, $sites->usleep_stop));
+                                usleep(rand($sites->usleep_start * 1000000, $sites->usleep_stop * 1000000));
                             }
 
                             $spiderPage = new Spider($link);
@@ -1246,6 +1253,41 @@ class ParserController extends Controller
     {
         $flag = 'curl';
 
+        /* Производим запись кууков, что бы в дальнейшем не аутентифицироваться каждый раз в деманах */
+        if (CurlAuth::find()->where(['sites_id' => $idSite])->exists()) {
+
+            $params = CurlAuth::find()->where(['sites_id' => $idSite])->asArray()->all();
+
+            $curl_arr = [];
+
+            foreach ($params as $param) {
+
+                if (stristr($param['value'], '=>')) {
+
+                    $array1 = [];
+                    $array2 = explode(',', $param['value']);
+
+                    foreach ($array2 as $str) {
+
+                        list($key, $value) = explode('=>', $str);
+                        $array1[$key] = $value;
+
+                    }
+
+                    $key = constant($param['key']);
+                    $curl_arr[$key] = $array1;
+
+                } else {
+
+                    $key = constant($param['key']);
+                    $curl_arr[$key] = $param['value'];
+
+                }
+            }
+
+            $this->actionCurl($curl_arr,null, $idSite);
+        }
+
         $baseUrl = Sites::findOne($idSite)->url;
 
         // Create Spider
@@ -1259,8 +1301,12 @@ class ParserController extends Controller
 
         $spider->getDiscovererSet()->set(new XPathExpressionDiscoverer($firstBlock->regular));
 
-        if ($sites->queue != 0){
-            $spider->getQueueManager()->maxQueueSize = $sites->queue + 1;
+        if ($sites->delay_parsing != 0){
+            $politenessPolicyEventListener = new PolitenessPolicyListener($sites->delay_parsing  * 1000);
+            $spider->getDownloader()->getDispatcher()->addListener(
+                SpiderEvents::SPIDER_CRAWL_PRE_REQUEST,
+                array($politenessPolicyEventListener, 'onCrawlPreRequest')
+            );
         }
 
         // Execute crawl
@@ -1309,41 +1355,6 @@ class ParserController extends Controller
                 }
             }
 
-            /* Производим запись кууков, что бы в дальнейшем не аутентифицироваться каждый раз в деманах */
-            if (CurlAuth::find()->where(['sites_id' => $idSite])->exists()) {
-
-                $params = CurlAuth::find()->where(['sites_id' => $idSite])->asArray()->all();
-
-                $curl_arr = [];
-
-                foreach ($params as $param) {
-
-                    if (stristr($param['value'], '=>')) {
-
-                        $array1 = [];
-                        $array2 = explode(',', $param['value']);
-
-                        foreach ($array2 as $str) {
-
-                            list($key, $value) = explode('=>', $str);
-                            $array1[$key] = $value;
-
-                        }
-
-                        $key = constant($param['key']);
-                        $curl_arr[$key] = $array1;
-
-                    } else {
-
-                        $key = constant($param['key']);
-                        $curl_arr[$key] = $param['value'];
-
-                    }
-                }
-
-                $this->actionCurl($curl_arr,null, $idSite);
-            }
-
             $hrefCount = $resource->getCrawler()->filterXpath($href->regular)->count();
 
             if ($hrefCount > 0) {
@@ -1356,7 +1367,7 @@ class ParserController extends Controller
                         $item->value = str_replace($baseUrl, '', $item->value);
                     }
 
-                    if (stristr( $item->value, 'img') or stristr( $item->value, '.pdf')) {
+                    if (stristr( $item->value, 'img') or stristr( $item->value, '.pdf') or stristr( $item->value, 'ru#')) {
                         continue;
                     }
 
@@ -1373,7 +1384,7 @@ class ParserController extends Controller
                          */
 
                         if ($sites->usleep_stop != 0){
-                            usleep(rand($sites->usleep_start, $sites->usleep_stop));
+                            usleep(rand($sites->usleep_start * 1000000, $sites->usleep_stop * 1000000));
                         }
 
 
@@ -1471,7 +1482,7 @@ class ParserController extends Controller
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
                             }
 
-                            if (stristr( $itemPage->value, 'img') or stristr( $itemPage->value, '.pdf')) {
+                            if (stristr( $itemPage->value, 'img') or stristr( $itemPage->value, '.pdf') or stristr( $item->value, 'ru#')) {
                                 continue;
                             }
 
@@ -1483,7 +1494,7 @@ class ParserController extends Controller
                              */
 
                             if ($sites->usleep_stop != 0){
-                                usleep(rand($sites->usleep_start, $sites->usleep_stop));
+                                usleep(rand($sites->usleep_start * 1000000, $sites->usleep_stop * 1000000));
                             }
 
                             $params = Curl::find()->where(['sites_id' => $idSite])->asArray()->all();

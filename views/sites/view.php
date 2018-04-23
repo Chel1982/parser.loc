@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     );
                 }
             ],
-            'queue',
+            'delay_parsing',
             'usleep_start',
             'usleep_stop',
             'status:boolean',

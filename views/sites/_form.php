@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'down_url')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'queue')->textInput() ?>
+    <?= $form->field($model, 'delay_parsing')->textInput() ?>
 
     <?= $form->field($model, 'usleep_start')->textInput() ?>
 

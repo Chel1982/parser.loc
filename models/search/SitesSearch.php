@@ -18,7 +18,7 @@ class SitesSearch extends Sites
     public function rules()
     {
         return [
-            [['id', 'queue', 'usleep_start', 'usleep_stop'], 'integer'],
+            [['id', 'delay_parsing', 'usleep_start', 'usleep_stop'], 'integer'],
             [['name', 'url', 'down_url', 'status'], 'safe'],
         ];
     }
@@ -60,7 +60,7 @@ class SitesSearch extends Sites
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'queue' => $this->queue,
+            'delay_parsing' => $this->delay_parsing,
             'usleep_start' => $this->usleep_start,
             'usleep_stop' => $this->usleep_stop,
         ]);

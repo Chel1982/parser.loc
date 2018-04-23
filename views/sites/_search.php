@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'down_url') ?>
 
-    <?= $form->field($model, 'queue') ?>
+    <?= $form->field($model, 'delay_parsing') ?>
 
     <?php // echo $form->field($model, 'status') ?>
 

@@ -11,7 +11,7 @@ use Yii;
  * @property string $name
  * @property string $url
  * @property string $down_url
- * @property int $queue
+ * @property int $delay_parsing
  * @property int $status
  * @property int $usleep_start
  * @property int $usleep_stop
@@ -37,7 +37,7 @@ class Sites extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['queue', 'usleep_start', 'usleep_stop'], 'integer'],
+            [['delay_parsing', 'usleep_start', 'usleep_stop'], 'integer'],
             [['name', 'url', 'down_url'], 'string', 'max' => 255],
             [['status'], 'string', 'max' => 1],
         ];
@@ -53,10 +53,10 @@ class Sites extends \yii\db\ActiveRecord
             'name' => 'Название сайта',
             'url' => 'Url сайта',
             'down_url' => 'Url для скачивания',
-            'queue' => 'Ширина очереди',
+            'delay_parsing' => 'Задержка crawler\'a, сек',
             'status' => 'Статус',
-            'usleep_start' => 'Старт задержки',
-            'usleep_stop' => 'Остановка задержки',
+            'usleep_start' => 'Нач. задер. парсинга, сек',
+            'usleep_stop' => 'Кон. задер. парсинга, сек',
         ];
     }
 
