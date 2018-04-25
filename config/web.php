@@ -2,6 +2,9 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$dbImkush = require __DIR__ . '/db_imkush.php';
+$dbHolodbar = require __DIR__ . '/db_holodbar.php';
+
 
 $config = [
     'id' => 'basic',
@@ -50,6 +53,8 @@ $config = [
             ],
         ],
         'db' => $db,
+        'dbImkush' => $dbImkush,
+        'dbHolodbar' => $dbHolodbar,
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

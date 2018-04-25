@@ -2,10 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\CategoriesHolodbar;
+use app\models\CategoriesImkuh;
+use app\models\ProductGroupsHolodbar;
+use app\models\ProductGroupsImkush;
 use app\models\Sites;
-use app\models\Xpath;
-use VDB\Spider\Discoverer\XPathExpressionDiscoverer;
-use VDB\Spider\Spider;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -13,7 +14,6 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -67,7 +67,161 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-       return $this->render('index');
+        if (\Yii::$app->request->post()){
+
+            if (\Yii::$app->request->post('imkush')){
+
+                $resСompareImkush = [];
+
+                $prodGrsIm = ProductGroupsImkush::find()->select(['pgid','pmgid','name'])->asArray()->all();
+                $prodCatsIm = CategoriesImkuh::find()->select(['pgid','pmgid','name'])->asArray()->all();
+
+                $countImkus = count($prodGrsIm);
+
+                $resСompareImkush['count'] = $countImkus;
+
+                $ch = 0;
+
+                foreach ($prodGrsIm as $keyGr => $valGr) {
+
+                    foreach ($prodCatsIm as $keyCat => $valCat){
+
+                        if((int)$valGr['pgid'] === (int)$valCat['pgid']){
+
+                            if($valGr['pmgid'] != (int)$valCat['pmgid'] or $valGr['name'] != $valCat['name']){
+
+                                $ch += 1;
+
+                                $resСompareImkush['change'] = $ch;
+
+                                if($valGr['pmgid'] != (int)$valCat['pmgid']){
+
+                                    $newCatPmgid = CategoriesImkuh::findOne(['pgid' => $valCat['pgid']]);
+
+                                    $newCatPmgid->pmgid = $valGr['pmgid'];
+                                    $newCatPmgid->save();
+                                }
+
+                                if($valGr['name'] != $valCat['name']){
+                                    $newCatName = CategoriesImkuh::findOne(['pgid' => $valCat['pgid']]);
+
+                                    $newCatName->name = $valGr['name'];
+                                    $newCatName->save();
+                                }
+                            }
+                            unset($prodGrsIm[$keyGr]);
+                            unset($prodCatsIm[$keyCat]);
+                        }
+
+                        continue;
+                    }
+
+                }
+
+                $resСompareImkush['add'] = count($prodGrsIm);
+                $resСompareImkush['delete'] = count($prodCatsIm);
+
+                if (!empty($prodGrsIm)){
+                    foreach ($prodGrsIm as $prodGrIm){
+                        $catImkushAdd = new CategoriesImkuh();
+                        $catImkushAdd->pgid = $prodGrIm['pgid'];
+                        $catImkushAdd->pmgid = $prodGrIm['pmgid'];
+                        $catImkushAdd->name = $prodGrIm['name'];
+                        $catImkushAdd->save();
+                    }
+                }
+
+                if (!empty($prodCatsIm)){
+                    foreach ($prodCatsIm as $prodCatIm) {
+                        $catImkushDel = CategoriesImkuh::findOne(['pgid' => $prodCatIm['pgid']]);
+                        $catImkushDel->delete();
+                    }
+                }
+
+
+                return $this->render('index',[
+                    'resСompareImkush' => $resСompareImkush
+                ]);
+            }
+
+            if (\Yii::$app->request->post('holodbar')){
+
+                $resСompareHolodbar = [];
+
+                $prodGrsIm = ProductGroupsHolodbar::find()->select(['pgid','pmgid','name'])->asArray()->all();
+                $prodCatsIm = CategoriesHolodbar::find()->select(['pgid','pmgid','name'])->asArray()->all();
+
+                $countImkus = count($prodGrsIm);
+
+                $resСompareHolodbar['count'] = $countImkus;
+
+                $ch = 0;
+
+                foreach ($prodGrsIm as $keyGr => $valGr) {
+
+                    foreach ($prodCatsIm as $keyCat => $valCat){
+
+                        if((int)$valGr['pgid'] === (int)$valCat['pgid']){
+
+                            if($valGr['pmgid'] != (int)$valCat['pmgid'] or $valGr['name'] != $valCat['name']){
+
+                                $ch += 1;
+
+                                $resСompareHolodbar['change'] = $ch;
+
+                                if($valGr['pmgid'] != (int)$valCat['pmgid']){
+
+                                    $newCatPmgid = CategoriesHolodbar::findOne(['pgid' => $valCat['pgid']]);
+
+                                    $newCatPmgid->pmgid = $valGr['pmgid'];
+                                    $newCatPmgid->save();
+                                }
+
+                                if($valGr['name'] != $valCat['name']){
+                                    $newCatName = CategoriesHolodbar::findOne(['pgid' => $valCat['pgid']]);
+
+                                    $newCatName->name = $valGr['name'];
+                                    $newCatName->save();
+                                }
+                            }
+                            unset($prodGrsIm[$keyGr]);
+                            unset($prodCatsIm[$keyCat]);
+                        }
+
+                        continue;
+                    }
+
+                }
+
+                $resСompareHolodbar['add'] = count($prodGrsIm);
+                $resСompareHolodbar['delete'] = count($prodCatsIm);
+
+                if (!empty($prodGrsIm)){
+                    foreach ($prodGrsIm as $prodGrIm){
+                        $catImkushAdd = new CategoriesHolodbar();
+                        $catImkushAdd->pgid = $prodGrIm['pgid'];
+                        $catImkushAdd->pmgid = $prodGrIm['pmgid'];
+                        $catImkushAdd->name = $prodGrIm['name'];
+                        $catImkushAdd->save();
+                    }
+                }
+
+                if (!empty($prodCatsIm)){
+                    foreach ($prodCatsIm as $prodCatIm) {
+                        $catImkushDel = CategoriesHolodbar::findOne(['pgid' => $prodCatIm['pgid']]);
+                        $catImkushDel->delete();
+                    }
+                }
+
+
+                return $this->render('index',[
+                    'resСompareHolodbar' => $resСompareHolodbar
+                ]);
+            }
+
+        }
+
+        return $this->render('index');
     }
 
     /**

@@ -31,4 +31,7 @@ phpunit.phar
 tests/_output/*
 tests/_support/_generated
 
-config/db.php
+#db config
+/config/db.php
+/config/db_holodbar.php
+/config/db_imkush.php

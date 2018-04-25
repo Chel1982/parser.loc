@@ -1,145 +1,78 @@
 <?php
 /* @var $this yii\web\View */
 
-use Symfony\Component\DomCrawler\Crawler;
-use VDB\Spider\Spider;
+use app\assets\AppAsset;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 $this->title = 'Parser API';
+AppAsset::register($this);
 ?>
 
-<div class="site-index">
+<div class="form" style="display: flex">
+    <?php ActiveForm::begin(); ?>
 
-    <div class="jumbotron">
-        <h1>Добро пожаловать в Админку</h1>
-    </div>
+        <div class="form-group">
 
-    <div>
-        <h4>Здесь вы сможете проверить работосопосбность Xpath выражений. Выражения работают только на сайтах, на которых не надо проходит аутентификацию.</h4>
-    </div>
-    <div>
-        <h5>Выражение скачивает text</h5>
-        <form name="text" action="" method="post">
+            <?= Html::input('hidden','imkush','0') ?>
 
-            <input style="width: 500px" name="text_url"> Введите url сайта<br>
-            <input style="width: 500px" name="text_xpath"> Введите Xpath выражение
-            <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
-            <p><input type="submit"></p>
+            <?= Html::submitButton('Синхронизировать категории товаров imkush', ['class' => 'btn btn-success imkush']) ?>
 
-        </form>
-    </div>
+        </div>
 
-    <div>
-        <h5>Выражение скачивает html</h5>
-        <form name="html" action="" method="post">
+    <?php ActiveForm::end(); ?>
 
-            <input style="width: 500px" name="html_url"> Введите url сайта<br>
-            <input style="width: 500px" name="html_xpath"> Введите Xpath выражение
-            <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
-            <p><input type="submit"></p>
+    <?php ActiveForm::begin(); ?>
 
-        </form>
-    </div>
-    <div>
-        <h5>Проверяем работу proxy</h5>
-        <form name="html" action="" method="post">
+        <div class="form-group" style="margin-left: 10px">
 
-            <input style="width: 500px" name="proxy"> Введите proxy url<br>
-            <input style="width: 500px" name="proxy_url"> Введите url сайта<br>
-            <input style="width: 500px" name="proxy_xpath"> Введите Xpath выражение text
-            <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
-            <p><input type="submit"></p>
+            <?= Html::input('hidden','holodbar','0') ?>
 
-        </form>
-    </div>
+            <?= Html::submitButton('Синхронизировать категории товаров holodbar', ['class' => 'btn btn-success holodbar']) ?>
 
+        </div>
+
+    <?php ActiveForm::end(); ?>
 </div>
 
-<?php
+<?php if (isset($resСompareImkush)): ?>
 
-if (Yii::$app->request->post()){
-
-    if (Yii::$app->request->post('text_url') && Yii::$app->request->post('text_xpath')){
-
-        $spider = new Spider(Yii::$app->request->post('text_url'));
-
-        $spider->crawl();
-
-        foreach ($spider->getDownloader()->getPersistenceHandler() as $resource) {
-
-            try {
-
-                $data = $resource->getCrawler()->filterXpath(Yii::$app->request->post('text_xpath'))->text();
-
-                echo 'Результат запроса text: ' . '<br>';
-                echo '<b>' . $data . '</b>';
-
-            } catch (Exception $e) {
-                echo 'Результат запроса text: ' . '<br>';
-                echo $e->getMessage();
-
-            }
-
-        }
+    <?= Html::tag('h4', 'Синхронизированно с Imkush') ?>
 
 
-    }
-    if (Yii::$app->request->post('html_url') && Yii::$app->request->post('html_xpath')){
+    <?= Html::tag('p', 'Проверено категорий товаров: ' . '<b>'. $resСompareImkush['count'] .'</b>') ?>
 
-        $spider = new Spider(Yii::$app->request->post('html_url'));
+    <?php if (isset($resСompareImkush['change'])): ?>
+        <?= Html::tag('p', 'Измененных категорий товаров: ' . '<b>'. $resСompareImkush['change'] .'</b>') ?>
+    <?php endif; ?>
 
-        $spider->crawl();
+    <?php if (isset($resСompareImkush['add']) and $resСompareImkush['add'] != 0): ?>
+        <?= Html::tag('p', 'Новых категорий товаров: ' . '<b>'. $resСompareImkush['add'] .'</b>') ?>
+    <?php endif; ?>
 
-        foreach ($spider->getDownloader()->getPersistenceHandler() as $resource) {
+    <?php if (isset($resСompareImkush['delete']) and $resСompareImkush['delete'] != 0): ?>
+        <?= Html::tag('p', 'Удаленных категорий товаров: ' . '<b>'. $resСompareImkush['delete'] .'</b>') ?>
+    <?php endif; ?>
 
-            try {
+<?php endif; ?>
 
-                $data = $resource->getCrawler()->filterXpath(Yii::$app->request->post('html_xpath'))->html();
+<?php if (isset($resСompareHolodbar)): ?>
 
-                echo 'Результат запроса html: ' . '<br>';
-                echo '/**********************************************************************************************/' . '<br>';
-                echo '<b>' . $data . '</b>' . '<br>';
-                echo '/**********************************************************************************************/';
+    <?= Html::tag('h4', 'Синхронизированно с Holodbar') ?>
 
-            } catch (Exception $e) {
-                echo 'Результат запроса html: ' . '<br>';
-                echo $e->getMessage();
 
-            }
+    <?= Html::tag('p', 'Проверено категорий товаров: ' . '<b>'. $resСompareHolodbar['count'] .'</b>') ?>
 
-        }
-    }
+    <?php if (isset($resСompareHolodbar['change'])): ?>
+        <?= Html::tag('p', 'Измененных категорий товаров: ' . '<b>'. $resСompareHolodbar['change'] .'</b>') ?>
+    <?php endif; ?>
 
-    if (\Yii::$app->request->post('proxy_url') && \Yii::$app->request->post('proxy_xpath') && \Yii::$app->request->post('proxy')){
-        $ch = curl_init();
-        $timeout = 10;
-        curl_setopt($ch,CURLOPT_URL, \Yii::$app->request->post('proxy_url'));
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch, CURLOPT_PROXY, \Yii::$app->request->post('proxy'));
-        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
-        $data = curl_exec($ch);
+    <?php if (isset($resСompareHolodbar['add']) and $resСompareHolodbar['add'] != 0): ?>
+        <?= Html::tag('p', 'Новых категорий товаров: ' . '<b>'. $resСompareHolodbar['add'] .'</b>') ?>
+    <?php endif; ?>
 
-        echo 'Результат запроса proxy: ' . '<br>';
+    <?php if (isset($resСompareHolodbar['delete']) and $resСompareHolodbar['delete'] != 0): ?>
+        <?= Html::tag('p', 'Удаленных категорий товаров: ' . '<b>'. $resСompareHolodbar['delete'] .'</b>') ?>
+    <?php endif; ?>
 
-        if($data === false)
-        {
-            echo '<b>' . 'Curl error: ' . curl_error($ch) . '</b><br>';
-        }
-        curl_close($ch);
-
-        try{
-            $crawler = new Crawler($data);
-
-            $name = $crawler->filterXPath(\Yii::$app->request->post('proxy_xpath'))->text();
-
-            echo '<b>' . $name . '</b>';
-
-            }catch (Exception $e) {
-
-            echo 'Результат запроса proxy: ' . '<br>';
-            echo $e->getMessage();
-
-        }
-
-    }
-}
-?>
+<?php endif; ?>
