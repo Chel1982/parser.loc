@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Goods;
 use Yii;
 use app\models\Groups;
 use app\models\search\GroupsSearch;
@@ -105,6 +106,21 @@ class GroupsController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+
+        $goods = Goods::find()->where(['groups_id' => $model->id])->asArray()->all();
+
+        foreach ($goods as $good) {
+
+            $path = Yii::getAlias("@app/web/uploads/images/" . $good['id']);
+            $files = array_diff(scandir($path), array('.','..'));
+
+            foreach ($files as $file) {
+                (is_dir("$path/$file")) ? rmdir("$path/$file") : unlink("$path/$file");
+            }
+            rmdir($path);
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
