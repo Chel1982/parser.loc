@@ -18,4 +18,12 @@ class ProductGroupsHolodbar extends ActiveRecord {
     {
         return 'products_groups';
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProductsMainGroups()
+    {
+        return $this->hasMany(ProductsMainGroupsHolodbar::className(), ['pmgid' => 'pmgid']);
+    }
 }

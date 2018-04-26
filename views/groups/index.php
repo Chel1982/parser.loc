@@ -1,11 +1,10 @@
 <?php
 
-use kartik\export\ExportMenu;
+use app\models\CategoriesImkuh;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\StringHelper;
 use yii\widgets\Pjax;
-
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\GroupsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -16,59 +15,69 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="groups-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php Pjax::begin(); ?>
     <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?php
-
-    $gridColumn = [
-        'id',
-        'name',
-        'created_at',
-        'url_group:url',
-    ];
-
-    echo ExportMenu::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => $gridColumn,
-    ]);
-
-    ?>
-
-    <?php Pjax::begin() ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
-        'pager' => [
-            'firstPageLabel' => 'Первая',
-            'lastPageLabel' => 'Последняя',
-        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'name',
+            //'id',
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function($data){
+
+                    return StringHelper::truncate($data->name , 50);
+
+                }
+            ],
+            //'created_at',
             [
                 'attribute' => 'url_group',
                 'format' => 'raw',
                 'value' => function($data){
-                    return Html::a(
-                        $data->url_group,
-                        $data->url_group,
-                        [
-                            'title' => 'Смелей, вперед!',
-                            'target' => '_blank'
-                        ]
-                    );
+
+                    return Html::a(StringHelper::truncate($data->url_group,50) ,$data->url_group,[
+                        'title' => 'Смелей, вперед!',
+                        'target' => '_blank'
+                    ]);
+
+                }
+            ],
+            [
+                'attribute' => 'cat_holod',
+                'format' => 'raw',
+                'value' => function($data){
+
+                    $catHolod = CategoriesImkuh::find()->where(['pgid' => $data->cat_holod])->asArray()->one();
+
+                    return Html::a(StringHelper::truncate($catHolod['name'], 50), 'http://www.holodbar.ru/content/katalog/' . $catHolod['pmgid'] . '/' . $data->cat_holod . '/',[
+                        'title' => 'Смелей, вперед!',
+                        'target' => '_blank'
+                    ]);
+
+                }
+            ],
+            [
+                'attribute' => 'cat_imkuh',
+                'format' => 'raw',
+                'value' => function($data){
+
+                    $catImkuh = CategoriesImkuh::find()->where(['pgid' => $data->cat_imkuh])->asArray()->one();
+
+                    return Html::a(StringHelper::truncate($catImkuh['name'],50), 'http://www.imkuh.ru/group/'. $data->cat_imkuh .'/',[
+                        'title' => 'Смелей, вперед!',
+                        'target' => '_blank'
+                    ]);
+
                 }
             ],
 
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' =>'{view} {delete}',
-            ],
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-
-    <?php Pjax::end() ?>
-
+    <?php Pjax::end(); ?>
 </div>

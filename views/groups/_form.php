@@ -12,14 +12,18 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['disabled' => 'disabled']) ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+    <?= $form->field($model, 'created_at')->textInput(['disabled' => 'disabled']) ?>
 
-    <?= $form->field($model, 'url_group')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'url_group')->textInput(['maxlength' => true, 'disabled' => 'disabled']) ?>
+
+    <?= $form->field($model, 'cat_holod')->dropDownList($model->getHierarchyHolod(),['prompt' => 'Категории', 'class'=>'form-control required']) ?>
+
+    <?= $form->field($model, 'cat_imkuh')->dropDownList($model->getHierarchyImkuh(),['prompt' => 'Категории', 'class'=>'form-control required']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Связать', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

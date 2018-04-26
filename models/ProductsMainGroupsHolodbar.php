@@ -5,10 +5,10 @@ namespace app\models;
 use yii\db\ActiveRecord;
 use Yii;
 
-class ProductGroupsImkush extends ActiveRecord {
+class ProductsMainGroupsHolodbar extends ActiveRecord {
 
     public static function getDb() {
-        return Yii::$app->get('dbImkush');
+        return Yii::$app->get('dbHolodbar');
     }
 
     /**
@@ -16,6 +16,7 @@ class ProductGroupsImkush extends ActiveRecord {
      */
     public static function tableName()
     {
-        return 'products_groups';
+        return 'products_main_groups';
     }
+
 }

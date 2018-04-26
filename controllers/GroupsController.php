@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\Goods;
 use Yii;
 use app\models\Groups;
 use app\models\search\GroupsSearch;
@@ -59,6 +58,45 @@ class GroupsController extends Controller
     }
 
     /**
+     * Creates a new Groups model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Groups();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing Groups model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['index']);
+           // return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
      * Deletes an existing Groups model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -67,26 +105,6 @@ class GroupsController extends Controller
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-
-        $goods = Goods::find()->where(['groups_id' => $model->id])->asArray()->all();
-
-        foreach ($goods as $good) {
-
-            $path = Yii::getAlias("@app/web/uploads/images/" . $good['id']);
-
-            if (file_exists($path)) {
-
-                $files = array_diff(scandir($path), array('.', '..'));
-
-                foreach ($files as $file) {
-                    (is_dir("$path/$file")) ? rmdir("$path/$file") : unlink("$path/$file");
-                }
-
-                rmdir($path);
-            }
-        }
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

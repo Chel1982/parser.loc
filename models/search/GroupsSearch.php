@@ -18,7 +18,7 @@ class GroupsSearch extends Groups
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'cat_holod', 'cat_imkuh'], 'integer'],
             [['name', 'from_date', 'to_date', 'created_at', 'url_group'], 'safe'],
         ];
     }
@@ -61,6 +61,8 @@ class GroupsSearch extends Groups
         $query->andFilterWhere([
             'id' => $this->id,
             'created_at' => $this->created_at,
+            'cat_holod' => $this->cat_holod,
+            'cat_imkuh' => $this->cat_imkuh,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

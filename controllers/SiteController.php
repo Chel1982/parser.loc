@@ -5,7 +5,7 @@ namespace app\controllers;
 use app\models\CategoriesHolodbar;
 use app\models\CategoriesImkuh;
 use app\models\ProductGroupsHolodbar;
-use app\models\ProductGroupsImkush;
+use app\models\ProductGroupsImkuh;
 use app\models\Sites;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -71,14 +71,14 @@ class SiteController extends Controller
 
             if (\Yii::$app->request->post('imkush')){
 
-                $resСompareImkush = [];
+                $resСompareImkuh = [];
 
-                $prodGrsIm = ProductGroupsImkush::find()->select(['pgid','pmgid','name'])->asArray()->all();
+                $prodGrsIm = ProductGroupsImkuh::find()->select(['pgid','pmgid','name'])->asArray()->all();
                 $prodCatsIm = CategoriesImkuh::find()->select(['pgid','pmgid','name'])->asArray()->all();
 
                 $countImkus = count($prodGrsIm);
 
-                $resСompareImkush['count'] = $countImkus;
+                $resСompareImkuh['count'] = $countImkus;
 
                 $ch = 0;
 
@@ -92,7 +92,7 @@ class SiteController extends Controller
 
                                 $ch += 1;
 
-                                $resСompareImkush['change'] = $ch;
+                                $resСompareImkuh['change'] = $ch;
 
                                 if($valGr['pmgid'] != (int)$valCat['pmgid']){
 
@@ -118,8 +118,8 @@ class SiteController extends Controller
 
                 }
 
-                $resСompareImkush['add'] = count($prodGrsIm);
-                $resСompareImkush['delete'] = count($prodCatsIm);
+                $resСompareImkuh['add'] = count($prodGrsIm);
+                $resСompareImkuh['delete'] = count($prodCatsIm);
 
                 if (!empty($prodGrsIm)){
                     foreach ($prodGrsIm as $prodGrIm){
@@ -140,7 +140,7 @@ class SiteController extends Controller
 
 
                 return $this->render('index',[
-                    'resСompareImkush' => $resСompareImkush
+                    'resСompareImkuh' => $resСompareImkuh
                 ]);
             }
 

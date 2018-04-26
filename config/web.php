@@ -2,7 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
-$dbImkush = require __DIR__ . '/db_imkush.php';
+$dbImkuh = require __DIR__ . '/db_imkuh.php';
 $dbHolodbar = require __DIR__ . '/db_holodbar.php';
 
 
@@ -53,7 +53,7 @@ $config = [
             ],
         ],
         'db' => $db,
-        'dbImkush' => $dbImkush,
+        'dbImkuh' => $dbImkuh,
         'dbHolodbar' => $dbHolodbar,
         'urlManager' => [
             'enablePrettyUrl' => true,

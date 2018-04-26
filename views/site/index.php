@@ -2,6 +2,8 @@
 /* @var $this yii\web\View */
 
 use app\assets\AppAsset;
+use app\models\ProductGroupsHolodbar;
+use app\models\ProductsMainGroupsHolodbar;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -35,23 +37,23 @@ AppAsset::register($this);
     <?php ActiveForm::end(); ?>
 </div>
 
-<?php if (isset($resСompareImkush)): ?>
+<?php if (isset($resСompareImkuh)): ?>
 
     <?= Html::tag('h4', 'Синхронизированно с Imkush') ?>
 
 
-    <?= Html::tag('p', 'Проверено категорий товаров: ' . '<b>'. $resСompareImkush['count'] .'</b>') ?>
+    <?= Html::tag('p', 'Проверено категорий товаров: ' . '<b>'. $resСompareImkuh['count'] .'</b>') ?>
 
-    <?php if (isset($resСompareImkush['change'])): ?>
-        <?= Html::tag('p', 'Измененных категорий товаров: ' . '<b>'. $resСompareImkush['change'] .'</b>') ?>
+    <?php if (isset($resСompareImkuh['change'])): ?>
+        <?= Html::tag('p', 'Измененных категорий товаров: ' . '<b>'. $resСompareImkuh['change'] .'</b>') ?>
     <?php endif; ?>
 
-    <?php if (isset($resСompareImkush['add']) and $resСompareImkush['add'] != 0): ?>
-        <?= Html::tag('p', 'Новых категорий товаров: ' . '<b>'. $resСompareImkush['add'] .'</b>') ?>
+    <?php if (isset($resСompareImkuh['add']) and $resСompareImkuh['add'] != 0): ?>
+        <?= Html::tag('p', 'Новых категорий товаров: ' . '<b>'. $resСompareImkuh['add'] .'</b>') ?>
     <?php endif; ?>
 
-    <?php if (isset($resСompareImkush['delete']) and $resСompareImkush['delete'] != 0): ?>
-        <?= Html::tag('p', 'Удаленных категорий товаров: ' . '<b>'. $resСompareImkush['delete'] .'</b>') ?>
+    <?php if (isset($resСompareImkuh['delete']) and $resСompareImkuh['delete'] != 0): ?>
+        <?= Html::tag('p', 'Удаленных категорий товаров: ' . '<b>'. $resСompareImkuh['delete'] .'</b>') ?>
     <?php endif; ?>
 
 <?php endif; ?>
@@ -76,3 +78,4 @@ AppAsset::register($this);
     <?php endif; ?>
 
 <?php endif; ?>
+

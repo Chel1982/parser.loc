@@ -15,10 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= Html::a('Обновить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Вы действительно хотите удалить эту группу?',
+                'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -30,18 +31,33 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'created_at',
+            'url_group:url',
             [
-                'attribute' => 'url_group',
+                'attribute' => 'cat_holod',
                 'format' => 'raw',
                 'value' => function($data){
-                    return Html::a(
-                        $data->url_group,
-                        $data->url_group,
-                        [
-                            'title' => 'Смелей, вперед!',
-                            'target' => '_blank'
-                        ]
-                    );
+
+                    $catHolod = \app\models\CategoriesImkuh::find()->where(['pgid' => $data->cat_holod])->asArray()->one();
+
+                    return Html::a($catHolod['name'], 'http://www.holodbar.ru/content/katalog/' . $catHolod['pmgid'] . '/' . $data->cat_holod . '/',[
+                        'title' => 'Смелей, вперед!',
+                        'target' => '_blank'
+                    ]);
+
+                }
+            ],
+            [
+                'attribute' => 'cat_imkuh',
+                'format' => 'raw',
+                'value' => function($data){
+
+                    $catImkuh = \app\models\CategoriesImkuh::find()->where(['pgid' => $data->cat_imkuh])->asArray()->one();
+
+                    return Html::a($catImkuh['name'], 'http://www.imkuh.ru/group/'. $data->cat_imkuh .'/',[
+                        'title' => 'Смелей, вперед!',
+                        'target' => '_blank'
+                    ]);
+
                 }
             ],
         ],
