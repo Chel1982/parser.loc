@@ -114,4 +114,19 @@ a.desc:after {
     outline: none;
 }
 
+.image_goods{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    margin: 0 5px;
+}
 
+.image_goods__items{
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+.image_goods a {
+    margin: 10px 0;
+}

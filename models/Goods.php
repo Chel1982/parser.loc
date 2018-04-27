@@ -51,8 +51,8 @@ class Goods extends \yii\db\ActiveRecord
             [['sites_id', 'groups_id'], 'integer'],
             [['name_goods', 'uri_goods'], 'string', 'max' => 255],
             [['uri_goods'], 'unique'],
-            [['groups_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::className(), 'targetAttribute' => ['groups_id' => 'id']],
-            [['sites_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sites::className(), 'targetAttribute' => ['sites_id' => 'id']],
+            [['groups_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::class, 'targetAttribute' => ['groups_id' => 'id']],
+            [['sites_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sites::class, 'targetAttribute' => ['sites_id' => 'id']],
         ];
     }
 
@@ -64,10 +64,10 @@ class Goods extends \yii\db\ActiveRecord
         return [
             'id' => 'ID товара',
             'name_goods' => 'Название товара',
-            'uri_goods' => 'uri товара',
+            'uri_goods' => 'url товара',
             'created_at' => 'Дата скачивания',
             'sites_id' => 'Название сайта товара',
-            'groups_id' => 'Groups ID',
+            'groups_id' => 'ID группы',
             'groups_name' => 'Название группы товара',
         ];
     }
@@ -77,7 +77,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getDescriptions()
     {
-        return $this->hasOne(Description::className(), ['goods_id' => 'id']);
+        return $this->hasOne(Description::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -85,7 +85,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getGroups()
     {
-        return $this->hasOne(Groups::className(), ['id' => 'groups_id']);
+        return $this->hasOne(Groups::class, ['id' => 'groups_id']);
     }
 
     /**
@@ -93,7 +93,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getSites()
     {
-        return $this->hasOne(Sites::className(), ['id' => 'sites_id']);
+        return $this->hasOne(Sites::class, ['id' => 'sites_id']);
     }
 
     /**
@@ -101,7 +101,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getImages()
     {
-        return $this->hasOne(Images::className(), ['goods_id' => 'id']);
+        return $this->hasMany(Images::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -109,7 +109,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getLogs()
     {
-        return $this->hasOne(Logs::className(), ['goods_id' => 'id']);
+        return $this->hasOne(Logs::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -117,7 +117,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getManufacturers()
     {
-        return $this->hasOne(Manufacturer::className(), ['goods_id' => 'id']);
+        return $this->hasOne(Manufacturer::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -125,7 +125,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getPrices()
     {
-        return $this->hasOne(Price::className(), ['goods_id' => 'id']);
+        return $this->hasOne(Price::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -133,6 +133,6 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getProductAttributes()
     {
-        return $this->hasOne(ProductAttributes::className(), ['goods_id' => 'id']);
+        return $this->hasOne(ProductAttributes::class, ['goods_id' => 'id']);
     }
 }
