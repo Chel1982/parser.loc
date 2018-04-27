@@ -1084,13 +1084,12 @@ class ParserController extends Controller
                         $item->value = str_replace($baseUrl, '', $item->value);
                     }
 
-                    if (stristr( $item->value, 'img') or stristr($item->value, '.pdf')  or stristr( $item->value, 'ru#')) {
+                    $uriGoods = $baseUrl . $item->value;
+
+                    if (stristr( $item->value, 'img') or stristr($item->value, '.pdf')  or stristr( $uriGoods, 'ru#')) {
                         continue;
                     }
 
-
-
-                    $uriGoods = $baseUrl . $item->value;
                     $marker[] = $item->value;
 
                     if (!Goods::find()->where(['uri_goods' => $uriGoods])->exists()) {
@@ -1188,11 +1187,12 @@ class ParserController extends Controller
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
                             }
 
-                            if (stristr( $itemPage->value, 'img') or stristr($itemPage->value, '.pdf')  or stristr( $item->value, 'ru#')) {
+                            $link = $baseUrl . $itemPage->value;
+
+                            if (stristr( $itemPage->value, 'img') or stristr($itemPage->value, '.pdf')  or stristr( $link, 'ru#')) {
                                 continue;
                             }
 
-                            $link = $baseUrl . $itemPage->value;
 
                             echo "Scanning: $link\n";
                             /**
@@ -1367,11 +1367,12 @@ class ParserController extends Controller
                         $item->value = str_replace($baseUrl, '', $item->value);
                     }
 
-                    if (stristr( $item->value, 'img') or stristr( $item->value, '.pdf') or stristr( $item->value, 'ru#')) {
+                    $uriGoods = $baseUrl . $item->value;
+
+                    if (stristr( $item->value, 'img') or stristr( $item->value, '.pdf') or stristr( $uriGoods, 'ru#')) {
                         continue;
                     }
 
-                    $uriGoods = $baseUrl . $item->value;
                     $marker[] = $item->value;
 
                     if (!Goods::find()->where(['uri_goods' => $uriGoods])->exists()) {
