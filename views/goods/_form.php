@@ -21,16 +21,20 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'created_at')->textInput() ?>
 
-    <?php if($model->descriptions->main !== null): ?>
+    <?php if($model->descriptions !== null and $model->descriptions->main !== null): ?>
     <?= $form->field($model->descriptions, 'main')->textarea(['rows' => '6']) ?>
     <?php endif; ?>
 
-    <?php if($model->descriptions->additional !== null): ?>
+    <?php if($model->descriptions !== null and $model->descriptions->additional !== null): ?>
     <?= $form->field($model->descriptions, 'additional')->textarea(['rows' => '6']) ?>
     <?php endif; ?>
 
-    <?php if($model->prices !== null): ?>
+    <?php if($model->prices !== null and $model->prices->price): ?>
         <?= $form->field($model->prices, 'price')->textInput() ?>
+    <?php endif; ?>
+
+    <?php if($model->prices  !== null and $model->prices->mark_up_price): ?>
+        <?= $form->field($model->prices, 'mark_up_price')->textInput() ?>
     <?php endif; ?>
 
     <?php if($model->manufacturers !== null): ?>

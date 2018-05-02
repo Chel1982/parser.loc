@@ -30,7 +30,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'id',
 
-            'price_value',
+            [
+                'attribute' => 'price_value',
+                'value' => function ($model) {
+
+                    if ($model->percent == 1){
+                        return $model->price_value . ' %';
+                    }elseif ($model->absolute == 1){
+                        return $model->price_value . ' р';
+                    }else{
+                        return $model->price_value;
+                    }
+                },
+            ],
             'from_value',
             'to_value',
             [
@@ -38,10 +50,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     return $model->groups->name;
                 },
-                'filter' => ArrayHelper::map(Groups::find()->all(), 'id', 'name'),
+                'filter' => ArrayHelper::map(Groups::find()->orderBy(['name' => SORT_ASC])->all(), 'id', 'name'),
             ],
-            'percent:boolean',
-            'absolute:boolean',
+            //'percent:boolean',
+            //'absolute:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

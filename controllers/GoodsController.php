@@ -72,16 +72,17 @@ class GoodsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
-            if (Yii::$app->request->post('Descriptions') !== null){
+            if (Yii::$app->request->post('Description') !== null){
                 $model->descriptions->load(Yii::$app->request->post());
                 $model->descriptions->save();
             }
-            if (Yii::$app->request->post('Prices') !== null){
+
+            if (Yii::$app->request->post('Price') !== null){
                 $model->prices->load(Yii::$app->request->post());
                 $model->prices->save();
             }
 
-            if (Yii::$app->request->post('Manufacturers') !== null){
+            if (Yii::$app->request->post('Manufacturer') !== null){
                 $model->manufacturers->load(Yii::$app->request->post());
                 $model->manufacturers->save();
             }

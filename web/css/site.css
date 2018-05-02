@@ -130,3 +130,11 @@ a.desc:after {
 .image_goods a {
     margin: 10px 0;
 }
+
+.mark-up-goods-form input[type=text]{
+    width: 500px;
+}
+
+.mark-up-goods-form select{
+    width: 500px;
+}

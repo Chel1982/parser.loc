@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'price_value')->textInput() ?>
+    <?= $form->field($model, 'price_value')->textInput()->textInput(['width' => '50px']) ?>
 
     <?= $form->field($model, 'percent')->checkbox() ?>
 
@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'to_value')->textInput() ?>
 
-    <?= $form->field($model, 'groups_id')->dropDownList(ArrayHelper::map(Groups::find()->all(), 'id', 'name')) ?>
+    <?= $form->field($model, 'groups_id')->dropDownList(ArrayHelper::map(Groups::find()->orderBy(['name' => SORT_ASC])->all(), 'id', 'name')) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

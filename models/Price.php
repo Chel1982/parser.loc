@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $price
+ * @property int $mark_up_price
  * @property int $goods_id
  *
  * @property Goods $goods
@@ -29,7 +30,7 @@ class Price extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['price', 'goods_id'], 'integer'],
+            [['price', 'mark_up_price', 'goods_id'], 'integer'],
             [['goods_id'], 'required'],
             [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'id']],
         ];
@@ -43,6 +44,7 @@ class Price extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'price' => 'Цена',
+            'mark_up_price' => 'Цена с наценкой',
             'goods_id' => 'Goods ID',
         ];
     }
