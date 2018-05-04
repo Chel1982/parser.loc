@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\components\validators\MarkFromValidator;
+use app\components\validators\MarkToValidator;
 use Yii;
 
 /**
@@ -34,9 +36,12 @@ class MarkUpGoods extends \yii\db\ActiveRecord
     {
         return [
             [['price_value', 'from_value', 'to_value', 'groups_id'], 'integer'],
-            [['groups_id'], 'required'],
+            [['price_value', 'from_value', 'to_value', 'groups_id'], 'required'],
+            [['to_value'], 'compare', 'message' => 'Значение "Порог(от)" должно быть меньше значения "Порог(до)"', 'compareAttribute' => 'from_value', 'operator' => '>'],
+            [['from_value'], MarkFromValidator::class],
+            [['to_value'], MarkToValidator::class],
             [['percent', 'absolute'], 'string', 'max' => 1],
-            [['groups_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::className(), 'targetAttribute' => ['groups_id' => 'id']],
+            [['groups_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::class, 'targetAttribute' => ['groups_id' => 'id']],
         ];
     }
 
@@ -61,6 +66,6 @@ class MarkUpGoods extends \yii\db\ActiveRecord
      */
     public function getGroups()
     {
-        return $this->hasOne(Groups::className(), ['id' => 'groups_id']);
+        return $this->hasOne(Groups::class, ['id' => 'groups_id']);
     }
 }

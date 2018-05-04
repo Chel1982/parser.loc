@@ -35,6 +35,18 @@ AppAsset::register($this);
         </div>
 
     <?php ActiveForm::end(); ?>
+
+    <?php ActiveForm::begin(); ?>
+
+    <div class="form-group" style="margin-left: 10px">
+
+        <?= Html::input('hidden','mark_up_price','0') ?>
+
+        <?= Html::submitButton('Применить все наценки', ['class' => 'btn btn-success mark_up_price']) ?>
+
+    </div>
+
+    <?php ActiveForm::end(); ?>
 </div>
 
 <?php if (isset($resСompareImkuh)): ?>
@@ -79,3 +91,6 @@ AppAsset::register($this);
 
 <?php endif; ?>
 
+<?php if (isset($resMarkUp)): ?>
+    <?= '<h4>' . $resMarkUp . '</h4>'?>
+<?php endif; ?>

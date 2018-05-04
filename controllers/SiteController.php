@@ -4,6 +4,9 @@ namespace app\controllers;
 
 use app\models\CategoriesHolodbar;
 use app\models\CategoriesImkuh;
+use app\models\Goods;
+use app\models\MarkUpGoods;
+use app\models\Price;
 use app\models\ProductGroupsHolodbar;
 use app\models\ProductGroupsImkuh;
 use app\models\Sites;
@@ -24,7 +27,7 @@ class SiteController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -39,7 +42,7 @@ class SiteController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
                 ],
@@ -217,6 +220,85 @@ class SiteController extends Controller
                 return $this->render('index',[
                     'resСompareHolodbar' => $resСompareHolodbar
                 ]);
+            }
+
+            if (\Yii::$app->request->post('mark_up_price')){
+
+
+                $markUpPercent = MarkUpGoods::find()->where(['percent' => 1])->asArray()->all();
+                $markUpAbsolute = MarkUpGoods::find()->where(['absolute' => 1])->asArray()->all();
+
+                if (empty($markUpPercent) && empty($markUpAbsolute)){
+                    $resMarkUp = 'Задайте хотя бы 1 наценку на товар';
+
+                    return $this->render('index',[
+                        'resMarkUp' => $resMarkUp
+                    ]);
+                }
+
+                foreach ($markUpPercent as $markPer) {
+
+                    $markPerFrom = $markPer['from_value'];
+                    $markPerTo = $markPer['to_value'];
+
+                    $percent = $markPer['price_value'] / 100;
+
+                    $goodsPer = Goods::find()
+                                ->where(['groups_id' => $markPer['groups_id']])
+                                ->with(['prices' => function($query)  use ($markPerFrom, $markPerTo){$query
+                                    ->where(['>=', 'price', $markPerFrom])
+                                    ->andWhere(['<=', 'price', $markPerTo]);}])
+                                ->asArray()
+                                ->all();
+
+                    foreach ($goodsPer as $goodsP){
+                        if ($goodsP['prices'] != null){
+
+                            $price = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $price->mark_up_price = round($price->price * $percent + $price->price);
+                            $price->save();
+
+                            $goods = Goods::findOne($goodsP['id']);
+                            $goods->updated_at = date('Y-m-d H:i:s' );
+                            $goods->save();
+                        }
+                    }
+                }
+
+                foreach ($markUpAbsolute as $markAbs) {
+
+                    $markAbsFrom = $markAbs['from_value'];
+                    $markAbsTo = $markAbs['to_value'];
+
+                    $goodsAbs = Goods::find()
+                        ->where(['groups_id' => $markAbs['groups_id']])
+                        ->with(['prices' => function($query) use ($markAbsFrom, $markAbsTo) {$query
+                                                                    ->where(['>=', 'price', $markAbsFrom])
+                                                                    ->andWhere(['<=', 'price', $markAbsTo]);}])
+                        ->asArray()
+                        ->all();
+
+                    foreach ($goodsAbs as $goodsA){
+
+                        if ($goodsA['prices'] != null){
+
+                            $priceAb = Price::findOne(['goods_id' => $goodsA['id']]);
+                            $priceAb->mark_up_price = $priceAb->price + $markAbs['price_value'];
+                            $priceAb->save();
+
+                            $goodsAb = Goods::findOne($goodsA['id']);
+                            $goodsAb->updated_at = date('Y-m-d H:i:s' );
+                            $goodsAb->save();
+                        }
+                    }
+                }
+
+                $resMarkUp = 'Наценки на товары применены успешно';
+
+                return $this->render('index',[
+                    'resMarkUp' => $resMarkUp
+                ]);
+
             }
 
         }

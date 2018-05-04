@@ -11,6 +11,7 @@ use Yii;
  * @property string $name_goods
  * @property string $uri_goods
  * @property string $created_at
+ * @property string $updated_at
  * @property string $from_date
  * @property string $to_date
  * @property string $groups_name
@@ -46,7 +47,7 @@ class Goods extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at'], 'safe'],
+            [['created_at', 'updated_at'], 'safe'],
             [['sites_id', 'groups_id'], 'required'],
             [['sites_id', 'groups_id'], 'integer'],
             [['name_goods', 'uri_goods'], 'string', 'max' => 255],
@@ -66,6 +67,7 @@ class Goods extends \yii\db\ActiveRecord
             'name_goods' => 'Название товара',
             'uri_goods' => 'url товара',
             'created_at' => 'Дата скачивания',
+            'updated_at' => 'Дата обновления',
             'sites_id' => 'Название сайта товара',
             'groups_id' => 'ID группы',
             'groups_name' => 'Название группы товара',
