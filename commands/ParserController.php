@@ -25,7 +25,6 @@ use VDB\Spider\Discoverer\XPathExpressionDiscoverer;
 use VDB\Spider\Event\SpiderEvents;
 use VDB\Spider\EventListener\PolitenessPolicyListener;
 use VDB\Spider\Spider;
-use VDB\Spider\StatsHandler;
 use yii\console\Controller;
 
 /**
