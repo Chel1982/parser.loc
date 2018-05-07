@@ -13,6 +13,7 @@ use Yii;
  * @property string $down_url
  * @property int $delay_parsing
  * @property int $status
+ * @property int $status_price
  * @property int $usleep_start
  * @property int $usleep_stop
  *
@@ -39,7 +40,7 @@ class Sites extends \yii\db\ActiveRecord
         return [
             [['delay_parsing', 'usleep_start', 'usleep_stop'], 'integer'],
             [['name', 'url', 'down_url'], 'string', 'max' => 255],
-            [['status'], 'string', 'max' => 1],
+            [['status', 'status_price'], 'string', 'max' => 1],
         ];
     }
 
@@ -55,8 +56,9 @@ class Sites extends \yii\db\ActiveRecord
             'down_url' => 'Url для скачивания',
             'delay_parsing' => 'Задержка crawler\'a, сек',
             'status' => 'Статус',
+            'status_price' => 'Проверка цены',
             'usleep_start' => 'Нач. задер. парсинга, сек',
-            'usleep_stop' => 'Кон. задер. парсинга, сек',
+            'usleep_stop' => 'Кон. задер. парсинга, сек'
         ];
     }
 

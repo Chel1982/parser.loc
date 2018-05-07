@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Sites;
+use app\models\LogsPrice;
 
 /**
- * SitesSearch represents the model behind the search form of `app\models\Sites`.
+ * LogsPriceSearch represents the model behind the search form of `app\models\LogsPrice`.
  */
-class SitesSearch extends Sites
+class LogsPriceSearch extends LogsPrice
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class SitesSearch extends Sites
     public function rules()
     {
         return [
-            [['id', 'delay_parsing', 'usleep_start', 'usleep_stop'], 'integer'],
-            [['name', 'url', 'down_url', 'status', 'status_price'], 'safe'],
+            [['id', 'goods_id'], 'integer'],
+            [['log'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class SitesSearch extends Sites
      */
     public function search($params)
     {
-        $query = Sites::find();
+        $query = LogsPrice::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -60,16 +60,10 @@ class SitesSearch extends Sites
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'delay_parsing' => $this->delay_parsing,
-            'usleep_start' => $this->usleep_start,
-            'usleep_stop' => $this->usleep_stop,
+            'goods_id' => $this->goods_id,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'url', $this->url])
-            ->andFilterWhere(['like', 'down_url', $this->down_url])
-            ->andFilterWhere(['like', 'status_price', $this->status_price])
-            ->andFilterWhere(['like', 'status', $this->status]);
+        $query->andFilterWhere(['like', 'log', $this->log]);
 
         return $dataProvider;
     }
