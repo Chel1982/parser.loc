@@ -18,9 +18,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'url_group')->textInput(['maxlength' => true, 'disabled' => 'disabled']) ?>
 
-    <?= $form->field($model, 'cat_holod')->dropDownList($model->getHierarchyHolod(),['prompt' => '', 'class'=>'form-control required']) ?>
+    <?= $form->field($model, 'categories_holodbar_id')->dropDownList($model->getHierarchyHolod(),['prompt' => '', 'class'=>'form-control required']) ?>
 
-    <?= $form->field($model, 'cat_imkuh')->dropDownList($model->getHierarchyImkuh(),['prompt' => '', 'class'=>'form-control required']) ?>
+    <?= $form->field($model, 'categories_imkuh_id')->dropDownList($model->getHierarchyImkuh(),['prompt' => '', 'class'=>'form-control required']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Связать', ['class' => 'btn btn-success']) ?>

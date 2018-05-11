@@ -56,7 +56,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'descriptions.additional',
                 'format' => 'raw',
             ],
-            'prices.price',
+            [
+                'attribute' => 'prices.price',
+                'format' => 'raw',
+                'value' => function($data){
+                     if(isset($data->prices->price) && $data->prices->currency_id == 1){
+                         return $data->prices->price . ' RUB';
+                     }elseif (isset($data->prices->price) && $data->prices->currency_id == 2){
+                         return $data->prices->price . ' EUR';
+                     }
+                    return false;
+                }
+            ],
+            [
+                'attribute' => 'prices.mark_up_price',
+                'format' => 'raw',
+                'value' => function($data){
+                    if(isset($data->prices->mark_up_price) && $data->prices->currency_id == 1){
+                        return $data->prices->mark_up_price . ' RUB';
+                    }elseif (isset($data->prices->mark_up_price) && $data->prices->currency_id == 2){
+                        return $data->prices->mark_up_price . ' EUR';
+                    }
+                    return false;
+                }
+            ],
             'manufacturers.name',
             [
                 'attribute' => 'productAttributes.content',

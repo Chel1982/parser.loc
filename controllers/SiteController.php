@@ -9,6 +9,7 @@ use app\models\MarkUpGoods;
 use app\models\Price;
 use app\models\ProductGroupsHolodbar;
 use app\models\ProductGroupsImkuh;
+use app\models\ProductsImkuh;
 use app\models\Sites;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -241,7 +242,7 @@ class SiteController extends Controller
                     $markPerFrom = $markPer['from_value'];
                     $markPerTo = $markPer['to_value'];
 
-                    $percent = $markPer['price_value'] / 100;
+                    $percent = $markPer['price_value'] / 250;
 
                     $goodsPer = Goods::find()
                                 ->where(['groups_id' => $markPer['groups_id']])
@@ -301,6 +302,21 @@ class SiteController extends Controller
 
             }
 
+            if (\Yii::$app->request->post('double_goods_imkuh')){
+
+            $countProdsImkuh = ProductsImkuh::find()->count();
+
+            $countGoods = Goods::findAll();
+
+            //$this->actionRecProdImkuh($count);
+
+            }
+
+            if (\Yii::$app->request->post('double_goods_holodbar')){
+
+                var_dump('holodbar');
+
+            }
         }
 
         return $this->render('index');

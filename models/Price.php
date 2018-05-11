@@ -8,10 +8,12 @@ use Yii;
  * This is the model class for table "price".
  *
  * @property int $id
- * @property int $price
+ * @property double $price
  * @property int $mark_up_price
  * @property int $goods_id
+ * @property int $currency_id
  *
+ * @property Currency $currency
  * @property Goods $goods
  */
 class Price extends \yii\db\ActiveRecord
@@ -30,9 +32,11 @@ class Price extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['price', 'mark_up_price', 'goods_id'], 'integer'],
+            [['price'], 'number'],
+            [['mark_up_price', 'goods_id', 'currency_id'], 'integer'],
             [['goods_id'], 'required'],
-            [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'id']],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::class, 'targetAttribute' => ['currency_id' => 'id']],
+            [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::class, 'targetAttribute' => ['goods_id' => 'id']],
         ];
     }
 
@@ -46,7 +50,16 @@ class Price extends \yii\db\ActiveRecord
             'price' => 'Цена',
             'mark_up_price' => 'Цена с наценкой',
             'goods_id' => 'Goods ID',
+            'currency_id' => 'Currency ID',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCurrency()
+    {
+        return $this->hasOne(Currency::class, ['id' => 'currency_id']);
     }
 
     /**
@@ -54,6 +67,6 @@ class Price extends \yii\db\ActiveRecord
      */
     public function getGoods()
     {
-        return $this->hasOne(Goods::className(), ['id' => 'goods_id']);
+        return $this->hasOne(Goods::class, ['id' => 'goods_id']);
     }
 }

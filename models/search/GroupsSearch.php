@@ -18,8 +18,8 @@ class GroupsSearch extends Groups
     public function rules()
     {
         return [
-            [['id', 'cat_holod', 'cat_imkuh'], 'integer'],
-            [['name', 'from_date', 'to_date', 'created_at', 'url_group'], 'safe'],
+            [['id', 'categories_holodbar_id', 'categories_imkuh_id'], 'integer'],
+            [['name', 'created_at', 'url_group'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class GroupsSearch extends Groups
      */
     public function search($params)
     {
-        $query = Groups::find()->orderBy(['id' => SORT_DESC]);
+        $query = Groups::find();
 
         // add conditions that should always apply here
 
@@ -61,13 +61,12 @@ class GroupsSearch extends Groups
         $query->andFilterWhere([
             'id' => $this->id,
             'created_at' => $this->created_at,
-            'cat_holod' => $this->cat_holod,
-            'cat_imkuh' => $this->cat_imkuh,
+            'categories_holodbar_id' => $this->categories_holodbar_id,
+            'categories_imkuh_id' => $this->categories_imkuh_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'url_group', $this->url_group])
-            ->andFilterWhere(['between','created_at', $this->from_date, $this->to_date]);
+            ->andFilterWhere(['like', 'url_group', $this->url_group]);
 
         return $dataProvider;
     }

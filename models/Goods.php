@@ -17,6 +17,8 @@ use Yii;
  * @property string $groups_name
  * @property int $sites_id
  * @property int $groups_id
+ * @property int $duplicate_imkuh
+ * @property int $duplicate_holodbar
  *
  * @property Description[] $descriptions
  * @property Groups $groups
@@ -49,7 +51,8 @@ class Goods extends \yii\db\ActiveRecord
         return [
             [['created_at', 'updated_at'], 'safe'],
             [['sites_id', 'groups_id'], 'required'],
-            [['sites_id', 'groups_id'], 'integer'],
+            [['sites_id', 'groups_id', 'duplicate_imkuh', 'duplicate_holodbar'], 'integer'],
+            [['duplicate_imkuh', 'duplicate_holodbar'], 'integer', 'max' => 1],
             [['name_goods', 'uri_goods'], 'string', 'max' => 255],
             [['uri_goods'], 'unique'],
             [['groups_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::class, 'targetAttribute' => ['groups_id' => 'id']],

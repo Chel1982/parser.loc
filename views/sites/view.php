@@ -63,6 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'usleep_stop',
             'status:boolean',
             'status_price:boolean',
+            'status_cat_price:boolean',
         ],
     ]) ?>
 

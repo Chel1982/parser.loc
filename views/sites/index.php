@@ -55,11 +55,24 @@ $this->params['breadcrumbs'][] = $this->title;
                     );
                 }
             ],
-            'delay_parsing',
-            'usleep_start',
-            'usleep_stop',
+            [
+                'attribute' => 'delay_parsing',
+                'header' => 'Задержка<br>crawler\'a, сек',
+
+            ],
+            [
+                'attribute' => 'usleep_start',
+                'header' => 'Нач.задер.<br>парсинга, сек',
+
+            ],
+            [
+                'attribute' => 'usleep_stop',
+                'header' => 'Кон.задер.<br>парсинга, сек',
+
+            ],
             'status:boolean',
             'status_price:boolean',
+            'status_cat_price:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

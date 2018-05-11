@@ -10,13 +10,14 @@ use Yii;
  * @property int $id
  * @property string $name
  * @property string $created_at
- * @property string $from_date
- * @property string $to_date
  * @property string $url_group
- * @property int $cat_holod
- * @property int $cat_imkuh
+ * @property int $categories_holodbar_id
+ * @property int $categories_imkuh_id
  *
  * @property Goods[] $goods
+ * @property CategoriesHolodbar $categoriesHolodbar
+ * @property CategoriesImkuh $categoriesImkuh
+ * @property MarkUpGoods[] $markUpGoods
  */
 class Groups extends \yii\db\ActiveRecord
 {
@@ -38,8 +39,10 @@ class Groups extends \yii\db\ActiveRecord
     {
         return [
             [['created_at'], 'safe'],
-            [['cat_holod', 'cat_imkuh'], 'integer'],
+            [['categories_holodbar_id', 'categories_imkuh_id'], 'integer'],
             [['name', 'url_group'], 'string', 'max' => 255],
+            [['categories_holodbar_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoriesHolodbar::class, 'targetAttribute' => ['categories_holodbar_id' => 'id']],
+            [['categories_imkuh_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoriesImkuh::class, 'targetAttribute' => ['categories_imkuh_id' => 'id']],
         ];
     }
 
@@ -53,8 +56,8 @@ class Groups extends \yii\db\ActiveRecord
             'name' => 'Название группы',
             'created_at' => 'Дата создания',
             'url_group' => 'Url группы',
-            'cat_holod' => 'Категория Holodbar',
-            'cat_imkuh' => 'Категория Imkuh',
+            'categories_holodbar_id' => 'Категория Holodbar',
+            'categories_imkuh_id' => 'Категория Imkuh',
         ];
     }
 
@@ -63,7 +66,31 @@ class Groups extends \yii\db\ActiveRecord
      */
     public function getGoods()
     {
-        return $this->hasMany(Goods::className(), ['groups_id' => 'id']);
+        return $this->hasMany(Goods::class, ['groups_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategoriesHolodbar()
+    {
+        return $this->hasOne(CategoriesHolodbar::class, ['id' => 'categories_holodbar_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategoriesImkuh()
+    {
+        return $this->hasOne(CategoriesImkuh::class, ['id' => 'categories_imkuh_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMarkUpGoods()
+    {
+        return $this->hasMany(MarkUpGoods::class, ['groups_id' => 'id']);
     }
 
     public function getHierarchyHolod() {

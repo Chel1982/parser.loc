@@ -48,13 +48,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'cat_holod',
+                'attribute' => 'categories_holodbar_id',
                 'format' => 'raw',
                 'value' => function($data){
 
-                    $catHolod = CategoriesImkuh::find()->where(['pgid' => $data->cat_holod])->asArray()->one();
+                    $catHolod = CategoriesImkuh::find()->where(['pgid' => $data->categories_holodbar_id])->asArray()->one();
 
-                    return Html::a(StringHelper::truncate($catHolod['name'], 50), 'http://www.holodbar.ru/content/katalog/' . $catHolod['pmgid'] . '/' . $data->cat_holod . '/',[
+                    return Html::a(StringHelper::truncate($catHolod['name'], 50), 'http://www.holodbar.ru/content/katalog/' . $catHolod['pmgid'] . '/' . $data->categories_holodbar_id . '/',[
                         'title' => 'Смелей, вперед!',
                         'target' => '_blank'
                     ]);
@@ -62,13 +62,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'cat_imkuh',
+                'attribute' => 'categories_imkuh_id',
                 'format' => 'raw',
                 'value' => function($data){
 
-                    $catImkuh = CategoriesImkuh::find()->where(['pgid' => $data->cat_imkuh])->asArray()->one();
+                    $catImkuh = CategoriesImkuh::find()->where(['pgid' => $data->categories_imkuh_id])->asArray()->one();
 
-                    return Html::a(StringHelper::truncate($catImkuh['name'],50), 'http://www.imkuh.ru/group/'. $data->cat_imkuh .'/',[
+                    return Html::a(StringHelper::truncate($catImkuh['name'],50), 'http://www.imkuh.ru/group/'. $data->categories_imkuh_id .'/',[
                         'title' => 'Смелей, вперед!',
                         'target' => '_blank'
                     ]);

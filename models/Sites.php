@@ -13,13 +13,15 @@ use Yii;
  * @property string $down_url
  * @property int $delay_parsing
  * @property int $status
- * @property int $status_price
  * @property int $usleep_start
  * @property int $usleep_stop
+ * @property int $status_price
+ * @property string $status_cat_price
  *
  * @property Curl[] $curls
  * @property CurlAuth[] $curlAuths
  * @property Goods[] $goods
+ * @property LogsCurl[] $logsCurls
  * @property Xpath[] $xpaths
  */
 class Sites extends \yii\db\ActiveRecord
@@ -41,6 +43,7 @@ class Sites extends \yii\db\ActiveRecord
             [['delay_parsing', 'usleep_start', 'usleep_stop'], 'integer'],
             [['name', 'url', 'down_url'], 'string', 'max' => 255],
             [['status', 'status_price'], 'string', 'max' => 1],
+            [['status_cat_price'], 'string', 'max' => 45],
         ];
     }
 
@@ -54,20 +57,22 @@ class Sites extends \yii\db\ActiveRecord
             'name' => 'Название сайта',
             'url' => 'Url сайта',
             'down_url' => 'Url для скачивания',
-            'delay_parsing' => 'Задержка crawler\'a, сек',
+            'delay_parsing' => 'Задер.crawler\'a, сек',
             'status' => 'Статус',
-            'status_price' => 'Проверка цены',
-            'usleep_start' => 'Нач. задер. парсинга, сек',
-            'usleep_stop' => 'Кон. задер. парсинга, сек'
+            'status_price' => 'Пров.цены',
+            'usleep_start' => 'Нач.задер.парсинга, сек',
+            'usleep_stop' => 'Кон.задер.парсинга, сек',
+            'status_cat_price' => 'Парс.каталогов',
         ];
     }
+
 
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getCurls()
     {
-        return $this->hasMany(Curl::className(), ['sites_id' => 'id']);
+        return $this->hasMany(Curl::class, ['sites_id' => 'id']);
     }
 
     /**
@@ -75,7 +80,7 @@ class Sites extends \yii\db\ActiveRecord
      */
     public function getCurlAuths()
     {
-        return $this->hasMany(CurlAuth::className(), ['sites_id' => 'id']);
+        return $this->hasMany(CurlAuth::class, ['sites_id' => 'id']);
     }
 
     /**
@@ -83,7 +88,15 @@ class Sites extends \yii\db\ActiveRecord
      */
     public function getGoods()
     {
-        return $this->hasMany(Goods::className(), ['sites_id' => 'id']);
+        return $this->hasMany(Goods::class, ['sites_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLogsCurls()
+    {
+        return $this->hasMany(LogsCurl::class, ['sites_id' => 'id']);
     }
 
     /**
@@ -91,6 +104,6 @@ class Sites extends \yii\db\ActiveRecord
      */
     public function getXpaths()
     {
-        return $this->hasMany(Xpath::className(), ['sites_id' => 'id']);
+        return $this->hasMany(Xpath::class, ['sites_id' => 'id']);
     }
 }
