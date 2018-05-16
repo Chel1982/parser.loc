@@ -1070,16 +1070,37 @@ class ParserController extends Controller
 
                                 $availability = trim($availability);
 
-                                if(!stristr($availability, '0')){
+
+                                $availabilityCount = preg_replace("/[^0-9]/", '', $availability);
+
+                                if(stristr($availability, 'шт.') and $availabilityCount > 0){
 
                                     if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
                                         $avail = Availability::findOne(['goods_id' => $goods->id]);
                                         $avail->availability = '1';
                                         $avail->save();
 
                                     }else{
+
                                         $avail = new Availability();
                                         $avail->availability = '1';
+                                        $avail->goods_id = $goods->id;
+                                        $avail->save();
+
+                                    }
+
+                                }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
+
+                                    if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
+                                        $avail = Availability::findOne(['goods_id' => $goods->id]);
+                                        $avail->availability = '0';
+                                        $avail->save();
+
+                                    }else{
+                                        $avail = new Availability();
+                                        $avail->availability = '0';
                                         $avail->goods_id = $goods->id;
                                         $avail->save();
                                     }
@@ -1107,7 +1128,9 @@ class ParserController extends Controller
 
                             $availability = trim($availability);
 
-                            if(!stristr($availability, '0')){
+                            $availabilityCount = preg_replace("/[^0-9]/", '', $availability);
+
+                            if(stristr($availability, 'шт.') and $availabilityCount > 0){
 
                                 if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
 
@@ -1122,6 +1145,21 @@ class ParserController extends Controller
                                     $avail->goods_id = $goods->id;
                                     $avail->save();
 
+                                }
+
+                            }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
+
+                                if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
+                                    $avail = Availability::findOne(['goods_id' => $goods->id]);
+                                    $avail->availability = '0';
+                                    $avail->save();
+
+                                }else{
+                                    $avail = new Availability();
+                                    $avail->availability = '0';
+                                    $avail->goods_id = $goods->id;
+                                    $avail->save();
                                 }
                             }
 
