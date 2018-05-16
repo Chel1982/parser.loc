@@ -50,6 +50,8 @@ class ParserPriceAvailController extends Controller
             $sites = Sites::findOne($idSite);
             $regPrice = Xpath::findOne(['sites_id' => $sites->id, 'name_regular_id' => 10]);
 
+
+
             if ($sites->usleep_stop != 0){
                 usleep(rand($sites->usleep_start * 1000000, $sites->usleep_stop * 1000000));
             }
@@ -86,10 +88,9 @@ class ParserPriceAvailController extends Controller
                         $priceCorrect = Price::findOne(['goods_id' => $goods->id]);
                         $priceCorrect->price = $priceSite;
                         $priceCorrect->save();
-
-                        $this->actionLogsPriceAvailSuccess($goods->id, 'price');
                     }
 
+                    $this->actionLogsPriceAvailSuccess($goods->id, 'price');
 
                 }catch (Exception $e) {
 
@@ -102,43 +103,59 @@ class ParserPriceAvailController extends Controller
                 /*Проверяем наличие товара*/
                 try {
 
-                    $availability = $resource->getCrawler()->filterXpath($regAvail->regular)->text();
-
-                    $availability = trim($availability);
-
-
-                    $availabilityCount = preg_replace("/[^0-9]/", '', $availability);
-
-                    if(stristr($availability, 'шт.') and $availabilityCount > 0){
+                    if ($regAvail->regular == '1'){
 
                         if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
-
                             $avail = Availability::findOne(['goods_id' => $goods->id]);
                             $avail->availability = '1';
                             $avail->save();
 
                         }else{
-
                             $avail = new Availability();
                             $avail->availability = '1';
                             $avail->goods_id = $goods->id;
                             $avail->save();
-
                         }
 
-                    }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
+                    }else{
+                        $availability = $resource->getCrawler()->filterXpath($regAvail->regular)->text();
 
-                        if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                        $availability = trim($availability);
 
-                            $avail = Availability::findOne(['goods_id' => $goods->id]);
-                            $avail->availability = '0';
-                            $avail->save();
 
-                        }else{
-                            $avail = new Availability();
-                            $avail->availability = '0';
-                            $avail->goods_id = $goods->id;
-                            $avail->save();
+                        $availabilityCount = preg_replace("/[^0-9]/", '', $availability);
+
+                        if(stristr($availability, 'шт.') and $availabilityCount > 0){
+
+                            if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
+                                $avail = Availability::findOne(['goods_id' => $goods->id]);
+                                $avail->availability = '1';
+                                $avail->save();
+
+                            }else{
+
+                                $avail = new Availability();
+                                $avail->availability = '1';
+                                $avail->goods_id = $goods->id;
+                                $avail->save();
+
+                            }
+
+                        }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
+
+                            if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
+                                $avail = Availability::findOne(['goods_id' => $goods->id]);
+                                $avail->availability = '0';
+                                $avail->save();
+
+                            }else{
+                                $avail = new Availability();
+                                $avail->availability = '0';
+                                $avail->goods_id = $goods->id;
+                                $avail->save();
+                            }
                         }
                     }
 
@@ -261,44 +278,61 @@ class ParserPriceAvailController extends Controller
             /*Проверяем наличие товара*/
             try {
 
-                $availability = $crawler->filterXPath($regAvail->regular)->text();
-
-                $availability = trim($availability);
-
-                $availabilityCount = preg_replace("/[^0-9]/", '', $availability);
-
-                if(stristr($availability, 'шт.') and $availabilityCount > 0){
+                if ($regAvail->regular == '1'){
 
                     if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
-
                         $avail = Availability::findOne(['goods_id' => $goods->id]);
                         $avail->availability = '1';
                         $avail->save();
 
                     }else{
-
                         $avail = new Availability();
                         $avail->availability = '1';
                         $avail->goods_id = $goods->id;
                         $avail->save();
-
                     }
 
-                }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
+                }else{
+                    $availability = $crawler->filterXPath($regAvail->regular)->text();
 
-                    if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                    $availability = trim($availability);
 
-                        $avail = Availability::findOne(['goods_id' => $goods->id]);
-                        $avail->availability = '0';
-                        $avail->save();
+                    $availabilityCount = preg_replace("/[^0-9]/", '', $availability);
 
-                    }else{
-                        $avail = new Availability();
-                        $avail->availability = '0';
-                        $avail->goods_id = $goods->id;
-                        $avail->save();
+                    if(stristr($availability, 'шт.') and $availabilityCount > 0){
+
+                        if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
+                            $avail = Availability::findOne(['goods_id' => $goods->id]);
+                            $avail->availability = '1';
+                            $avail->save();
+
+                        }else{
+
+                            $avail = new Availability();
+                            $avail->availability = '1';
+                            $avail->goods_id = $goods->id;
+                            $avail->save();
+
+                        }
+
+                    }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
+
+                        if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
+                            $avail = Availability::findOne(['goods_id' => $goods->id]);
+                            $avail->availability = '0';
+                            $avail->save();
+
+                        }else{
+                            $avail = new Availability();
+                            $avail->availability = '0';
+                            $avail->goods_id = $goods->id;
+                            $avail->save();
+                        }
                     }
                 }
+
 
                 $this->actionLogsPriceAvailSuccess($goods->id, 'availability');
 

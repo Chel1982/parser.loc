@@ -1044,7 +1044,7 @@ class ParserController extends Controller
 
                 $regAvail = Xpath::findOne(['sites_id' => $sites->id, 'name_regular_id' => 13]);
 
-                if ($sites->availability == 1){
+                if ($regAvail->regular == '1'){
 
                     if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
                         $avail = Availability::findOne(['goods_id' => $goods->id]);
