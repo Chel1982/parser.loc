@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'price:ntext',
             'manufactured:ntext',
             'prod_attr:ntext',
+            'availability:ntext',
             [
                 'attribute' => 'goods_id',
                 'format' => 'raw',
@@ -50,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     );
                 }
             ],
+
 
             [
                 'class' => 'yii\grid\ActionColumn',

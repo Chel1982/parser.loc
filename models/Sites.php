@@ -16,7 +16,7 @@ use Yii;
  * @property int $usleep_start
  * @property int $usleep_stop
  * @property int $status_price
- * @property string $status_cat_price
+ * @property int $status_cat_price
  *
  * @property Curl[] $curls
  * @property CurlAuth[] $curlAuths
@@ -42,8 +42,7 @@ class Sites extends \yii\db\ActiveRecord
         return [
             [['delay_parsing', 'usleep_start', 'usleep_stop'], 'integer'],
             [['name', 'url', 'down_url'], 'string', 'max' => 255],
-            [['status', 'status_price'], 'string', 'max' => 1],
-            [['status_cat_price'], 'string', 'max' => 45],
+            [['status', 'status_price', 'status_cat_price'], 'string', 'max' => 1],
         ];
     }
 
@@ -59,7 +58,7 @@ class Sites extends \yii\db\ActiveRecord
             'down_url' => 'Url для скачивания',
             'delay_parsing' => 'Задер.crawler\'a, сек',
             'status' => 'Статус',
-            'status_price' => 'Пров.цены',
+            'status_price' => 'Пров.цены и нал.',
             'usleep_start' => 'Нач.задер.парсинга, сек',
             'usleep_stop' => 'Кон.задер.парсинга, сек',
             'status_cat_price' => 'Парс.каталогов',

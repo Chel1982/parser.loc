@@ -6,6 +6,7 @@ use AMQPChannel;
 use AMQPConnection;
 use AMQPExchange;
 use AMQPQueue;
+use app\models\Availability;
 use app\models\Curl;
 use app\models\CurlAuth;
 use app\models\Description;
@@ -1001,6 +1002,155 @@ class ParserController extends Controller
         $rabbit->disconnect();
     }
 
+    public function actionAvail()
+    {
+        /**
+         * Подключаемся к брокеру и точке обмена сообщениями
+         */
+        $rabbit = new AMQPConnection(array('host' => '127.0.0.1', 'port' => '5672', 'login' => 'guest', 'password' => 'guest'));
+        $rabbit->connect();
+
+        $channel = new AMQPChannel($rabbit);
+        $queue = new AMQPExchange($channel);
+        $queue->setName('amq.direct');
+
+        /**
+         * Добавляем очередь откуда будем брать страницы
+         */
+        $q = new AMQPQueue($channel);
+        $q->setName('analyze_avail');
+        $q->declare();
+        $q->bind('amq.direct', 'analyze_avail');
+
+        while (true) {
+
+            /**
+             * Обрабатываем пока в очереди не закончатся сообщения
+             */
+
+            $page = $q->get();
+
+            if ($page) {
+
+                $data = $page->getBody();
+
+                list($flag, $link, $data) = explode('|-----|', $data);
+
+                $data = unserialize($data);
+
+                $sites = Sites::find()->where(['id' => Goods::find()->select('sites_id')->where(['uri_goods' => $link])])->one();
+
+                $goods = Goods::findOne(['uri_goods' => $link]);
+
+                $regAvail = Xpath::findOne(['sites_id' => $sites->id, 'name_regular_id' => 13]);
+
+                if ($sites->availability == 1){
+
+                    if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                        $avail = Availability::findOne(['goods_id' => $goods->id]);
+                        $avail->availability = '1';
+                        $avail->save();
+
+                    }else{
+                        $avail = new Availability();
+                        $avail->availability = '1';
+                        $avail->goods_id = $goods->id;
+                        $avail->save();
+                    }
+
+                }else{
+
+                    if($flag == 'spider'){
+
+                        foreach ($data as $resource){
+
+                            try {
+
+                                $availability = $resource->getCrawler()->filterXpath($regAvail->regular)->text();
+
+                                $availability = trim($availability);
+
+                                if(!stristr($availability, '0')){
+
+                                    if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                                        $avail = Availability::findOne(['goods_id' => $goods->id]);
+                                        $avail->availability = '1';
+                                        $avail->save();
+
+                                    }else{
+                                        $avail = new Availability();
+                                        $avail->availability = '1';
+                                        $avail->goods_id = $goods->id;
+                                        $avail->save();
+                                    }
+                                }
+
+                                $this->actionLogsSuccess($goods->id, 'availability');
+
+                            }catch (Exception $e) {
+
+                                $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
+
+                                $this->actionLogsFailed($goods->id, $goods->sites->id, 13, 'availability', $e);
+
+                            }
+
+                        }
+
+                    }elseif($flag == 'curl'){
+
+                        try {
+
+                            $crawler = new Crawler($data);
+
+                            $availability = $crawler->filterXPath($regAvail->regular)->text();
+
+                            $availability = trim($availability);
+
+                            if(!stristr($availability, '0')){
+
+                                if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+
+                                    $avail = Availability::findOne(['goods_id' => $goods->id]);
+                                    $avail->availability = '1';
+                                    $avail->save();
+
+                                }else{
+
+                                    $avail = new Availability();
+                                    $avail->availability = '1';
+                                    $avail->goods_id = $goods->id;
+                                    $avail->save();
+
+                                }
+                            }
+
+                            $this->actionLogsSuccess($goods->id, 'availability');
+
+                        }catch (Exception $e) {
+
+                            $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
+
+                            $this->actionLogsFailed($goods->id, $goods->sites->id, 13, 'availability', $e);
+
+                        }
+
+                    }
+                }
+
+                $q->ack($page->getDeliveryTag());
+
+            } else {
+
+                sleep(1);
+
+            }
+
+        }
+
+        $rabbit->disconnect();
+    }
+
     public function actionSpider($idSite, $seed)
     {
         $flag = 'spider';
@@ -1138,6 +1288,8 @@ class ParserController extends Controller
 
                         $this->queue->publish($data, 'analyze_prod_attr');
 
+                        $this->queue->publish($data, 'analyze_avail');
+
                     }
                 }
 
@@ -1236,6 +1388,8 @@ class ParserController extends Controller
 
                             $this->queue->publish($data, 'analyze_prod_attr');
 
+                            $this->queue->publish($data, 'analyze_avail');
+
                         }
                     }
                 }
@@ -1307,6 +1461,8 @@ class ParserController extends Controller
                 array($politenessPolicyEventListener, 'onCrawlPreRequest')
             );
         }
+
+        $spider->getQueueManager()->maxQueueSize = 2;
 
         // Execute crawl
         $spider->crawl();
@@ -1433,6 +1589,8 @@ class ParserController extends Controller
 
                         $this->queue->publish($data, 'analyze_prod_attr');
 
+                        $this->queue->publish($data, 'analyze_avail');
+
                     }
                 }
 
@@ -1541,6 +1699,8 @@ class ParserController extends Controller
                             $this->queue->publish($data, 'analyze_manufacturer');
 
                             $this->queue->publish($data, 'analyze_prod_attr');
+
+                            $this->queue->publish($data, 'analyze_avail');
 
                         }
                     }

@@ -2,17 +2,18 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\LogsPriceSearch */
+/* @var $searchModel app\models\search\LogsPriceAvailSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Logs Prices';
+$this->title = 'Logs цены и наличия товаров';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="logs-price-index">
+<div class="logs-price-avail-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -22,7 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
            // 'id',
-            'log',
+            'price',
+            'availability',
             [
                 'attribute' => 'goods_id',
                 'format' => 'raw',
@@ -37,10 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     );
                 }
             ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' =>'{view} {delete}',
-            ],
+
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    <?php Pjax::end(); ?>
 </div>

@@ -22,11 +22,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'created_at')->textInput() ?>
 
     <?php if($model->descriptions !== null and $model->descriptions->main !== null): ?>
-    <?= $form->field($model->descriptions, 'main')->textarea(['rows' => '6']) ?>
+        <?= $form->field($model->descriptions, 'main')->textarea(['rows' => '6']) ?>
     <?php endif; ?>
 
     <?php if($model->descriptions !== null and $model->descriptions->additional !== null): ?>
-    <?= $form->field($model->descriptions, 'additional')->textarea(['rows' => '6']) ?>
+        <?= $form->field($model->descriptions, 'additional')->textarea(['rows' => '6']) ?>
     <?php endif; ?>
 
     <?php if($model->prices !== null and $model->prices->price): ?>
@@ -38,11 +38,15 @@ use yii\widgets\ActiveForm;
     <?php endif; ?>
 
     <?php if($model->manufacturers !== null): ?>
-    <?= $form->field($model->manufacturers, 'name')->textarea(['rows' => '6']) ?>
+        <?= $form->field($model->manufacturers, 'name')->textarea(['rows' => '6']) ?>
     <?php endif; ?>
 
     <?php if($model->productAttributes !== null): ?>
-    <?= $form->field($model->productAttributes, 'content')->textarea(['rows' => '6']) ?>
+        <?= $form->field($model->productAttributes, 'content')->textarea(['rows' => '6']) ?>
+    <?php endif; ?>
+
+    <?php if($model->availabilities !== null): ?>
+        <?= $form->field($model->availabilities, 'availability')->dropDownList([1 => 'Да', 0 => 'Нет']) ?>
     <?php endif; ?>
 
     <?= $form->field($model, 'sites_id')->dropDownList([ArrayHelper::map(Sites::find()->all(), 'id', 'name')]) ?>

@@ -70,9 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => 'Кон.задер.<br>парсинга, сек',
 
             ],
-            'status:boolean',
-            'status_price:boolean',
             'status_cat_price:boolean',
+            'status_price:boolean',
+            'status:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

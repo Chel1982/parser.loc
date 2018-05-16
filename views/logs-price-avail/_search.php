@@ -4,20 +4,25 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\search\LogsPriceSearch */
+/* @var $model app\models\search\LogsPriceAvailSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="logs-price-search">
+<div class="logs-price-avail-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+        'options' => [
+            'data-pjax' => 1
+        ],
     ]); ?>
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'log') ?>
+    <?= $form->field($model, 'price') ?>
+
+    <?= $form->field($model, 'availability') ?>
 
     <?= $form->field($model, 'goods_id') ?>
 

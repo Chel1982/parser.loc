@@ -20,6 +20,7 @@ use Yii;
  * @property int $duplicate_imkuh
  * @property int $duplicate_holodbar
  *
+ * @property Availability[] $availabilities
  * @property Description[] $descriptions
  * @property Groups $groups
  * @property Sites $sites
@@ -75,6 +76,14 @@ class Goods extends \yii\db\ActiveRecord
             'groups_id' => 'ID группы',
             'groups_name' => 'Название группы товара',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAvailabilities()
+    {
+        return $this->hasOne(Availability::class, ['goods_id' => 'id']);
     }
 
     /**

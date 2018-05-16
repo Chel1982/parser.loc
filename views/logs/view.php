@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'price:ntext',
             'manufactured:ntext',
             'prod_attr:ntext',
+            'availability:ntext',
             'goods_id',
         ],
     ]) ?>

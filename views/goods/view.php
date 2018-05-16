@@ -85,6 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'productAttributes.content',
                 'format' => 'raw',
             ],
+            'availabilities.availability:boolean',
         ],
     ]);
 

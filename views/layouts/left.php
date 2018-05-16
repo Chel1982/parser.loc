@@ -34,7 +34,7 @@
                     ['label' => 'Скачанные группы товаров', 'url' => ['/groups/index']],
                     ['label' => 'Наценка на товары', 'url' => ['/mark-up-goods/index']],
                     ['label' => 'Логи парсинга', 'url' => ['/logs/index']],
-                    ['label' => 'Логи проверки цены', 'url' => ['/logs-price/index']],
+                    ['label' => 'Логи цены и наличия', 'url' => ['/logs-price-avail/index']],
                 ],
             ]
         ) ?>

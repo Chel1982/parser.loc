@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\LogsPrice;
-use app\models\search\LogsPriceSearch;
+use app\models\LogsPriceAvail;
+use app\models\search\LogsPriceAvailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LogsPriceController implements the CRUD actions for LogsPrice model.
+ * LogsPriceAvailController implements the CRUD actions for LogsPriceAvail model.
  */
-class LogsPriceController extends Controller
+class LogsPriceAvailController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class LogsPriceController extends Controller
     }
 
     /**
-     * Lists all LogsPrice models.
+     * Lists all LogsPriceAvail models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LogsPriceSearch();
+        $searchModel = new LogsPriceAvailSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class LogsPriceController extends Controller
     }
 
     /**
-     * Displays a single LogsPrice model.
+     * Displays a single LogsPriceAvail model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,13 +58,13 @@ class LogsPriceController extends Controller
     }
 
     /**
-     * Creates a new LogsPrice model.
+     * Creates a new LogsPriceAvail model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new LogsPrice();
+        $model = new LogsPriceAvail();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +76,7 @@ class LogsPriceController extends Controller
     }
 
     /**
-     * Updates an existing LogsPrice model.
+     * Updates an existing LogsPriceAvail model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -96,7 +96,7 @@ class LogsPriceController extends Controller
     }
 
     /**
-     * Deletes an existing LogsPrice model.
+     * Deletes an existing LogsPriceAvail model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,15 +110,15 @@ class LogsPriceController extends Controller
     }
 
     /**
-     * Finds the LogsPrice model based on its primary key value.
+     * Finds the LogsPriceAvail model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return LogsPrice the loaded model
+     * @return LogsPriceAvail the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = LogsPrice::findOne($id)) !== null) {
+        if (($model = LogsPriceAvail::findOne($id)) !== null) {
             return $model;
         }
 

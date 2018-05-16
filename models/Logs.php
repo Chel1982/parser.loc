@@ -15,6 +15,7 @@ use Yii;
  * @property string $price
  * @property string $manufactured
  * @property string $prod_attr
+ * @property string $availability
  * @property int $goods_id
  *
  * @property Goods $goods
@@ -35,10 +36,10 @@ class Logs extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'description', 'desc_add', 'image', 'price', 'manufactured', 'prod_attr'], 'string'],
+            [['name', 'description', 'desc_add', 'image', 'price', 'manufactured', 'prod_attr', 'availability'], 'string'],
             [['goods_id'], 'required'],
             [['goods_id'], 'integer'],
-            [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'id']],
+            [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::class, 'targetAttribute' => ['goods_id' => 'id']],
         ];
     }
 
@@ -56,6 +57,7 @@ class Logs extends \yii\db\ActiveRecord
             'price' => 'Цена',
             'manufactured' => 'Производитель',
             'prod_attr' => 'Аттрибуты продукции',
+            'availability' => 'Наличие товара',
             'goods_id' => 'ID товара',
         ];
     }
@@ -65,6 +67,6 @@ class Logs extends \yii\db\ActiveRecord
      */
     public function getGoods()
     {
-        return $this->hasOne(Goods::className(), ['id' => 'goods_id']);
+        return $this->hasOne(Goods::class, ['id' => 'goods_id']);
     }
 }

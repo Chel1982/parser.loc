@@ -4,17 +4,18 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\LogsPrice */
+/* @var $model app\models\LogsPriceAvail */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Logs Prices', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Logs Price Avails', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="logs-price-view">
+<div class="logs-price-avail-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -27,8 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-           // 'id',
-            'log',
+            'id',
+            'price',
+            'availability',
             'goods_id',
         ],
     ]) ?>

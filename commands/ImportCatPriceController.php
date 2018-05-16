@@ -2,6 +2,7 @@
 
 namespace app\commands;
 
+use app\models\Availability;
 use app\models\Goods;
 use app\models\Price;
 use Exception;
@@ -108,11 +109,109 @@ class ImportCatPriceController extends Controller
                                     $price->save();
                                 }
                             }
+
+                            if(Availability::find()->where(['goods_id' => $goods->id])->exists()) {
+
+                                if ($rowData[0][9] === 'EUR') {
+                                    if (is_numeric($rowData[0][10])) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '1';
+                                        $availability->save();
+                                    } elseif ($rowData[0][10] == null) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '0';
+                                        $availability->save();
+                                    }
+                                } elseif ($rowData[0][8] === 'EUR') {
+                                    if (is_numeric($rowData[0][9])) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '1';
+                                        $availability->save();
+                                    } elseif ($rowData[0][9] == null) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '0';
+                                        $availability->save();
+                                    }
+                                } elseif ($rowData[0][9] === 'руб.') {
+                                    if (is_numeric($rowData[0][10])) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '1';
+                                        $availability->save();
+                                    } elseif ($rowData[0][10] == null) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '0';
+                                        $availability->save();
+                                    }
+                                } elseif ($rowData[0][8] === 'руб.') {
+                                    if (is_numeric($rowData[0][9])) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '1';
+                                        $availability->save();
+                                    } elseif ($rowData[0][9] == null) {
+                                        $availability = Availability::findOne(['goods_id' => $goods->id]);
+                                        $availability->availability = '0';
+                                        $availability->save();
+                                    }
+                                }
+                            }else{
+
+                                if ($rowData[0][9] === 'EUR'){
+                                    if(is_numeric($rowData[0][10])){
+                                        $availability = new Availability();
+                                        $availability->goods_id = $goods->id;
+                                        $availability->availability = '1';
+                                        $availability->save();
+                                    }elseif ($rowData[0][10] == null){
+                                        $availability = new Availability();
+                                        $availability->goods_id = $goods->id;
+                                        $availability->availability = '0';
+                                        $availability->save();
+                                    }
+                                }elseif ($rowData[0][8] === 'EUR'){
+                                    if(is_numeric($rowData[0][9])){
+                                        $availability = new Availability();
+                                        $availability->goods_id = $goods->id;
+                                        $availability->availability = '1';
+                                        $availability->save();
+                                    }elseif ($rowData[0][9] == null){
+                                        $availability = new Availability();
+                                        $availability->goods_id = $goods->id;
+                                        $availability->availability = '0';
+                                        $availability->save();
+                                    }
+                                }elseif ($rowData[0][9] === 'руб.'){
+                                        if(is_numeric($rowData[0][10])){
+                                            $availability = new Availability();
+                                            $availability->goods_id = $goods->id;
+                                            $availability->availability = '1';
+                                            $availability->save();
+                                        }elseif ($rowData[0][10] == null){
+                                            $availability = new Availability();
+                                            $availability->goods_id = $goods->id;
+                                            $availability->availability = '0';
+                                            $availability->save();
+                                        }
+                                    }elseif ($rowData[0][8] === 'руб.'){
+
+                                        if(is_numeric($rowData[0][9])){
+                                            $availability = new Availability();
+                                            $availability->goods_id = $goods->id;
+                                            $availability->availability = '1';
+                                            $availability->save();
+                                        }elseif ($rowData[0][9] == null){
+                                            $availability = new Availability();
+                                            $availability->goods_id = $goods->id;
+                                            $availability->availability = '0';
+                                            $availability->save();
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-    }
+
 
 }

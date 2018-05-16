@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\LogsPrice;
+use app\models\LogsPriceAvail;
 
 /**
- * LogsPriceSearch represents the model behind the search form of `app\models\LogsPrice`.
+ * LogsPriceAvailSearch represents the model behind the search form of `app\models\LogsPriceAvail`.
  */
-class LogsPriceSearch extends LogsPrice
+class LogsPriceAvailSearch extends LogsPriceAvail
 {
     /**
      * @inheritdoc
@@ -19,7 +19,7 @@ class LogsPriceSearch extends LogsPrice
     {
         return [
             [['id', 'goods_id'], 'integer'],
-            [['log'], 'safe'],
+            [['price', 'availability'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class LogsPriceSearch extends LogsPrice
      */
     public function search($params)
     {
-        $query = LogsPrice::find()->orderBy(['id' => SORT_DESC]);
+        $query = LogsPriceAvail::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -63,7 +63,8 @@ class LogsPriceSearch extends LogsPrice
             'goods_id' => $this->goods_id,
         ]);
 
-        $query->andFilterWhere(['like', 'log', $this->log]);
+        $query->andFilterWhere(['like', 'price', $this->price])
+            ->andFilterWhere(['like', 'availability', $this->availability]);
 
         return $dataProvider;
     }

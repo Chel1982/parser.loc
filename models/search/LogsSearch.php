@@ -19,7 +19,7 @@ class LogsSearch extends Logs
     {
         return [
             [['id', 'goods_id'], 'integer'],
-            [['name', 'description', 'desc_add', 'image', 'price', 'manufactured', 'prod_attr'], 'safe'],
+            [['name', 'description', 'desc_add', 'image', 'price', 'manufactured', 'prod_attr', 'availability'], 'safe'],
         ];
     }
 
@@ -69,7 +69,8 @@ class LogsSearch extends Logs
             ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'price', $this->price])
             ->andFilterWhere(['like', 'manufactured', $this->manufactured])
-            ->andFilterWhere(['like', 'prod_attr', $this->prod_attr]);
+            ->andFilterWhere(['like', 'prod_attr', $this->prod_attr])
+            ->andFilterWhere(['like', 'prod_attr', $this->availability]);
 
         return $dataProvider;
     }

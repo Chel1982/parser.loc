@@ -5,22 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "logs_price".
+ * This is the model class for table "logs_price_avail".
  *
  * @property int $id
- * @property string $log
+ * @property string $price
+ * @property string $availability
  * @property int $goods_id
  *
  * @property Goods $goods
  */
-class LogsPrice extends \yii\db\ActiveRecord
+class LogsPriceAvail extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'logs_price';
+        return 'logs_price_avail';
     }
 
     /**
@@ -31,7 +32,7 @@ class LogsPrice extends \yii\db\ActiveRecord
         return [
             [['goods_id'], 'required'],
             [['goods_id'], 'integer'],
-            [['log'], 'string', 'max' => 45],
+            [['price', 'availability'], 'string', 'max' => 45],
             [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'id']],
         ];
     }
@@ -43,8 +44,9 @@ class LogsPrice extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'log' => 'Logs',
-            'goods_id' => 'ID товара',
+            'price' => 'Цена',
+            'availability' => 'Наличие',
+            'goods_id' => 'Goods ID',
         ];
     }
 
