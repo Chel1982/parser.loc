@@ -138,3 +138,9 @@ a.desc:after {
 .mark-up-goods-form select{
     width: 500px;
 }
+
+.image-goods{
+    max-width: 400px;
+    height: auto;
+}
+

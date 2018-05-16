@@ -60,7 +60,7 @@ use yii\widgets\ActiveForm;
     <div class="image_goods__items">
             <?php foreach ($model->images as $image): ?>
         <div class="image_goods">
-                <?= Html::img('@web/uploads/images/' . $model->id . '/' . $image->name, ['alt' => $image->name]); ?>
+                <?= Html::img('@web/uploads/images/' . $model->id . '/' . $image->name, ['alt' => $image->name, 'class' => 'image-goods']); ?>
                 <?= Html::a('Удалить', ['delete-image', 'id' => $model->id, 'idImage' => $image->id,'name' => $image->name], ['class' => 'btn btn-danger']) ?>
         </div>
             <?php endforeach; ?>

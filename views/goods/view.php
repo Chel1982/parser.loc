@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
         echo '<b> Изображение продукции </b> <br>';
     }
     foreach ($images as $image) {
-      echo  Html::img('@web/uploads/images/' . $model->id . '/' . $image['name'], ['alt' => $image['name']]);
+      echo  Html::img('@web/uploads/images/' . $model->id . '/' . $image['name'], ['alt' => $image['name'], 'class' => 'image-goods']);
       echo '  ';
     }
 
