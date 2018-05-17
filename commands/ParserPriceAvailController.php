@@ -50,13 +50,9 @@ class ParserPriceAvailController extends Controller
             $sites = Sites::findOne($idSite);
             $regPrice = Xpath::findOne(['sites_id' => $sites->id, 'name_regular_id' => 10]);
 
-
-
             if ($sites->usleep_stop != 0){
                 usleep(rand($sites->usleep_start * 1000000, $sites->usleep_stop * 1000000));
             }
-
-            echo "Scanning: " . $urlG['uri_goods'] . "\n";
 
             $spider = new Spider($urlG['uri_goods']);
 
@@ -241,8 +237,6 @@ class ParserPriceAvailController extends Controller
             $keyUrl = constant('CURLOPT_URL');
 
             $curl_arr[$keyUrl] = $urlG['uri_goods'];
-
-            echo "Scanning: " . $urlG['uri_goods'] . "\n";
 
             $data = $this->actionCurl($curl_arr, $urlG['id'] , $idSite);
 
