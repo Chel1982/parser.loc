@@ -27,23 +27,6 @@ class ParserCatPriceController extends Controller
 
     public function actionCurlSpider($idSite)
     {
-        $ch = curl_init();
-        curl_setopt ($ch, CURLOPT_URL, 'http://gastrorag.ru/dealers/cabinet/');
-
-// I changed UA here
-        curl_setopt ($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1');
-
-        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt ($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        $html = curl_exec($ch);
-
-// I added this
-        file_put_contents('test.txt', print_r($html, 1));die();
-        die();
-
         $regCat = Xpath::findOne(['sites_id' => $idSite, 'name_regular_id' => 1]);
         $sites = Sites::findOne($idSite);
 
