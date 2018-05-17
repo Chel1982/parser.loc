@@ -1381,8 +1381,6 @@ class ParserController extends Controller
                             if (stristr( $itemPage->value, 'img') or stristr($itemPage->value, '.pdf')  or stristr( $link, 'ru#')) {
                                 continue;
                             }
-
-
                             echo "Scanning: $link\n";
                             /**
                              * Создаем товар в БД
@@ -1499,8 +1497,6 @@ class ParserController extends Controller
                 array($politenessPolicyEventListener, 'onCrawlPreRequest')
             );
         }
-
-        $spider->getQueueManager()->maxQueueSize = 2;
 
         // Execute crawl
         $spider->crawl();
@@ -1764,15 +1760,15 @@ class ParserController extends Controller
     {
         if (Xpath::find()->where(['sites_id' => $sitesId, 'name_regular_id' => $xpathId])->exists()) {
 
-                $log = Logs::findOne(['goods_id' => $goodsId]);
-                $log->$row = $e->getMessage();
-                $log->save();
+            $log = Logs::findOne(['goods_id' => $goodsId]);
+            $log->$row = $e->getMessage();
+            $log->save();
 
         } else {
 
-                $log = Logs::findOne(['goods_id' => $goodsId]);
-                $log->$row = 'Не задано в XPath выражениях';
-                $log->save();
+            $log = Logs::findOne(['goods_id' => $goodsId]);
+            $log->$row = 'Не задано в XPath выражениях';
+            $log->save();
 
         }
     }
