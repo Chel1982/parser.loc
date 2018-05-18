@@ -1279,7 +1279,7 @@ class ParserController extends Controller
 
                     $marker[] = $item->value;
 
-                    if (!Goods::find()->where(['uri_goods' => $uriGoods])->exists()) {
+
 
                         $link = $baseUrl . $item->value;
 
@@ -1302,6 +1302,8 @@ class ParserController extends Controller
 
                         $data = $flag . '|-----|' . $link . '|-----|' . $data;
 
+                    if (!Goods::find()->where(['uri_goods' => $uriGoods])->exists()) {
+
                         $good = new Goods();
                         $good->uri_goods = $link;
                         $good->sites_id = $idSite;
@@ -1311,6 +1313,24 @@ class ParserController extends Controller
                         $log = new Logs();
                         $log->goods_id = $good->id;
                         $log->save();
+
+                        $this->queue->publish($data, 'analyze_name');
+
+                        $this->queue->publish($data, 'analyze_desc');
+
+                        $this->queue->publish($data, 'analyze_desc_add');
+
+                        $this->queue->publish($link, 'analyze_img');
+
+                        $this->queue->publish($data, 'analyze_price');
+
+                        $this->queue->publish($data, 'analyze_manufacturer');
+
+                        $this->queue->publish($data, 'analyze_prod_attr');
+
+                        $this->queue->publish($data, 'analyze_avail');
+
+                    }else{
 
                         $this->queue->publish($data, 'analyze_name');
 
@@ -1370,7 +1390,7 @@ class ParserController extends Controller
 
                         $uriGoodPage = $baseUrl . $itemPage->value;
 
-                        if (!Goods::find()->where(['uri_goods' => $uriGoodPage])->exists()) {
+
 
                             if (stristr( $itemPage->value, $baseUrl)) {
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
@@ -1400,6 +1420,7 @@ class ParserController extends Controller
 
                             $data = $flag . '|-----|' . $link . '|-----|' . $data;
 
+                        if (!Goods::find()->where(['uri_goods' => $uriGoodPage])->exists()) {
                             $good = new Goods();
                             $good->uri_goods = $link;
                             $good->sites_id = $idSite;
@@ -1409,6 +1430,24 @@ class ParserController extends Controller
                             $log = new Logs();
                             $log->goods_id = $good->id;
                             $log->save();
+
+                            $this->queue->publish($data, 'analyze_name');
+
+                            $this->queue->publish($data, 'analyze_desc');
+
+                            $this->queue->publish($data, 'analyze_desc_add');
+
+                            $this->queue->publish($link, 'analyze_img');
+
+                            $this->queue->publish($data, 'analyze_price');
+
+                            $this->queue->publish($data, 'analyze_manufacturer');
+
+                            $this->queue->publish($data, 'analyze_prod_attr');
+
+                            $this->queue->publish($data, 'analyze_avail');
+
+                        }else{
 
                             $this->queue->publish($data, 'analyze_name');
 
@@ -1564,8 +1603,6 @@ class ParserController extends Controller
 
                     $marker[] = $item->value;
 
-                    if (!Goods::find()->where(['uri_goods' => $uriGoods])->exists()) {
-
                         $link = $baseUrl . $item->value;
 
                         echo "Scanning: $link\n";
@@ -1593,6 +1630,14 @@ class ParserController extends Controller
 
                     $curl_arr[$keyUrl] = $link;
 
+                        $data = $this->actionCurl($curl_arr, NULL , $idSite);
+
+                        $data = serialize($data);
+
+                        $data = $flag . '|-----|' . $link . '|-----|' . $data;
+
+                    if (!Goods::find()->where(['uri_goods' => $uriGoods])->exists()) {
+
                         $good = new Goods();
                         $good->uri_goods = $link;
                         $good->sites_id = $idSite;
@@ -1603,12 +1648,6 @@ class ParserController extends Controller
                         $log->goods_id = $good->id;
                         $log->save();
 
-                        $data = $this->actionCurl($curl_arr, $good->id , $idSite);
-
-                        $data = serialize($data);
-
-                        $data = $flag . '|-----|' . $link . '|-----|' . $data;
-
                         $this->queue->publish($data, 'analyze_name');
 
                         $this->queue->publish($data, 'analyze_desc');
@@ -1618,6 +1657,24 @@ class ParserController extends Controller
                         $this->queue->publish($data, 'analyze_price');
 
                         $this->queue->publish($link, 'analyze_img');
+
+                        $this->queue->publish($data, 'analyze_manufacturer');
+
+                        $this->queue->publish($data, 'analyze_prod_attr');
+
+                        $this->queue->publish($data, 'analyze_avail');
+
+                    }else{
+
+                        $this->queue->publish($data, 'analyze_name');
+
+                        $this->queue->publish($data, 'analyze_desc');
+
+                        $this->queue->publish($data, 'analyze_desc_add');
+
+                        $this->queue->publish($link, 'analyze_img');
+
+                        $this->queue->publish($data, 'analyze_price');
 
                         $this->queue->publish($data, 'analyze_manufacturer');
 
@@ -1668,7 +1725,7 @@ class ParserController extends Controller
 
                         $uriGoodPage = $baseUrl . $itemPage->value;
 
-                        if (!Goods::find()->where(['uri_goods' => $uriGoodPage])->exists()) {
+
 
                             if (stristr( $itemPage->value, $baseUrl)) {
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
@@ -1704,6 +1761,14 @@ class ParserController extends Controller
 
                             $curl_arr[$keyUrl] = $link;
 
+                            $data = $this->actionCurl($curl_arr, NULL , $idSite);
+
+                            $data = serialize($data);
+
+                            $data = $flag . '|-----|' . $link . '|-----|' . $data;
+
+                        if (!Goods::find()->where(['uri_goods' => $uriGoodPage])->exists()) {
+
                             $good = new Goods();
                             $good->uri_goods = $link;
                             $good->sites_id = $idSite;
@@ -1714,11 +1779,23 @@ class ParserController extends Controller
                             $log->goods_id = $good->id;
                             $log->save();
 
-                            $data = $this->actionCurl($curl_arr, $good->id , $idSite);
+                            $this->queue->publish($data, 'analyze_name');
 
-                            $data = serialize($data);
+                            $this->queue->publish($data, 'analyze_desc');
 
-                            $data = $flag . '|-----|' . $link . '|-----|' . $data;
+                            $this->queue->publish($data, 'analyze_desc_add');
+
+                            $this->queue->publish($link, 'analyze_img');
+
+                            $this->queue->publish($data, 'analyze_price');
+
+                            $this->queue->publish($data, 'analyze_manufacturer');
+
+                            $this->queue->publish($data, 'analyze_prod_attr');
+
+                            $this->queue->publish($data, 'analyze_avail');
+
+                        }else{
 
                             $this->queue->publish($data, 'analyze_name');
 
