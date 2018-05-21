@@ -4,6 +4,20 @@ namespace app\models;
 
 use yii\db\ActiveRecord;
 use Yii;
+/**
+ * This is the model class for table "catalog".
+ *
+ * @property int $pid
+ * @property string $name
+ * @property string $text
+ * @property int $on_off
+ * @property int $in_case
+ * @property int $type
+ * @property int $parser_status
+ * @property int $price
+ * @property int $valuta
+ *
+ */
 
 class ProductsHolodbar extends ActiveRecord {
 
@@ -20,10 +34,20 @@ class ProductsHolodbar extends ActiveRecord {
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @inheritdoc
      */
-    public function getProductsMainGroups()
+    public function attributeLabels()
     {
-        return $this->hasMany(ProductsMainGroupsHolodbar::className(), ['pmgid' => 'pmgid']);
+        return [
+            'pid' => 'ID',
+            'name' => 'Название товара',
+            'text' => 'Описание товара',
+            'on_off' => 'Вкл/Выкл товара',
+            'in_case' => 'Наличие товара',
+            'type' => 'ID группы',
+            'price' => 'Цена товара',
+            'valuta' => 'Валюта',
+            'parser_status' => 'Статус парсера',
+        ];
     }
 }

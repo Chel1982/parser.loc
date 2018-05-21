@@ -2,6 +2,8 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$dbImkuh = require __DIR__ . '/db_imkuh.php';
+$dbHolodbar = require __DIR__ . '/db_holodbar.php';
 
 $config = [
     'id' => 'basic-console',
@@ -21,6 +23,8 @@ $config = [
             ],
         ],
         'db' => $db,
+        'dbImkuh' => $dbImkuh,
+        'dbHolodbar' => $dbHolodbar,
     ],
     'params' => $params,
     /*
