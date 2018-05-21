@@ -80,9 +80,9 @@ class SiteController extends Controller
                 $prodGrsIm = ProductGroupsImkuh::find()->select(['pgid','pmgid','name'])->asArray()->all();
                 $prodCatsIm = CategoriesImkuh::find()->select(['pgid','pmgid','name'])->asArray()->all();
 
-                $countImkus = count($prodGrsIm);
+                $countImkuh = count($prodGrsIm);
 
-                $resСompareImkuh['count'] = $countImkus;
+                $resСompareImkuh['count'] = $countImkuh;
 
                 $ch = 0;
 
@@ -155,9 +155,9 @@ class SiteController extends Controller
                 $prodGrsIm = ProductGroupsHolodbar::find()->select(['pgid','pmgid','name'])->asArray()->all();
                 $prodCatsIm = CategoriesHolodbar::find()->select(['pgid','pmgid','name'])->asArray()->all();
 
-                $countImkus = count($prodGrsIm);
+                $countHolodbar = count($prodGrsIm);
 
-                $resСompareHolodbar['count'] = $countImkus;
+                $resСompareHolodbar['count'] = $countHolodbar;
 
                 $ch = 0;
 
@@ -217,14 +217,12 @@ class SiteController extends Controller
                     }
                 }
 
-
                 return $this->render('index',[
                     'resСompareHolodbar' => $resСompareHolodbar
                 ]);
             }
 
             if (\Yii::$app->request->post('mark_up_price')){
-
 
                 $markUpPercent = MarkUpGoods::find()->where(['percent' => 1])->asArray()->all();
                 $markUpAbsolute = MarkUpGoods::find()->where(['absolute' => 1])->asArray()->all();
@@ -242,7 +240,7 @@ class SiteController extends Controller
                     $markPerFrom = $markPer['from_value'];
                     $markPerTo = $markPer['to_value'];
 
-                    $percent = $markPer['price_value'] / 250;
+                    $percent = $markPer['price_value'] / 100;
 
                     $goodsPer = Goods::find()
                                 ->where(['groups_id' => $markPer['groups_id']])
@@ -276,8 +274,8 @@ class SiteController extends Controller
                         ->with(['prices' => function($query) use ($markAbsFrom, $markAbsTo) {$query
                                                                     ->where(['>=', 'price', $markAbsFrom])
                                                                     ->andWhere(['<=', 'price', $markAbsTo]);}])
-                        ->asArray()
-                        ->all();
+                                                                    ->asArray()
+                                                                    ->all();
 
                     foreach ($goodsAbs as $goodsA){
 
@@ -304,9 +302,9 @@ class SiteController extends Controller
 
             if (\Yii::$app->request->post('double_goods_imkuh')){
 
-            $countProdsImkuh = ProductsImkuh::find()->count();
+            //$countProdsImkuh = ProductsImkuh::find()->count();
 
-            $countGoods = Goods::findAll();
+            //$countGoods = Goods::findAll();
 
             //$this->actionRecProdImkuh($count);
 
@@ -314,7 +312,7 @@ class SiteController extends Controller
 
             if (\Yii::$app->request->post('double_goods_holodbar')){
 
-                var_dump('holodbar');
+               // var_dump('holodbar');
 
             }
         }
