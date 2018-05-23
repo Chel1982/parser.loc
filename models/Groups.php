@@ -56,8 +56,8 @@ class Groups extends \yii\db\ActiveRecord
             'name' => 'Название группы',
             'created_at' => 'Дата создания',
             'url_group' => 'Url группы',
-            'categories_holodbar_id' => 'Категория Holodbar',
-            'categories_imkuh_id' => 'Категория Imkuh',
+            'categories_holodbar_id' => 'Группы товаров Holodbar',
+            'categories_imkuh_id' => 'Группы товаров Imkuh',
         ];
     }
 
