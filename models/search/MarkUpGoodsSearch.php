@@ -65,6 +65,8 @@ class MarkUpGoodsSearch extends MarkUpGoods
             'to_value' => $this->to_value,
             'categories_imkuh_id' => $this->categories_imkuh_id,
             'categories_holodbar_id' => $this->categories_holodbar_id,
+            'manufacturer_id_imkuh' => $this->manufacturer_id_imkuh,
+            'manufacturer_id_holodbar' => $this->manufacturer_id_holodbar,
         ]);
 
         $query->andFilterWhere(['like', 'percent', $this->percent])

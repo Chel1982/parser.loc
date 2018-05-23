@@ -41,8 +41,8 @@ class Groups extends \yii\db\ActiveRecord
             [['created_at'], 'safe'],
             [['categories_holodbar_id', 'categories_imkuh_id'], 'integer'],
             [['name', 'url_group'], 'string', 'max' => 255],
-            [['categories_holodbar_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoriesHolodbar::class, 'targetAttribute' => ['categories_holodbar_id' => 'id']],
-            [['categories_imkuh_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoriesImkuh::class, 'targetAttribute' => ['categories_imkuh_id' => 'id']],
+            [['categories_holodbar_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoriesHolodbar::class, 'targetAttribute' => ['categories_holodbar_id' => 'pgid']],
+            [['categories_imkuh_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoriesImkuh::class, 'targetAttribute' => ['categories_imkuh_id' => 'pgid']],
         ];
     }
 
@@ -74,7 +74,7 @@ class Groups extends \yii\db\ActiveRecord
      */
     public function getCategoriesHolodbar()
     {
-        return $this->hasOne(CategoriesHolodbar::class, ['id' => 'categories_holodbar_id']);
+        return $this->hasOne(CategoriesHolodbar::class, ['pgid' => 'categories_holodbar_id']);
     }
 
     /**
@@ -82,7 +82,7 @@ class Groups extends \yii\db\ActiveRecord
      */
     public function getCategoriesImkuh()
     {
-        return $this->hasOne(CategoriesImkuh::class, ['id' => 'categories_imkuh_id']);
+        return $this->hasOne(CategoriesImkuh::class, ['pgid' => 'categories_imkuh_id']);
     }
 
     /**

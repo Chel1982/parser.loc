@@ -27,9 +27,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'to_value')->textInput() ?>
 
-    <?= $form->field($model, 'categories_imkuh_id')->dropDownList(ArrayHelper::map(CategoriesImkuh::findAll(Groups::find()->where(['is not', 'categories_imkuh_id', NULL])->select('categories_imkuh_id')), 'pgid', 'name'), ['prompt' => 'Выберите группу Imkuh'])->label('Группа товаров Imkuh') ?>
+    <?= $form->field($model, 'categories_imkuh_id')->dropDownList(ArrayHelper::map(CategoriesImkuh::findAll(['pgid' => Groups::find()->where(['is not', 'categories_imkuh_id', NULL])->select('categories_imkuh_id')]), 'pgid', 'name'), ['prompt' => 'Выберите группу Imkuh'])->label('Группа товаров Imkuh') ?>
 
-    <?= $form->field($model, 'categories_holodbar_id')->dropDownList(ArrayHelper::map(CategoriesHolodbar::findAll(Groups::find()->where(['is not', 'categories_holodbar_id', NULL])->select('categories_holodbar_id')), 'pgid', 'name'), ['prompt' => 'Выберите группу Holodbar'])->label('Группа товаров Holodbar') ?>
+    <?= $form->field($model, 'categories_holodbar_id')->dropDownList(ArrayHelper::map(CategoriesHolodbar::findAll(['pgid' => Groups::find()->where(['is not', 'categories_holodbar_id', NULL])->select('categories_holodbar_id')]), 'pgid', 'name'), ['prompt' => 'Выберите группу Holodbar'])->label('Группа товаров Holodbar') ?>
 
     <?= $form->field($model, 'manufacturer_id_imkuh')->dropDownList(ArrayHelper::map(Manufacturer::find()->where(['imkuh' => 1])->all(), 'id', 'name'), ['prompt' => 'Выберите производителя для Imkuh'])->label('Производители для Imkuh') ?>
 

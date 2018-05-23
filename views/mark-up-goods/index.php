@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
 
                 },
-                'filter' => ArrayHelper::map(CategoriesImkuh::findAll(Groups::find()->where(['is not', 'categories_imkuh_id', NULL])->select('categories_imkuh_id')), 'pgid', 'name'),
+                'filter' => ArrayHelper::map(CategoriesImkuh::findAll(['pgid' => Groups::find()->where(['is not', 'categories_imkuh_id', NULL])->select('categories_imkuh_id')]), 'pgid', 'name'),
             ],
             [
                 'attribute' => 'categories_holodbar_id',
@@ -70,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
 
                 },
-                'filter' => ArrayHelper::map(CategoriesHolodbar::findAll(Groups::find()->where(['is not', 'categories_holodbar_id', NULL])->select('categories_holodbar_id')), 'pgid', 'name'),
+                'filter' => ArrayHelper::map(CategoriesHolodbar::findAll(['pgid' => Groups::find()->where(['is not', 'categories_holodbar_id', NULL])->select('categories_holodbar_id')]), 'pgid', 'name'),
             ],
             [
                 'attribute' => 'manufacturer_id_imkuh',
