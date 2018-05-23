@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\search\MarkUpGoods1111Search */
+/* @var $model app\models\search\ManufacturerSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="mark-up-goods-search">
+<div class="manufacturer-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -20,17 +20,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'percent') ?>
+    <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'absolute') ?>
+    <?= $form->field($model, 'sites_url') ?>
 
-    <?= $form->field($model, 'price_value') ?>
+    <?= $form->field($model, 'imkuh') ?>
 
-    <?= $form->field($model, 'from_value') ?>
-
-    <?php // echo $form->field($model, 'to_value') ?>
-
-    <?php // echo $form->field($model, 'groups_id') ?>
+    <?= $form->field($model, 'holodbar') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

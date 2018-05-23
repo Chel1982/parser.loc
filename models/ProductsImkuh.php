@@ -10,6 +10,7 @@ use Yii;
  * @property int $pid
  * @property string $name
  * @property string $text
+ * @property string $vendor
  * @property int $on_off
  * @property int $in_case
  * @property int $type
@@ -41,6 +42,7 @@ class ProductsImkuh extends ActiveRecord {
             'pid' => 'ID',
             'name' => 'Название товара',
             'text' => 'Описание товара',
+            'vendor' => 'Производитель товара',
             'on_off' => 'Вкл/Выкл товара',
             'in_case' => 'Наличие товара',
             'type' => 'ID группы',

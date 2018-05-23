@@ -33,9 +33,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'from_value',
             'to_value',
             [
+                'attribute' => 'manufacturer_id',
+                'value' => function ($model) {
+                    if(isset($model->manufacturer->name)){
+                        return $model->manufacturer->name;
+                    }else{
+                        return false;
+                    }
+                },
+            ],
+            [
                 'attribute' => 'groups_id',
                 'value' => function ($model) {
-                    return $model->groups->name;
+                    if (isset($model->groups->name)){
+                        return $model->groups->name;
+                    }else{
+                        return false;
+                    }
+
                 },
             ],
             'percent:boolean',

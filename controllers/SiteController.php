@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\CategoriesHolodbar;
 use app\models\CategoriesImkuh;
 use app\models\Goods;
+use app\models\ManufacturerHasGoods;
 use app\models\MarkUpGoods;
 use app\models\Price;
 use app\models\ProductGroupsHolodbar;
@@ -242,25 +243,22 @@ class SiteController extends Controller
 
                     $percent = $markPer['price_value'] / 100;
 
-                    $goodsPer = Goods::find()
-                                ->where(['groups_id' => $markPer['groups_id']])
-                                ->with(['prices' => function($query)  use ($markPerFrom, $markPerTo){$query
-                                    ->where(['>=', 'price', $markPerFrom])
-                                    ->andWhere(['<=', 'price', $markPerTo]);}])
-                                ->asArray()
-                                ->all();
+                    $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markPer['manufacturer_id']])->select('goods_id');
+
+                    $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('goods_id');
+
+                    $goodsPer = Goods::findAll($idPriceGoods);
 
                     foreach ($goodsPer as $goodsP){
-                        if ($goodsP['prices'] != null){
 
-                            $price = Price::findOne(['goods_id' => $goodsP['id']]);
-                            $price->mark_up_price = round($price->price * $percent + $price->price);
-                            $price->save();
+                        $price = Price::findOne(['goods_id' => $goodsP['id']]);
+                        $price->mark_up_price = round($price->price * $percent + $price->price);
+                        $price->save();
 
-                            $goods = Goods::findOne($goodsP['id']);
-                            $goods->updated_at = date('Y-m-d H:i:s' );
-                            $goods->save();
-                        }
+                        $goods = Goods::findOne($goodsP['id']);
+                        $goods->updated_at = date('Y-m-d H:i:s' );
+                        $goods->save();
+
                     }
                 }
 
@@ -269,17 +267,13 @@ class SiteController extends Controller
                     $markAbsFrom = $markAbs['from_value'];
                     $markAbsTo = $markAbs['to_value'];
 
-                    $goodsAbs = Goods::find()
-                        ->where(['groups_id' => $markAbs['groups_id']])
-                        ->with(['prices' => function($query) use ($markAbsFrom, $markAbsTo) {$query
-                                                                    ->where(['>=', 'price', $markAbsFrom])
-                                                                    ->andWhere(['<=', 'price', $markAbsTo]);}])
-                                                                    ->asArray()
-                                                                    ->all();
+                    $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markAbs['manufacturer_id']])->select('goods_id');
+
+                    $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('goods_id');
+
+                    $goodsAbs = Goods::findAll($idPriceGoods);
 
                     foreach ($goodsAbs as $goodsA){
-
-                        if ($goodsA['prices'] != null){
 
                             $priceAb = Price::findOne(['goods_id' => $goodsA['id']]);
                             $priceAb->mark_up_price = $priceAb->price + $markAbs['price_value'];
@@ -288,7 +282,7 @@ class SiteController extends Controller
                             $goodsAb = Goods::findOne($goodsA['id']);
                             $goodsAb->updated_at = date('Y-m-d H:i:s' );
                             $goodsAb->save();
-                        }
+
                     }
                 }
 

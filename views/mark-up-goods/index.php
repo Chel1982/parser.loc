@@ -1,6 +1,9 @@
 <?php
 
+use app\models\CategoriesHolodbar;
+use app\models\CategoriesImkuh;
 use app\models\Groups;
+use app\models\Manufacturer;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -46,14 +49,53 @@ $this->params['breadcrumbs'][] = $this->title;
             'from_value',
             'to_value',
             [
-                'attribute' => 'groups_id',
+                'attribute' => 'categories_imkuh_id',
                 'value' => function ($model) {
-                    return $model->groups->name;
+                    if(isset($model->categoriesImkuh->name)){
+                        return $model->categoriesImkuh->name;
+                    }else{
+                        return false;
+                    }
+
                 },
-                'filter' => ArrayHelper::map(Groups::find()->orderBy(['name' => SORT_ASC])->all(), 'id', 'name'),
+                'filter' => ArrayHelper::map(CategoriesImkuh::findAll(Groups::find()->where(['is not', 'categories_imkuh_id', NULL])->select('categories_imkuh_id')), 'pgid', 'name'),
             ],
-            //'percent:boolean',
-            //'absolute:boolean',
+            [
+                'attribute' => 'categories_holodbar_id',
+                'value' => function ($model) {
+                    if (isset($model->categoriesHolodbar->name)){
+                        return $model->categoriesHolodbar->name;
+                    }else{
+                        return false;
+                    }
+
+                },
+                'filter' => ArrayHelper::map(CategoriesHolodbar::findAll(Groups::find()->where(['is not', 'categories_holodbar_id', NULL])->select('categories_holodbar_id')), 'pgid', 'name'),
+            ],
+            [
+                'attribute' => 'manufacturer_id_imkuh',
+                'value' => function ($model) {
+                    if (isset($model->manufacturerIdImkuh->name)){
+                        return $model->manufacturerIdImkuh->name;
+                    }else{
+                        return false;
+                    }
+
+                },
+                'filter' => ArrayHelper::map(Manufacturer::find()->where(['imkuh' => 1])->all(), 'id', 'name'),
+            ],
+            [
+                'attribute' => 'manufacturer_id_holodbar',
+                'value' => function ($model) {
+                    if (isset($model->manufacturerIdHolodbar->name)){
+                        return $model->manufacturerIdHolodbar->name;
+                    }else{
+                        return false;
+                    }
+
+                },
+                'filter' => ArrayHelper::map(Manufacturer::find()->where(['holodbar' => 1])->all(), 'id', 'name'),
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

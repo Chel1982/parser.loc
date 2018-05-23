@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\MarkUpGoods;
+use app\models\Manufacturer;
 
 /**
- * MarkUpGoodsSearch represents the model behind the search form of `app\models\MarkUpGoods`.
+ * ManufacturerSearch represents the model behind the search form of `app\models\Manufacturer`.
  */
-class MarkUpGoodsSearch extends MarkUpGoods
+class ManufacturerSearch extends Manufacturer
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class MarkUpGoodsSearch extends MarkUpGoods
     public function rules()
     {
         return [
-            [['id', 'price_value', 'from_value', 'to_value', 'categories_imkuh_id', 'categories_holodbar_id', 'manufacturer_id_imkuh', 'manufacturer_id_holodbar'], 'integer'],
-            [['percent', 'absolute'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'sites_url', 'imkuh', 'holodbar'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class MarkUpGoodsSearch extends MarkUpGoods
      */
     public function search($params)
     {
-        $query = MarkUpGoods::find();
+        $query = Manufacturer::find();
 
         // add conditions that should always apply here
 
@@ -60,15 +60,12 @@ class MarkUpGoodsSearch extends MarkUpGoods
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'price_value' => $this->price_value,
-            'from_value' => $this->from_value,
-            'to_value' => $this->to_value,
-            'categories_imkuh_id' => $this->categories_imkuh_id,
-            'categories_holodbar_id' => $this->categories_holodbar_id,
         ]);
 
-        $query->andFilterWhere(['like', 'percent', $this->percent])
-            ->andFilterWhere(['like', 'absolute', $this->absolute]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'sites_url', $this->sites_url])
+            ->andFilterWhere(['like', 'imkuh', $this->imkuh])
+            ->andFilterWhere(['like', 'holodbar', $this->holodbar]);
 
         return $dataProvider;
     }

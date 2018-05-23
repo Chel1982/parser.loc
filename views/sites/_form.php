@@ -28,6 +28,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status_cat_price')->dropDownList([1 => 'Да', 0 => 'Нет']) ?>
 
+    <?= $form->field($model, 'status_manuf')->dropDownList([1 => 'Да', 0 => 'Нет']) ?>
+
     <?= $form->field($model, 'status')->dropDownList([1 => 'Да', 0 => 'Нет']) ?>
 
     <div class="form-group">

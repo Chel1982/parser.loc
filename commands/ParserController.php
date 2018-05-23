@@ -16,6 +16,7 @@ use app\models\Images;
 use app\models\Logs;
 use app\models\LogsCurl;
 use app\models\Manufacturer;
+use app\models\ManufacturerHasGoods;
 use app\models\Price;
 use app\models\ProductAttributes;
 use app\models\Sites;
@@ -818,65 +819,197 @@ class ParserController extends Controller
 
                 $data = unserialize($data);
 
-                $sites = Sites::find()->where(['id' => Goods::find()->select('sites_id')->where(['uri_goods' => $link])])->one();
+                $idGoods = Goods::find()->where(['uri_goods' => $link])->select('sites_id');
+
+                $sites = Sites::findOne($idGoods);
 
                 $regManuf = Xpath::findOne(['sites_id' => $sites->id, 'name_regular_id' => 11]);
 
+                $goods = Goods::findOne(['uri_goods' => $link]);
+
                 if($flag == 'spider'){
 
-                    foreach ($data as $resource){
-
+                    /*Проверяем есть проиводтель в таблице Sites*/
+                    if($sites->status_manuf == 1){
                         try {
 
-                        $manufacturer = $resource->getCrawler()->filterXpath($regManuf->regular)->text();
+                            /*Проверяем создан ли производтель в таблице Manufacturer*/
+                            if (Manufacturer::find()->where(['sites_url' => $sites->url])->exists()){
 
-                        $manufacturer = trim($manufacturer);
+                                $manufacturer = Manufacturer::findOne(['sites_url' => $sites->url]);
 
-                        $goods = Goods::findOne(['uri_goods' => $link]);
+                                $man = new ManufacturerHasGoods();
+                                $man->manufacturer_id = $manufacturer->id;
+                                $man->goods_id = $goods->id;
+                                $man->save();
 
-                        $man = new Manufacturer();
-                        $man->name = $manufacturer;
-                        $man->goods_id = $goods->id;
-                        $man->save();
+                                $this->actionLogsSuccess($goods->id, 'manufactured');
 
-                        $this->actionLogsSuccess($goods->id, 'manufactured');
+                            }else{
+
+                                $manufacturer = new Manufacturer();
+                                $manufacturer->name = $sites->name;
+                                $manufacturer->sites_url = $sites->url;
+                                $manufacturer->save();
+
+                                $man = new ManufacturerHasGoods();
+                                $man->manufacturer_id = $manufacturer->id;
+                                $man->goods_id = $goods->id;
+                                $man->save();
+
+                                $this->actionLogsSuccess($goods->id, 'manufactured');
+                            }
 
                         }catch (Exception $e) {
 
-                        $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
+                            $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
 
-                        $this->actionLogsFailed($goods->id, $goods->sites->id, 11, 'manufactured', $e);
+                            $this->actionLogsFailed($goods->id, $goods->sites->id, 11, 'manufactured', $e);
 
                         }
 
+                    }else{
+
+                        foreach ($data as $resource){
+
+                            try {
+
+                                $manufacturer = $resource->getCrawler()->filterXpath($regManuf->regular)->text();
+
+                                $manufacturer = trim($manufacturer);
+
+                                /*Если производитель есть*/
+                                if (Manufacturer::find()->where(['name' => $manufacturer])->exists()){
+
+                                    $manufacturer = Manufacturer::findOne(['name' => $manufacturer]);
+
+                                    $man = new ManufacturerHasGoods();
+                                    $man->manufacturer_id = $manufacturer->id;
+                                    $man->goods_id = $goods->id;
+                                    $man->save();
+
+                                }else{
+
+                                    /*Если производителя нет*/
+
+                                    $man = new Manufacturer();
+                                    $man->name = $manufacturer;
+                                    $man->sites_url = $sites->url;
+                                    $man->save();
+
+                                    $man = new ManufacturerHasGoods();
+                                    $man->manufacturer_id = $man->id;
+                                    $man->goods_id = $goods->id;
+                                    $man->save();
+
+                                    $this->actionLogsSuccess($goods->id, 'manufactured');
+                                }
+
+
+                            }catch (Exception $e) {
+
+                                $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
+
+                                $this->actionLogsFailed($goods->id, $goods->sites->id, 11, 'manufactured', $e);
+
+                            }
+
+                        }
                     }
 
                 }elseif($flag == 'curl'){
 
-                    try {
+                    if($sites->status_manuf == 1){
+                        if (Manufacturer::find()->where(['sites_url' => $sites->url])->exists()){
 
-                        $crawler = new Crawler($data);
+                            try {
 
-                        $manufacturer = $crawler->filterXPath($regManuf->regular)->text();
+                                /*Проверяем создан ли производтель в таблице Manufacturer*/
+                                if (Manufacturer::find()->where(['sites_url' => $sites->url])->exists()){
 
-                        $manufacturer = trim($manufacturer);
+                                    $manufacturer = Manufacturer::findOne(['sites_url' => $sites->url]);
 
-                        $goods = Goods::findOne(['uri_goods' => $link]);
+                                    $man = new ManufacturerHasGoods();
+                                    $man->manufacturer_id = $manufacturer->id;
+                                    $man->goods_id = $goods->id;
+                                    $man->save();
 
-                        $man = new Manufacturer();
-                        $man->name = $manufacturer;
-                        $man->goods_id = $goods->id;
-                        $man->save();
 
-                        $this->actionLogsSuccess($goods->id, 'manufactured');
+                                    $this->actionLogsSuccess($goods->id, 'manufactured');
 
-                    } catch (Exception $e) {
+                                }else{
 
-                        $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
+                                    $manufacturer = new Manufacturer();
+                                    $manufacturer->name = $sites->name;
+                                    $manufacturer->sites_url = $sites->url;
+                                    $manufacturer->save();
 
-                        $this->actionLogsFailed($goods->id, $goods->sites->id, 11, 'manufactured', $e);
+                                    $man = new ManufacturerHasGoods();
+                                    $man->manufacturer_id = $manufacturer->id;
+                                    $man->goods_id = $goods->id;
+                                    $man->save();
+
+                                    $this->actionLogsSuccess($goods->id, 'manufactured');
+                                }
+
+                            }catch (Exception $e) {
+
+                                $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
+
+                                $this->actionLogsFailed($goods->id, $goods->sites->id, 11, 'manufactured', $e);
+
+                            }
+
+                        }else{
+
+                            try {
+
+                                $crawler = new Crawler($data);
+
+                                $manufacturer = $crawler->filterXPath($regManuf->regular)->text();
+
+                                $manufacturer = trim($manufacturer);
+
+                                /*Если производитель есть*/
+                                if (Manufacturer::find()->where(['name' => $manufacturer])->exists()){
+
+                                    $manufacturer = Manufacturer::findOne(['name' => $manufacturer]);
+
+                                    $man = new ManufacturerHasGoods();
+                                    $man->manufacturer_id = $manufacturer->id;
+                                    $man->goods_id = $goods->id;
+                                    $man->save();
+
+                                    $this->actionLogsSuccess($goods->id, 'manufactured');
+
+                                }else{
+
+                                    /*Если производителя нет*/
+
+                                    $man = new Manufacturer();
+                                    $man->name = $manufacturer;
+                                    $man->sites_url = $sites->url;
+                                    $man->save();
+
+                                    $man = new ManufacturerHasGoods();
+                                    $man->manufacturer_id = $man->id;
+                                    $man->goods_id = $goods->id;
+                                    $man->save();
+
+                                    $this->actionLogsSuccess($goods->id, 'manufactured');
+                                }
+
+                            } catch (Exception $e) {
+
+                                $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
+
+                                $this->actionLogsFailed($goods->id, $goods->sites->id, 11, 'manufactured', $e);
+
+                            }
+                        }
 
                     }
+
                 }
 
                 $q->ack($page->getDeliveryTag());
@@ -1338,7 +1471,7 @@ class ParserController extends Controller
 
                         $this->queue->publish($data, 'analyze_desc_add');
 
-                        $this->queue->publish($link, 'analyze_img');
+                        //$this->queue->publish($link, 'analyze_img');
 
                         $this->queue->publish($data, 'analyze_price');
 
@@ -1455,7 +1588,7 @@ class ParserController extends Controller
 
                             $this->queue->publish($data, 'analyze_desc_add');
 
-                            $this->queue->publish($link, 'analyze_img');
+                         //   $this->queue->publish($link, 'analyze_img');
 
                             $this->queue->publish($data, 'analyze_price');
 
@@ -1672,7 +1805,7 @@ class ParserController extends Controller
 
                         $this->queue->publish($data, 'analyze_desc_add');
 
-                        $this->queue->publish($link, 'analyze_img');
+                     //   $this->queue->publish($link, 'analyze_img');
 
                         $this->queue->publish($data, 'analyze_price');
 
@@ -1803,7 +1936,7 @@ class ParserController extends Controller
 
                             $this->queue->publish($data, 'analyze_desc_add');
 
-                            $this->queue->publish($link, 'analyze_img');
+                       //     $this->queue->publish($link, 'analyze_img');
 
                             $this->queue->publish($data, 'analyze_price');
 

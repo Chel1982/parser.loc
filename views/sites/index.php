@@ -72,6 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'status_cat_price:boolean',
             'status_price:boolean',
+            'status_manuf:boolean',
             'status:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],

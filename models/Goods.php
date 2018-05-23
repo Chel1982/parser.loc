@@ -26,6 +26,7 @@ use Yii;
  * @property Sites $sites
  * @property Images[] $images
  * @property Logs[] $logs
+ * @property ManufacturerHasGoods[] $manufacturerHasGoods
  * @property Manufacturer[] $manufacturers
  * @property Price[] $prices
  * @property ProductAttributes[] $productAttributes
@@ -129,9 +130,17 @@ class Goods extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getManufacturerHasGoods()
+    {
+        return $this->hasMany(ManufacturerHasGoods::class, ['goods_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getManufacturers()
     {
-        return $this->hasOne(Manufacturer::class, ['goods_id' => 'id']);
+        return $this->hasOne(Manufacturer::class, ['id' => 'manufacturer_id'])->viaTable('manufacturer_has_goods', ['goods_id' => 'id']);
     }
 
     /**

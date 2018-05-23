@@ -9,9 +9,13 @@ use Yii;
  *
  * @property int $id
  * @property string $name
- * @property int $goods_id
+ * @property string $sites_url
+ * @property int $imkuh
+ * @property int $holodbar
  *
- * @property Goods $goods
+ * @property ManufacturerHasGoods[] $manufacturerHasGoods
+ * @property Goods[] $goods
+ * @property MarkUpGoods[] $markUpGoods
  */
 class Manufacturer extends \yii\db\ActiveRecord
 {
@@ -29,10 +33,9 @@ class Manufacturer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['goods_id'], 'required'],
-            [['goods_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'id']],
+            [['sites_url'], 'string', 'max' => 45],
+            [['imkuh', 'holodbar'], 'string', 'max' => 1],
         ];
     }
 
@@ -44,8 +47,18 @@ class Manufacturer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Производитель',
-            'goods_id' => 'Goods ID',
+            'sites_url' => 'Базовый url',
+            'imkuh' => 'Imkuh',
+            'holodbar' => 'Holodbar',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getManufacturerHasGoods()
+    {
+        return $this->hasMany(ManufacturerHasGoods::class, ['manufacturer_id' => 'id']);
     }
 
     /**
@@ -53,6 +66,14 @@ class Manufacturer extends \yii\db\ActiveRecord
      */
     public function getGoods()
     {
-        return $this->hasOne(Goods::className(), ['id' => 'goods_id']);
+        return $this->hasMany(Goods::class, ['id' => 'goods_id'])->viaTable('manufacturer_has_goods', ['manufacturer_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMarkUpGoods()
+    {
+        return $this->hasOne(MarkUpGoods::class, ['manufacturer_id' => 'id']);
     }
 }

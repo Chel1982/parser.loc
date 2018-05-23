@@ -19,7 +19,7 @@ class SitesSearch extends Sites
     {
         return [
             [['id', 'delay_parsing', 'usleep_start', 'usleep_stop'], 'integer'],
-            [['name', 'url', 'down_url', 'status', 'status_price', 'status_cat_price'], 'safe'],
+            [['name', 'url', 'down_url', 'status', 'status_price', 'status_cat_price', 'status_manuf'], 'safe'],
         ];
     }
 
@@ -70,6 +70,7 @@ class SitesSearch extends Sites
             ->andFilterWhere(['like', 'down_url', $this->down_url])
             ->andFilterWhere(['like', 'status_price', $this->status_price])
             ->andFilterWhere(['like', 'status_cat_price', $this->status_cat_price])
+            ->andFilterWhere(['like', 'status_manuf', $this->status_manuf])
             ->andFilterWhere(['like', 'status', $this->status]);
 
         return $dataProvider;
