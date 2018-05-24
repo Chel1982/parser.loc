@@ -18,23 +18,17 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?php
-
-    $params = [
-        'prompt' => 'Выберите сайт...'
-    ];
-
-    ?>
-
     <?= $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'name_goods') ?>
 
     <?= $form->field($model, 'uri_goods') ?>
 
-    <?php  echo $form->field($model, 'sites_id')->dropDownList(ArrayHelper::map(Sites::find()->all(),'id','name'), $params) ?>
+    <?= $form->field($model, 'sites_id')->dropDownList(ArrayHelper::map(Sites::find()->all(),'id','name'), ['prompt' => 'Выберите сайт...']) ?>
 
-    <?php  echo $form->field($model, 'groups_name') ?>
+    <?= $form->field($model, 'groups_name') ?>
+
+    <?= $form->field($model, 'manufacturers_name') ?>
 
     <?= DatePicker::widget([
         'model' => $model,

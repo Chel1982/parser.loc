@@ -15,6 +15,7 @@ use Yii;
  * @property string $from_date
  * @property string $to_date
  * @property string $groups_name
+ * @property string $manufacturers_name
  * @property int $sites_id
  * @property int $groups_id
  * @property int $duplicate_imkuh
@@ -36,6 +37,7 @@ class Goods extends \yii\db\ActiveRecord
     public $from_date;
     public $to_date;
     public $groups_name;
+    public $manufacturers_name;
 
     /**
      * @inheritdoc
@@ -76,6 +78,7 @@ class Goods extends \yii\db\ActiveRecord
             'sites_id' => 'Название сайта товара',
             'groups_id' => 'Название группы',
             'groups_name' => 'Название группы товара',
+            'manufacturers_name' => 'Название производителя товара',
         ];
     }
 
