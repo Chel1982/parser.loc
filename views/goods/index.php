@@ -1,12 +1,8 @@
 <?php
 
-use app\models\Groups;
-use app\models\Sites;
 use kartik\export\ExportMenu;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\helpers\StringHelper;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -72,6 +68,24 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]
                     );
                 }
+            ],
+            [
+                'attribute' => 'prices.price',
+                'value' => function ($model) {
+                    if (isset($model->prices->price)){
+                        return $model->prices->price . ' ' . $model->prices->currency->name;
+                    }
+                    return '';
+                },
+            ],
+            [
+                'attribute' => 'prices.mark_up_price',
+                'value' => function ($model) {
+                    if (isset($model->prices->mark_up_price)){
+                        return $model->prices->mark_up_price . ' ' . $model->prices->currency->name;
+                    }
+                    return '';
+                },
             ],
             [
                 'attribute' => 'sites_id',
