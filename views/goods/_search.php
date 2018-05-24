@@ -30,6 +30,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'manufacturers_name') ?>
 
+    <?= $form->field($model, 'price_from') ?>
+
+    <?= $form->field($model, 'price_to') ?>
+
     <?= DatePicker::widget([
         'model' => $model,
         'attribute' => 'from_date',

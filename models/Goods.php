@@ -17,6 +17,8 @@ use Yii;
  * @property string $groups_name
  * @property string $manufacturers_name
  * @property int $sites_id
+ * @property int $price_from
+ * @property int $price_to
  * @property int $groups_id
  * @property int $duplicate_imkuh
  * @property int $duplicate_holodbar
@@ -38,6 +40,8 @@ class Goods extends \yii\db\ActiveRecord
     public $to_date;
     public $groups_name;
     public $manufacturers_name;
+    public $price_from;
+    public $price_to;
 
     /**
      * @inheritdoc
@@ -79,6 +83,8 @@ class Goods extends \yii\db\ActiveRecord
             'groups_id' => 'Название группы',
             'groups_name' => 'Название группы товара',
             'manufacturers_name' => 'Название производителя товара',
+            'price_from' => 'Цена товара (от)',
+            'price_to' => 'Цена товара (до)',
         ];
     }
 
