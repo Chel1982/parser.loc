@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Availability;
 use app\models\CategoriesHolodbar;
 use app\models\CategoriesImkuh;
 use app\models\Goods;
+use app\models\Groups;
 use app\models\ManufacturerHasGoods;
 use app\models\MarkUpGoods;
 use app\models\Price;
@@ -236,6 +238,7 @@ class SiteController extends Controller
                     ]);
                 }
 
+                /* Делаем процентную наценку */
                 foreach ($markUpPercent as $markPer) {
 
                     $markPerFrom = $markPer['from_value'];
@@ -243,46 +246,207 @@ class SiteController extends Controller
 
                     $percent = $markPer['price_value'] / 100;
 
-                    $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markPer['manufacturer_id']])->select('goods_id');
+                    /* Наценка на группы товаров Imkih */
+                    if (isset($markPer['categories_imkuh_id'])) {
 
-                    $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('goods_id');
+                        /* Выбираем товары из групп */
 
-                    $goodsPer = Goods::findAll($idPriceGoods);
+                        $idGroups = Groups::find()->where(['categories_imkuh_id' => $markPer['categories_imkuh_id']])->select('id');
+                        $idGoods = Goods::find()->where(['groups_id' => $idGroups])->select('id');
 
-                    foreach ($goodsPer as $goodsP){
+                        /* Ищем товары в диапозоне цен */
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoods])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('goods_id');
 
-                        $price = Price::findOne(['goods_id' => $goodsP['id']]);
-                        $price->mark_up_price = round($price->price * $percent + $price->price);
-                        $price->save();
+                        $goodsPer = Goods::findAll($idPriceGoods);
+                        /* Делаем наценку на товар */
+                        foreach ($goodsPer as $goodsP) {
 
-                        $goods = Goods::findOne($goodsP['id']);
-                        $goods->updated_at = date('Y-m-d H:i:s' );
-                        $goods->save();
+                            $price = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $price->mark_up_price = round($price->price * $percent + $price->price);
+                            $price->save();
 
+                            $goods = Goods::findOne($goodsP['id']);
+                            $goods->updated_at = date('Y-m-d H:i:s');
+                            $goods->save();
+
+                        }
+                    }
+
+                    /* Наценка на группы товаров Holodbar */
+                    if (isset($markPer['categories_holodbar_id'])) {
+
+                        /* Выбираем товары из групп */
+
+                        $idGroups = Groups::find()->where(['categories_holodbar_id' => $markPer['categories_holodbar_id']])->select('id');
+                        $idGoods = Goods::find()->where(['groups_id' => $idGroups])->select('id');
+
+                        /* Ищем товары в диапозоне цен */
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoods])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('goods_id');
+
+                        $goodsPer = Goods::findAll($idPriceGoods);
+                        /* Делаем наценку на товар */
+                        foreach ($goodsPer as $goodsP) {
+
+                            $price = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $price->mark_up_price = round($price->price * $percent + $price->price);
+                            $price->save();
+
+                            $goods = Goods::findOne($goodsP['id']);
+                            $goods->updated_at = date('Y-m-d H:i:s');
+                            $goods->save();
+
+                        }
+                    }
+
+                    /* Наценка на производителя для Imkuh */
+                    if (isset($markPer['manufacturer_id_imkuh'])) {
+
+                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markPer['manufacturer_id_imkuh']])->select('goods_id');
+
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('goods_id');
+
+                        $goodsPer = Goods::findAll($idPriceGoods);
+
+                        foreach ($goodsPer as $goodsP) {
+
+                            $price = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $price->mark_up_price = round($price->price * $percent + $price->price);
+                            $price->save();
+
+                            $goods = Goods::findOne($goodsP['id']);
+                            $goods->updated_at = date('Y-m-d H:i:s');
+                            $goods->save();
+
+                        }
+
+                    }
+
+                    /* Наценка на производителя для Holidbar */
+                    if (isset($markPer['manufacturer_id_holodbar'])) {
+
+                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markPer['manufacturer_id_holodbar']])->select('goods_id');
+
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('goods_id');
+
+                        $goodsPer = Goods::findAll($idPriceGoods);
+
+                        foreach ($goodsPer as $goodsP) {
+
+                            $price = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $price->mark_up_price = round($price->price * $percent + $price->price);
+                            $price->save();
+
+                            $goods = Goods::findOne($goodsP['id']);
+                            $goods->updated_at = date('Y-m-d H:i:s');
+                            $goods->save();
+
+                        }
                     }
                 }
 
+                /* Делаем наценку абсолюной величины */
                 foreach ($markUpAbsolute as $markAbs) {
 
                     $markAbsFrom = $markAbs['from_value'];
                     $markAbsTo = $markAbs['to_value'];
 
-                    $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markAbs['manufacturer_id']])->select('goods_id');
+                    /* Наценка на группы товаров Imkih */
+                    if (isset($markAbs['categories_imkuh_id'])) {
 
-                    $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('goods_id');
+                        /* Выбираем товары из групп */
 
-                    $goodsAbs = Goods::findAll($idPriceGoods);
+                        $idGroups = Groups::find()->where(['categories_imkuh_id' => $markAbs['categories_imkuh_id']])->select('id');
+                        $idGoods = Goods::find()->where(['groups_id' => $idGroups])->select('id');
 
-                    foreach ($goodsAbs as $goodsA){
+                        /* Ищем товары в диапозоне цен */
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoods])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('goods_id');
 
-                            $priceAb = Price::findOne(['goods_id' => $goodsA['id']]);
+                        $goodsPer = Goods::findAll($idPriceGoods);
+
+                        /* Делаем наценку на товар */
+                        foreach ($goodsPer as $goodsP) {
+
+                            $priceAb = Price::findOne(['goods_id' => $goodsP['id']]);
                             $priceAb->mark_up_price = $priceAb->price + $markAbs['price_value'];
                             $priceAb->save();
 
-                            $goodsAb = Goods::findOne($goodsA['id']);
+                            $goodsAb = Goods::findOne($goodsP['id']);
                             $goodsAb->updated_at = date('Y-m-d H:i:s' );
                             $goodsAb->save();
 
+                        }
+                    }
+
+                    /* Наценка на группы товаров Holodbar */
+                    if (isset($markAbs['categories_holodbar_id'])) {
+
+                        /* Выбираем товары из групп */
+
+                        $idGroups = Groups::find()->where(['categories_holodbar_id' => $markAbs['categories_holodbar_id']])->select('id');
+                        $idGoods = Goods::find()->where(['groups_id' => $idGroups])->select('id');
+
+                        /* Ищем товары в диапозоне цен */
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoods])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('goods_id');
+
+                        $goodsPer = Goods::findAll($idPriceGoods);
+
+                        /* Делаем наценку на товар */
+                        foreach ($goodsPer as $goodsP) {
+
+                            $priceAb = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $priceAb->mark_up_price = $priceAb->price + $markAbs['price_value'];
+                            $priceAb->save();
+
+                            $goodsAb = Goods::findOne($goodsP['id']);
+                            $goodsAb->updated_at = date('Y-m-d H:i:s' );
+                            $goodsAb->save();
+
+                        }
+                    }
+
+                    /* Наценка на производителя для Imkuh */
+                    if (isset($markAbs['manufacturer_id_imkuh'])) {
+
+                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markAbs['manufacturer_id_imkuh']])->select('goods_id');
+
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('goods_id');
+
+                        $goodsPer = Goods::findAll($idPriceGoods);
+
+                        foreach ($goodsPer as $goodsP) {
+
+                            $priceAb = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $priceAb->mark_up_price = $priceAb->price + $markAbs['price_value'];
+                            $priceAb->save();
+
+                            $goodsAb = Goods::findOne($goodsP['id']);
+                            $goodsAb->updated_at = date('Y-m-d H:i:s' );
+                            $goodsAb->save();
+
+                        }
+
+                    }
+
+                    /* Наценка на производителя для Holodbar */
+                    if (isset($markAbs['manufacturer_id_holodbar'])) {
+
+                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markAbs['manufacturer_id_holodbar']])->select('goods_id');
+
+                        $idPriceGoods = Price::find()->where(['goods_id' => $idGoodsMan])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('goods_id');
+
+                        $goodsPer = Goods::findAll($idPriceGoods);
+
+                        foreach ($goodsPer as $goodsP) {
+
+                            $priceAb = Price::findOne(['goods_id' => $goodsP['id']]);
+                            $priceAb->mark_up_price = $priceAb->price + $markAbs['price_value'];
+                            $priceAb->save();
+
+                            $goodsAb = Goods::findOne($goodsP['id']);
+                            $goodsAb->updated_at = date('Y-m-d H:i:s' );
+                            $goodsAb->save();
+
+                        }
                     }
                 }
 
