@@ -38,13 +38,25 @@ AppAsset::register($this);
 
     <?php ActiveForm::begin(); ?>
 
-    <div class="form-group" style="margin-left: 10px">
+        <div class="form-group" style="margin-left: 10px">
 
-        <?= Html::input('hidden','mark_up_price','0') ?>
+            <?= Html::input('hidden','mark_up_price','0') ?>
 
-        <?= Html::submitButton('Применить все наценки', ['class' => 'btn btn-success mark_up_price']) ?>
+            <?= Html::submitButton('Применить все наценки', ['class' => 'btn btn-success mark_up_price']) ?>
 
-    </div>
+        </div>
+
+    <?php ActiveForm::end(); ?>
+
+    <?php ActiveForm::begin(); ?>
+
+        <div class="form-group" style="margin-left: 10px">
+
+            <?= Html::input('hidden','export','0') ?>
+
+            <?= Html::submitButton('Применить экспорт', ['class' => 'btn btn-success export']) ?>
+
+        </div>
 
     <?php ActiveForm::end(); ?>
 </div>

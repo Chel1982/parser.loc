@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'descriptions.main',
             'descriptions.additional',
             'images.name',
-            'prices.price',
+            'price',
             'manufacturers.name',
             'productAttributes.content',
             'created_at',
@@ -70,19 +70,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'prices.price',
+                'attribute' => 'price',
                 'value' => function ($model) {
-                    if (isset($model->prices->price)){
-                        return $model->prices->price . ' ' . $model->prices->currency->name;
+                    if (isset($model->price)){
+                        return $model->price . ' ' . $model->currency;
                     }
                     return '';
                 },
             ],
             [
-                'attribute' => 'prices.mark_up_price',
+                'attribute' => 'mark_up_price',
                 'value' => function ($model) {
-                    if (isset($model->prices->mark_up_price)){
-                        return $model->prices->mark_up_price . ' ' . $model->prices->currency->name;
+                    if (isset($model->mark_up_price)){
+                        return $model->mark_up_price . ' ' . $model->currency;
                     }
                     return '';
                 },

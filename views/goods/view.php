@@ -57,25 +57,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
             ],
             [
-                'attribute' => 'prices.price',
+                'attribute' => 'price',
                 'format' => 'raw',
                 'value' => function($data){
-                     if(isset($data->prices->price) && $data->prices->currency_id == 1){
-                         return $data->prices->price . ' RUB';
-                     }elseif (isset($data->prices->price) && $data->prices->currency_id == 2){
-                         return $data->prices->price . ' EUR';
-                     }
+                    if(isset($data->price) && $data->currency == 'RUB'){
+                        return $data->price . ' RUB';
+                    }elseif (isset($data->price) && $data->currency == 'EUR'){
+                        return $data->price . ' EUR';
+                    }
                     return false;
                 }
             ],
             [
-                'attribute' => 'prices.mark_up_price',
+                'attribute' => 'mark_up_price',
                 'format' => 'raw',
                 'value' => function($data){
-                    if(isset($data->prices->mark_up_price) && $data->prices->currency_id == 1){
-                        return $data->prices->mark_up_price . ' RUB';
-                    }elseif (isset($data->prices->mark_up_price) && $data->prices->currency_id == 2){
-                        return $data->prices->mark_up_price . ' EUR';
+                    if(isset($data->mark_up_price) && $data->currency == 'RUB'){
+                        return $data->mark_up_price . ' RUB';
+                    }elseif (isset($data->mark_up_price) && $data->currency == 'EUR'){
+                        return $data->mark_up_price . ' EUR';
                     }
                     return false;
                 }
@@ -85,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'productAttributes.content',
                 'format' => 'raw',
             ],
-            'availabilities.availability:boolean',
+            'availability:boolean',
         ],
     ]);
 
@@ -95,8 +95,8 @@ $this->params['breadcrumbs'][] = $this->title;
         echo '<b> Изображение продукции </b> <br>';
     }
     foreach ($images as $image) {
-      echo  Html::img('@web/uploads/images/' . $model->id . '/' . $image['name'], ['alt' => $image['name'], 'class' => 'image-goods']);
-      echo '  ';
+        echo  Html::img('@web/uploads/images/' . $model->id . '/' . $image['name'], ['alt' => $image['name'], 'class' => 'image-goods']);
+        echo '  ';
     }
 
     ?>

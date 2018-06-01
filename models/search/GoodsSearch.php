@@ -41,7 +41,7 @@ class GoodsSearch extends Goods
      */
     public function search($params)
     {
-        $query = Goods::find()->orderBy(['id' => SORT_DESC])->joinWith(['groups', 'manufacturers', 'prices']);
+        $query = Goods::find()->orderBy(['id' => SORT_DESC])->joinWith(['groups', 'manufacturers']);
 
         // add conditions that should always apply here
 
@@ -62,7 +62,7 @@ class GoodsSearch extends Goods
             ->andFilterWhere(['like', 'name_goods', $this->name_goods])
             ->andFilterWhere(['like', 'uri_goods', $this->uri_goods])
             ->andFilterWhere(['between','goods.created_at', $this->from_date, $this->to_date])
-            ->andFilterWhere(['between','price.price', $this->price_from, $this->price_to])
+            ->andFilterWhere(['between','price', $this->price_from, $this->price_to])
             ->andFilterWhere(['like','groups.name', $this->groups_name])
             ->andFilterWhere(['like','manufacturer.name', $this->manufacturers_name])
             ->andFilterWhere(['=','sites_id', $this->sites_id]);

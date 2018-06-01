@@ -10,20 +10,15 @@ use Yii;
  * @property int $id
  * @property string $name_goods
  * @property string $uri_goods
+ * @property double $price
+ * @property double $mark_up_price
+ * @property string $currency
+ * @property int $availability
+ * @property int $groups_id
+ * @property int $sites_id
  * @property string $created_at
  * @property string $updated_at
- * @property string $from_date
- * @property string $to_date
- * @property string $groups_name
- * @property string $manufacturers_name
- * @property int $sites_id
- * @property int $price_from
- * @property int $price_to
- * @property int $groups_id
- * @property int $duplicate_imkuh
- * @property int $duplicate_holodbar
  *
- * @property Availability[] $availabilities
  * @property Description[] $descriptions
  * @property Groups $groups
  * @property Sites $sites
@@ -31,7 +26,6 @@ use Yii;
  * @property Logs[] $logs
  * @property ManufacturerHasGoods[] $manufacturerHasGoods
  * @property Manufacturer[] $manufacturers
- * @property Price[] $prices
  * @property ProductAttributes[] $productAttributes
  */
 class Goods extends \yii\db\ActiveRecord
@@ -57,11 +51,13 @@ class Goods extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['price', 'mark_up_price'], 'number'],
+            [['groups_id', 'sites_id'], 'required'],
+            [['groups_id', 'sites_id', 'availability'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['sites_id', 'groups_id'], 'required'],
-            [['sites_id', 'groups_id', 'duplicate_imkuh', 'duplicate_holodbar'], 'integer'],
-            [['duplicate_imkuh', 'duplicate_holodbar'], 'integer', 'max' => 1],
             [['name_goods', 'uri_goods'], 'string', 'max' => 255],
+            [['currency'], 'string', 'max' => 45],
+            //[['availability'], 'string', 'max' => 1],
             [['uri_goods'], 'unique'],
             [['groups_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::class, 'targetAttribute' => ['groups_id' => 'id']],
             [['sites_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sites::class, 'targetAttribute' => ['sites_id' => 'id']],
@@ -85,16 +81,13 @@ class Goods extends \yii\db\ActiveRecord
             'manufacturers_name' => 'Название производителя товара',
             'price_from' => 'Цена товара (от)',
             'price_to' => 'Цена товара (до)',
+            'price' => 'Цена',
+            'mark_up_price' => 'Наценка',
+            'currency' => 'Валюта',
+            'availability' => 'Наличие',
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAvailabilities()
-    {
-        return $this->hasOne(Availability::class, ['goods_id' => 'id']);
-    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -152,13 +145,6 @@ class Goods extends \yii\db\ActiveRecord
         return $this->hasOne(Manufacturer::class, ['id' => 'manufacturer_id'])->viaTable('manufacturer_has_goods', ['goods_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPrices()
-    {
-        return $this->hasOne(Price::class, ['goods_id' => 'id']);
-    }
 
     /**
      * @return \yii\db\ActiveQuery

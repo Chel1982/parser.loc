@@ -22,7 +22,7 @@ class GoodsController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -69,17 +69,12 @@ class GoodsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-//var_dump(Yii::$app->request->post());die();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
             if (Yii::$app->request->post('Description') !== null){
                 $model->descriptions->load(Yii::$app->request->post());
                 $model->descriptions->save();
-            }
-
-            if (Yii::$app->request->post('Price') !== null){
-                $model->prices->load(Yii::$app->request->post());
-                $model->prices->save();
             }
 
             if (Yii::$app->request->post('Manufacturer') !== null){
@@ -91,10 +86,7 @@ class GoodsController extends Controller
                 $model->productAttributes->load(Yii::$app->request->post());
                 $model->productAttributes->save();
             }
-            if (Yii::$app->request->post('Availability') !== null){
-                $model->availabilities->load(Yii::$app->request->post());
-                $model->availabilities->save();
-            }
+
             return $this->redirect(['index']);
         }
 

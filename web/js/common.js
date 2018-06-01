@@ -6,6 +6,10 @@ $('.btn btn-success, .holodbar').on('click', function (e) {
     $("input[name='holodbar']").val(1);
 });
 
+$('.btn btn-success, .export').on('click', function (e) {
+    $("input[name='export']").val(1);
+});
+
 $('.btn btn-success, .mark_up_price').on('click', function (e) {
     $("input[name='mark_up_price']").val(1);
 });

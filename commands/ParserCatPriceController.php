@@ -16,7 +16,7 @@ class ParserCatPriceController extends Controller
     public function actionInit()
     {
 
-        $sites = Sites::find()->where(['status_cat_price' => 1])->asArray()->all();
+        $sites = Sites::find()->where(['id' => 21])->asArray()->all();
 
         foreach ($sites as $site) {
 
@@ -31,7 +31,7 @@ class ParserCatPriceController extends Controller
         $sites = Sites::findOne($idSite);
 
         /* Производим запись кууков, что бы в дальнейшем не аутентифицироваться каждый раз в деманах */
-        if (Sites::find()->where(['id' => $idSite,'status_cat_price' => 1])->exists()) {
+        if (Sites::find()->where(['id' => $idSite])->exists()) {
 
             $params = CurlAuth::find()->where(['sites_id' => $idSite])->asArray()->all();
 
@@ -61,6 +61,7 @@ class ParserCatPriceController extends Controller
 
                 }
             }
+
             $this->actionCurl($curl_arr,null, $idSite);
         }
 

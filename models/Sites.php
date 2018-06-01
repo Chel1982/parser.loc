@@ -62,7 +62,7 @@ class Sites extends \yii\db\ActiveRecord
             'status_price' => 'Пров.цены и нал.',
             'usleep_start' => 'Нач.задер.парсинга, сек',
             'usleep_stop' => 'Кон.задер.парсинга, сек',
-            'status_cat_price' => 'Парс.кат.',
+            'status_cat_price' => 'Провер.кат.',
             'status_manuf' => 'Сайт произв.',
         ];
     }
