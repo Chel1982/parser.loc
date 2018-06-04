@@ -98,7 +98,7 @@ class Groups extends \yii\db\ActiveRecord
         $parents = ProductsMainGroupsHolodbar::find()->asArray()->all();
 
         foreach($parents as $id => $p) {
-            $children = ProductGroupsHolodbar::find()->where(['pmgid' => $p['pmgid']])->asArray()->all();
+            $children = ProductGroupsHolodbar::find()->where(['pmgid' => $p['pmgid']])->orderBy(['name' => SORT_ASC])->asArray()->all();
             $child_options = [];
             foreach($children as $child) {
                 $child_options[$child['pgid']] = $child['name'];
@@ -113,7 +113,7 @@ class Groups extends \yii\db\ActiveRecord
         $parents = ProductsMainGroupsImkuh::find()->asArray()->all();
 
         foreach($parents as $id => $p) {
-            $children = ProductGroupsImkuh::find()->where(['pmgid' => $p['pmgid']])->asArray()->all();
+            $children = ProductGroupsImkuh::find()->where(['pmgid' => $p['pmgid']])->orderBy(['name' => SORT_ASC])->asArray()->all();
             $child_options = [];
             foreach($children as $child) {
                 $child_options[$child['pgid']] = $child['name'];
