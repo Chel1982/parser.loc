@@ -721,6 +721,7 @@ class ParserController extends Controller
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
                         $goods->price = $price;
+                        $goods->currency = 'RUB';
                         $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');
@@ -749,6 +750,7 @@ class ParserController extends Controller
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
                         $goods->price = $price;
+                        $goods->currency = 'RUB';
                         $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');
