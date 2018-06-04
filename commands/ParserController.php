@@ -6,7 +6,6 @@ use AMQPChannel;
 use AMQPConnection;
 use AMQPExchange;
 use AMQPQueue;
-use app\models\Availability;
 use app\models\Curl;
 use app\models\CurlAuth;
 use app\models\Description;
@@ -17,7 +16,6 @@ use app\models\Logs;
 use app\models\LogsCurl;
 use app\models\Manufacturer;
 use app\models\ManufacturerHasGoods;
-use app\models\Price;
 use app\models\ProductAttributes;
 use app\models\Sites;
 use app\models\Xpath;
@@ -722,11 +720,8 @@ class ParserController extends Controller
                         $price = preg_replace("/[^0-9]/", '', $price);
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
-
-                        $pr = new Price();
-                        $pr->price = $price;
-                        $pr->goods_id = $goods->id;
-                        $pr->save();
+                        $goods->price = $price;
+                        $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');
 
@@ -753,11 +748,8 @@ class ParserController extends Controller
                         $price = preg_replace("/[^0-9]/", '', $price);
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
-
-                        $pr = new Price();
-                        $pr->price = $price;
-                        $pr->goods_id = $goods->id;
-                        $pr->save();
+                        $goods->price = $price;
+                        $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');
 
@@ -1179,16 +1171,10 @@ class ParserController extends Controller
 
                 if ($regAvail->regular == '1'){
 
-                    if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
-                        $avail = Availability::findOne(['goods_id' => $goods->id]);
-                        $avail->availability = '1';
-                        $avail->save();
+                    if (Goods::find()->where(['uri_goods' => $link])->exists()){
+                        $goods->availability = 1;
+                        $goods->save();
 
-                    }else{
-                        $avail = new Availability();
-                        $avail->availability = '1';
-                        $avail->goods_id = $goods->id;
-                        $avail->save();
                     }
 
                 }else{
@@ -1203,39 +1189,26 @@ class ParserController extends Controller
 
                                 $availability = trim($availability);
 
-
                                 $availabilityCount = preg_replace("/[^0-9]/", '', $availability);
 
-                                if(stristr($availability, 'шт.') and $availabilityCount > 0){
+                                if(stristr($availability, 'шт.') && $availabilityCount > 0){
 
-                                    if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                                    if (Goods::find()->where(['uri_goods' => $link])->exists()){
 
-                                        $avail = Availability::findOne(['goods_id' => $goods->id]);
-                                        $avail->availability = '1';
-                                        $avail->save();
-
-                                    }else{
-
-                                        $avail = new Availability();
-                                        $avail->availability = '1';
-                                        $avail->goods_id = $goods->id;
-                                        $avail->save();
+                                        $goods = Goods::findOne(['uri_goods' => $link]);
+                                        $goods->availability = 1;
+                                        $goods->save();
 
                                     }
 
-                                }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
+                                }elseif (!stristr($availability, 'шт.' || (stristr($availability, 'шт.') && $availabilityCount == 0))){
 
-                                    if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                                    if (Goods::find()->where(['uri_goods' => $link])->exists()){
 
-                                        $avail = Availability::findOne(['goods_id' => $goods->id]);
-                                        $avail->availability = '0';
-                                        $avail->save();
+                                        $goods = Goods::findOne(['uri_goods' => $link]);
+                                        $goods->availability = 0;
+                                        $goods->save();
 
-                                    }else{
-                                        $avail = new Availability();
-                                        $avail->availability = '0';
-                                        $avail->goods_id = $goods->id;
-                                        $avail->save();
                                     }
                                 }
 
@@ -1265,34 +1238,22 @@ class ParserController extends Controller
 
                             if(stristr($availability, 'шт.') and $availabilityCount > 0){
 
-                                if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                                if (Goods::find()->where(['uri_goods' => $link])->exists()){
 
-                                    $avail = Availability::findOne(['goods_id' => $goods->id]);
-                                    $avail->availability = '1';
-                                    $avail->save();
-
-                                }else{
-
-                                    $avail = new Availability();
-                                    $avail->availability = '1';
-                                    $avail->goods_id = $goods->id;
-                                    $avail->save();
+                                    $goods = Goods::findOne(['uri_goods' => $link]);
+                                    $goods->availability = 1;
+                                    $goods->save();
 
                                 }
 
                             }elseif (!stristr($availability, 'шт.' or (stristr($availability, 'шт.') and $availabilityCount == 0))){
 
-                                if (Availability::find()->where(['goods_id' => $goods->id])->exists()){
+                                if (Goods::find()->where(['uri_goods' => $link])->exists()){
 
-                                    $avail = Availability::findOne(['goods_id' => $goods->id]);
-                                    $avail->availability = '0';
-                                    $avail->save();
+                                    $goods = Goods::findOne(['uri_goods' => $link]);
+                                    $goods->availability = 0;
+                                    $goods->save();
 
-                                }else{
-                                    $avail = new Availability();
-                                    $avail->availability = '0';
-                                    $avail->goods_id = $goods->id;
-                                    $avail->save();
                                 }
                             }
 
