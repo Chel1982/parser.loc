@@ -62,7 +62,8 @@ class GoodsSearch extends Goods
             ->andFilterWhere(['like', 'name_goods', $this->name_goods])
             ->andFilterWhere(['like', 'uri_goods', $this->uri_goods])
             ->andFilterWhere(['between','goods.created_at', $this->from_date, $this->to_date])
-            ->andFilterWhere(['between','price', $this->price_from, $this->price_to])
+            ->andFilterWhere(['>=','price', $this->price_from])
+            ->andFilterWhere(['<=','price', $this->price_to])
             ->andFilterWhere(['like','groups.name', $this->groups_name])
             ->andFilterWhere(['like','manufacturer.name', $this->manufacturers_name])
             ->andFilterWhere(['=','sites_id', $this->sites_id]);

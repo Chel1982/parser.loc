@@ -11,6 +11,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<div class="row">
 <div class="goods-search">
 
     <?php $form = ActiveForm::begin([
@@ -18,21 +19,22 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'name_goods') ?>
+    <?= $form->field($model, 'id', ['options' => ['class' => 'col-md-4']]) ?>
 
-    <?= $form->field($model, 'uri_goods') ?>
+    <?= $form->field($model, 'name_goods', ['options' => ['class' => 'col-md-4']]) ?>
 
-    <?= $form->field($model, 'sites_id')->dropDownList(ArrayHelper::map(Sites::find()->all(),'id','name'), ['prompt' => 'Выберите сайт...']) ?>
+    <?= $form->field($model, 'uri_goods', ['options' => ['class' => 'col-md-4']]) ?>
 
-    <?= $form->field($model, 'groups_name') ?>
+    <?= $form->field($model, 'sites_id', ['options' => ['class' => 'col-md-4']])->dropDownList(ArrayHelper::map(Sites::find()->all(),'id','name'), ['prompt' => 'Выберите сайт...']) ?>
 
-    <?= $form->field($model, 'manufacturers_name') ?>
+    <?= $form->field($model, 'groups_name', ['options' => ['class' => 'col-md-4']]) ?>
 
-    <?= $form->field($model, 'price_from') ?>
+    <?= $form->field($model, 'manufacturers_name', ['options' => ['class' => 'col-md-4']]) ?>
 
-    <?= $form->field($model, 'price_to') ?>
+    <?= $form->field($model, 'price_from', ['options' => ['class' => 'col-md-4']]) ?>
+
+    <?= $form->field($model, 'price_to', ['options' => ['class' => 'col-md-4']]) ?>
 
     <?= DatePicker::widget([
         'model' => $model,
@@ -55,4 +57,5 @@ use yii\widgets\ActiveForm;
 
     <?php ActiveForm::end(); ?>
 
+</div>
 </div>
