@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'price',
                 'value' => function ($model) {
-                    if (isset($model->price)){
+                    if (isset($model->price) && $model->price != 0){
                         return $model->price . ' ' . $model->currency;
                     }
                     return '';
