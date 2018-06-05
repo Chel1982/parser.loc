@@ -19,7 +19,7 @@ class GoodsSearch extends Goods
     {
         return [
             [['id', 'groups_id', 'sites_id'], 'integer'],
-            [['name_goods', 'groups_name', 'sites_id', 'from_date', 'to_date', 'uri_goods', 'created_at', 'manufacturers_name', 'price_from', 'price_to'], 'safe'],
+            [['name_goods', 'groups_name', 'sites_id', 'from_date', 'to_date', 'uri_goods', 'created_at', 'manufacturer', 'price_from', 'price_to'], 'safe'],
         ];
     }
 
@@ -67,6 +67,7 @@ class GoodsSearch extends Goods
         $query->andFilterWhere(['=', 'goods.id',$this->id])
             ->andFilterWhere(['like', 'name_goods', $this->name_goods])
             ->andFilterWhere(['like', 'uri_goods', $this->uri_goods])
+            ->andFilterWhere(['like', 'manufacturer', $this->manufacturer])
             ->andFilterWhere(['between','goods.created_at', $this->from_date, $this->to_date])
             ->andFilterWhere(['<=','price', $this->price_to])
             ->andFilterWhere(['like','groups.name', $this->groups_name])

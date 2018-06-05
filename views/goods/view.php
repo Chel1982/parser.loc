@@ -80,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return false;
                 }
             ],
-            'manufacturers.name',
+            'manufacturer',
             [
                 'attribute' => 'productAttributes.content',
                 'format' => 'raw',

@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'groups_name', ['options' => ['class' => 'col-md-4']]) ?>
 
-    <?= $form->field($model, 'manufacturers_name', ['options' => ['class' => 'col-md-4']]) ?>
+    <?= $form->field($model, 'manufacturer', ['options' => ['class' => 'col-md-4']]) ?>
 
     <?= $form->field($model, 'price_from', ['options' => ['class' => 'col-md-4']]) ?>
 

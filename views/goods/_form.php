@@ -35,9 +35,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model->descriptions, 'additional')->textarea(['rows' => '6']) ?>
     <?php endif; ?>
 
-    <?php if($model->manufacturers !== null): ?>
-        <?= $form->field($model->manufacturers, 'name')->textarea(['rows' => '6']) ?>
-    <?php endif; ?>
+    <?= $form->field($model, 'manufacturer')->textInput() ?>
 
     <?php if($model->productAttributes !== null): ?>
         <?= $form->field($model->productAttributes, 'content')->textarea(['rows' => '6']) ?>
