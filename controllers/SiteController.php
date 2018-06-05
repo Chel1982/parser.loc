@@ -7,6 +7,7 @@ use app\models\CategoriesHolodbar;
 use app\models\CategoriesImkuh;
 use app\models\Goods;
 use app\models\Groups;
+use app\models\Manufacturer;
 use app\models\ManufacturerHasGoods;
 use app\models\MarkUpGoods;
 use app\models\Price;
@@ -292,10 +293,14 @@ class SiteController extends Controller
                     /* Наценка на производителя для Imkuh */
                     if (isset($markPer['manufacturer_id_imkuh'])) {
 
-                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markPer['manufacturer_id_imkuh']])->select('goods_id');
+                        $idCatImkuh = MarkUpGoods::find()->where(['is not', 'manufacturer_id_imkuh', NULL])->select('manufacturer_id_imkuh');
+
+                        $urlManuf = Manufacturer::find()->where(['id' => $idCatImkuh])->select('sites_url');
+
+                        $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
 
                         /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['id' => $idGoodsMan])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('id');
+                        $goodsId = Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('id');
 
                         /* Делаем наценку на товар */
                         $goodsPer = Goods::findAll($goodsId);
@@ -379,10 +384,14 @@ class SiteController extends Controller
                     /* Наценка на производителя для Imkuh */
                     if (isset($markAbs['manufacturer_id_imkuh'])) {
 
-                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markAbs['manufacturer_id_imkuh']])->select('goods_id');
+                        $idCatImkuh = MarkUpGoods::find()->where(['is not', 'manufacturer_id_imkuh', NULL])->select('manufacturer_id_imkuh');
+
+                        $urlManuf = Manufacturer::find()->where(['id' => $idCatImkuh])->select('sites_url');
+
+                        $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
 
                         /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['id' => $idGoodsMan])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('id');
+                        $goodsId = Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('id');
 
                         /* Делаем наценку на товар */
                         $goodsPer = Goods::findAll($goodsId);
@@ -426,8 +435,7 @@ class SiteController extends Controller
 
             if (\Yii::$app->request->post('export')){
 
-                $result = shell_exec( 'php ' . \Yii::$app->basePath . '/yii export-goods/init' );
-                //echo $result;
+                shell_exec( 'php ' . \Yii::$app->basePath . '/yii export-goods/init' );
 
             }
         }
