@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $name_goods
+ * @property string $manufacturer
  * @property string $uri_goods
  * @property double $price
  * @property double $mark_up_price
@@ -55,7 +56,7 @@ class Goods extends \yii\db\ActiveRecord
             [['groups_id', 'sites_id'], 'required'],
             [['groups_id', 'sites_id', 'availability'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name_goods', 'uri_goods'], 'string', 'max' => 255],
+            [['name_goods', 'uri_goods', 'manufacturer'], 'string', 'max' => 255],
             [['currency'], 'string', 'max' => 45],
             //[['availability'], 'string', 'max' => 1],
             [['uri_goods'], 'unique'],
@@ -85,6 +86,7 @@ class Goods extends \yii\db\ActiveRecord
             'mark_up_price' => 'Наценка',
             'currency' => 'Валюта',
             'availability' => 'Наличие',
+            'manufacturer' => 'Производитель',
         ];
     }
 
