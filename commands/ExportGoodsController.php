@@ -4,9 +4,10 @@ namespace app\commands;
 use app\models\Goods;
 use app\models\Groups;
 use app\models\ImagesImkuh;
-use app\models\ManufacturerHasGoods;
+use app\models\Manufacturer;
 use app\models\MarkUpGoods;
 use app\models\ProductsImkuh;
+use app\models\Sites;
 use SplFileInfo;
 use yii\console\Controller;
 use Exception;
@@ -23,7 +24,6 @@ class ExportGoodsController extends Controller
 {
     public function actionInit()
     {
-
         if (MarkUpGoods::find()->where(['is not', 'categories_imkuh_id', NULL])->orWhere(['is not', 'categories_holodbar_id', NULL])->orWhere(['is not', 'manufacturer_id_imkuh', NULL])->orWhere(['is not', 'manufacturer_id_holodbar', NULL])->exists()){
 
             /* Для группы товаров сайта Imkuh */
@@ -42,7 +42,7 @@ class ExportGoodsController extends Controller
                         ->andWhere(['availability' => 1])
                         ->andWhere(['not', ['mark_up_price' => NULL]])
                         ->andWhere(['not', ['mark_up_price' => 0]])
-                        ->with(['descriptions', 'images', 'manufacturers','productAttributes', 'groups'  => function($query) {$query->with('categoriesImkuh');}])
+                        ->with(['descriptions', 'images','productAttributes', 'groups'  => function($query) {$query->with('categoriesImkuh');}])
                         ->asArray()
                         ->all();
 
@@ -59,7 +59,7 @@ class ExportGoodsController extends Controller
                             $product->text = $good['descriptions']['main'];
                             $product->text .= $good['descriptions']['additional'];
                             $product->text .= $good['productAttributes']['content'];
-                            $product->vendor = ($good['manufacturers']['name'] == NULL) ? '' : $good['manufacturers']['name'];
+                            $product->vendor = ($good['manufacturer'] == NULL) ? '' : $good['manufacturer'];
                             $product->type = $good['groups']['categoriesImkuh']['pgid'];
                             $product->price = $good['mark_up_price'];
                             $good['currency'] == 'RUB' ? $product->currency = 0 : $product->currency = 2;
@@ -75,7 +75,7 @@ class ExportGoodsController extends Controller
                             $product->text = $good['descriptions']['main'];
                             $product->text .= $good['descriptions']['additional'];
                             $product->text .= $good['productAttributes']['content'];
-                            $product->vendor = ($good['manufacturers']['name'] == NULL) ? '' : $good['manufacturers']['name'];
+                            $product->vendor = ($good['manufacturer'] == NULL) ? '' : $good['manufacturer'];
                             $product->type = $good['groups']['categoriesImkuh']['pgid'];
                             $product->price = $good['mark_up_price'];
                             $good['currency'] == 'RUB' ? $product->currency = 0 : $product->currency = 2;
@@ -83,6 +83,8 @@ class ExportGoodsController extends Controller
                             $product->on_off = 1;
                             $product->parser_status = 1;
                             $product->save();
+
+
 
                             $path = \Yii::$app->basePath . '/web/uploads/images/' . $good['id'] . '/';
 
@@ -106,7 +108,7 @@ class ExportGoodsController extends Controller
 
                                         $nameFile = $image->iid . '.' . $ext;
 
-                                        file_put_contents('/var/www/parser.imkuh.loc/web/uploads/images_imkuh/products/' . $nameFile, file_get_contents($path . $file));
+                                        file_put_contents('/var/www/imkuhru/data/www/test18.imkuh.ru/images/products/' . $nameFile, file_get_contents($path . $file));
 
                                     } catch (Exception $e) {
                                         echo $e;
@@ -210,11 +212,13 @@ class ExportGoodsController extends Controller
                 /* Выбираем товары из групп */
                 $idCatImkuh = MarkUpGoods::find()->where(['is not', 'manufacturer_id_imkuh', NULL])->select('manufacturer_id_imkuh');
 
-                $idGoods = ManufacturerHasGoods::find()->where(['manufacturer_id' => $idCatImkuh])->select('goods_id');
+                $urlManuf = Manufacturer::find()->where(['id' => $idCatImkuh])->select('sites_url');
+
+                $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
 
                 /* Проверяем наличие товара */
                 $goods = Goods::find()
-                    ->where(['id' => $idGoods])
+                    ->where(['sites_id' => $idSites])
                     ->andWhere(['availability' => 1])
                     ->andWhere(['not', ['mark_up_price' => NULL]])
                     ->andWhere(['not', ['mark_up_price' => 0]])
@@ -235,7 +239,7 @@ class ExportGoodsController extends Controller
                         $product->text = $good['descriptions']['main'];
                         $product->text .= $good['descriptions']['additional'];
                         $product->text .= $good['productAttributes']['content'];
-                        $product->vendor = ($good['manufacturers']['name'] == NULL) ? '' : $good['manufacturers']['name'];
+                        $product->vendor = ($good['manufacturer'] == NULL) ? '' : $good['manufacturer'];
                         $product->type = 0;
                         $product->price = $good['mark_up_price'];
                         $good['currency'] == 'RUB' ? $product->currency = 0 : $product->currency = 2;
@@ -251,7 +255,7 @@ class ExportGoodsController extends Controller
                         $product->text = $good['descriptions']['main'];
                         $product->text .= $good['descriptions']['additional'];
                         $product->text .= $good['productAttributes']['content'];
-                        $product->vendor = ($good['manufacturers']['name'] == NULL) ? '' : $good['manufacturers']['name'];
+                        $product->vendor = ($good['manufacturer'] == NULL) ? '' : $good['manufacturer'];
                         $product->type = 0;
                         $product->price = $good['mark_up_price'];
                         $good['currency'] == 'RUB' ? $product->currency = 0 : $product->currency = 2;
@@ -281,9 +285,8 @@ class ExportGoodsController extends Controller
                                     $imageId->save();
 
                                     $nameFile = $image->iid . '.' . $ext;
-                                    ///var/www/import18imkuhru/data/www/import18.imkuh.ru/images/products/
-                                    /// /var/www/imkuh.ru/images/products/
-                                    file_put_contents('/var/www/imkuh.ru/images/products/' . $nameFile, file_get_contents($path . $file));
+
+                                    file_put_contents('/var/www/imkuhru/data/www/test18.imkuh.ru/images/products/' . $nameFile, file_get_contents($path . $file));
                                 }catch (Exception $e){
                                     echo $e;
                                 }
