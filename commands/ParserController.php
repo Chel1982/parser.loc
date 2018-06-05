@@ -827,32 +827,11 @@ class ParserController extends Controller
                     if($sites->status_manuf == 1){
                         try {
 
-                            /*Проверяем создан ли производтель в таблице Manufacturer*/
-                            if (Manufacturer::find()->where(['sites_url' => $sites->url])->exists()){
+                            $goods->manufacturer = $sites->name;
+                            $goods->save();
 
-                                $manufacturer = Manufacturer::findOne(['sites_url' => $sites->url]);
+                            $this->actionLogsSuccess($goods->id, 'manufactured');
 
-                                $man = new ManufacturerHasGoods();
-                                $man->manufacturer_id = $manufacturer->id;
-                                $man->goods_id = $goods->id;
-                                $man->save();
-
-                                $this->actionLogsSuccess($goods->id, 'manufactured');
-
-                            }else{
-
-                                $manufacturer = new Manufacturer();
-                                $manufacturer->name = $sites->name;
-                                $manufacturer->sites_url = $sites->url;
-                                $manufacturer->save();
-
-                                $man = new ManufacturerHasGoods();
-                                $man->manufacturer_id = $manufacturer->id;
-                                $man->goods_id = $goods->id;
-                                $man->save();
-
-                                $this->actionLogsSuccess($goods->id, 'manufactured');
-                            }
 
                         }catch (Exception $e) {
 
@@ -869,41 +848,16 @@ class ParserController extends Controller
                             try {
 
                                 $manufacturer = $resource->getCrawler()->filterXpath($regManuf->regular)->text();
-
                                 $manufacturer = trim($manufacturer);
 
-                                /*Если производитель есть*/
-                                if (Manufacturer::find()->where(['name' => $manufacturer])->exists()){
+                                $goods->manufacturer = $manufacturer;
+                                $goods->save();
 
-                                    $manufacturer = Manufacturer::findOne(['name' => $manufacturer]);
-
-                                    $man = new ManufacturerHasGoods();
-                                    $man->manufacturer_id = $manufacturer->id;
-                                    $man->goods_id = $goods->id;
-                                    $man->save();
-
-                                }else{
-
-                                    /*Если производителя нет*/
-
-                                    $man = new Manufacturer();
-                                    $man->name = $manufacturer;
-                                    $man->sites_url = $sites->url;
-                                    $man->save();
-
-                                    $man = new ManufacturerHasGoods();
-                                    $man->manufacturer_id = $man->id;
-                                    $man->goods_id = $goods->id;
-                                    $man->save();
-
-                                    $this->actionLogsSuccess($goods->id, 'manufactured');
-                                }
-
+                                $this->actionLogsSuccess($goods->id, 'manufactured');
 
                             }catch (Exception $e) {
 
                                 $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
-
                                 $this->actionLogsFailed($goods->id, $goods->sites->id, 11, 'manufactured', $e);
 
                             }
@@ -918,33 +872,10 @@ class ParserController extends Controller
 
                             try {
 
-                                /*Проверяем создан ли производтель в таблице Manufacturer*/
-                                if (Manufacturer::find()->where(['sites_url' => $sites->url])->exists()){
+                                $goods->manufacturer = $sites->name;
+                                $goods->save();
 
-                                    $manufacturer = Manufacturer::findOne(['sites_url' => $sites->url]);
-
-                                    $man = new ManufacturerHasGoods();
-                                    $man->manufacturer_id = $manufacturer->id;
-                                    $man->goods_id = $goods->id;
-                                    $man->save();
-
-
-                                    $this->actionLogsSuccess($goods->id, 'manufactured');
-
-                                }else{
-
-                                    $manufacturer = new Manufacturer();
-                                    $manufacturer->name = $sites->name;
-                                    $manufacturer->sites_url = $sites->url;
-                                    $manufacturer->save();
-
-                                    $man = new ManufacturerHasGoods();
-                                    $man->manufacturer_id = $manufacturer->id;
-                                    $man->goods_id = $goods->id;
-                                    $man->save();
-
-                                    $this->actionLogsSuccess($goods->id, 'manufactured');
-                                }
+                                $this->actionLogsSuccess($goods->id, 'manufactured');
 
                             }catch (Exception $e) {
 
@@ -964,34 +895,10 @@ class ParserController extends Controller
 
                                 $manufacturer = trim($manufacturer);
 
-                                /*Если производитель есть*/
-                                if (Manufacturer::find()->where(['name' => $manufacturer])->exists()){
+                                $goods->manufacturer = $manufacturer;
+                                $goods->save();
 
-                                    $manufacturer = Manufacturer::findOne(['name' => $manufacturer]);
-
-                                    $man = new ManufacturerHasGoods();
-                                    $man->manufacturer_id = $manufacturer->id;
-                                    $man->goods_id = $goods->id;
-                                    $man->save();
-
-                                    $this->actionLogsSuccess($goods->id, 'manufactured');
-
-                                }else{
-
-                                    /*Если производителя нет*/
-
-                                    $man = new Manufacturer();
-                                    $man->name = $manufacturer;
-                                    $man->sites_url = $sites->url;
-                                    $man->save();
-
-                                    $man = new ManufacturerHasGoods();
-                                    $man->manufacturer_id = $man->id;
-                                    $man->goods_id = $goods->id;
-                                    $man->save();
-
-                                    $this->actionLogsSuccess($goods->id, 'manufactured');
-                                }
+                                $this->actionLogsSuccess($goods->id, 'manufactured');
 
                             } catch (Exception $e) {
 
