@@ -84,8 +84,6 @@ class ExportGoodsController extends Controller
                             $product->parser_status = 1;
                             $product->save();
 
-
-
                             $path = \Yii::$app->basePath . '/web/uploads/images/' . $good['id'] . '/';
 
                             if (file_exists($path)) {
@@ -232,7 +230,7 @@ class ExportGoodsController extends Controller
 
                 foreach ($goods as $good){
 
-                    if (ProductsImkuh::find()->where(['parser_status' => 1])->andWhere(['name' => $good['name_goods']])->exists()){
+                    if (ProductsImkuh::find()->where(['parser_status' => 1])->andWhere(['name' => $good['name_goods']])->andWhere(['=', 'type', 0])->exists()){
 
                         $product = ProductsImkuh::findOne(['parser_status' => 1, 'name' => $good['name_goods']]);
                         $product->name = $good['name_goods'];
@@ -247,6 +245,10 @@ class ExportGoodsController extends Controller
                         $product->on_off = 1;
                         $product->parser_status = 1;
                         $product->save();
+
+                    }elseif(ProductsImkuh::find()->where(['parser_status' => 1])->andWhere(['name' => $good['name_goods']])->andWhere(['<>', 'type', 0])->exists()) {
+
+                        continue ;
 
                     }else{
 
