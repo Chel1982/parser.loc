@@ -228,6 +228,10 @@ class SiteController extends Controller
 
             if (\Yii::$app->request->post('mark_up_price')){
 
+                Goods::updateAll(
+                    ['mark_up_price' => NULL]
+                );
+
                 $markUpPercent = MarkUpGoods::find()->where(['percent' => 1])->asArray()->all();
                 $markUpAbsolute = MarkUpGoods::find()->where(['absolute' => 1])->asArray()->all();
 
@@ -274,7 +278,6 @@ class SiteController extends Controller
                         /* Выбираем товары из групп */
 
                         $idGroups = Groups::find()->where(['categories_holodbar_id' => $markPer['categories_holodbar_id']])->select('id');
-                        $idGoods = Goods::find()->where(['groups_id' => $idGroups])->select('id');
 
                         /* Ищем товары в диапозоне цен */
                         $goodsId = Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('id');
