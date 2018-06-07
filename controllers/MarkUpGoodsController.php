@@ -2,6 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Goods;
+use app\models\Groups;
+use app\models\Manufacturer;
+use app\models\Sites;
 use Yii;
 use app\models\MarkUpGoods;
 use app\models\search\MarkUpGoodsSearch;
@@ -104,6 +108,84 @@ class MarkUpGoodsController extends Controller
      */
     public function actionDelete($id)
     {
+        $markUp = MarkUpGoods::findOne($id);
+
+        if (isset($markUp->categories_imkuh_id)){
+
+            /* Выбираем товары из групп */
+            $idGroups = Groups::find()->where(['categories_imkuh_id' => $markUp->categories_imkuh_id])->select('id');
+
+            /* Ищем товары в диапозоне цен */
+            $goodsId = Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price', $markUp->from_value])->andWhere(['<=', 'price', $markUp->to_value])->select('id');
+
+            $goods = Goods::findAll($goodsId);
+
+            foreach ($goods as $good) {
+
+                $good->mark_up_price = NULL;
+                $good->save();
+
+            }
+
+        }
+
+        if (isset($markUp->categories_holodbar_id)){
+            /* Выбираем товары из групп */
+            $idGroups = Groups::find()->where(['categories_imkuh_id' => $markUp->categories_holodbar_id])->select('id');
+
+            /* Ищем товары в диапозоне цен */
+            $goodsId = Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price', $markUp->from_value])->andWhere(['<=', 'price', $markUp->to_value])->select('id');
+
+            $goods = Goods::findAll($goodsId);
+
+            foreach ($goods as $good) {
+
+                $good->mark_up_price = NULL;
+                $good->save();
+
+            }
+        }
+
+        if (isset($markUp->manufacturer_id_imkuh)){
+
+            $urlManuf = Manufacturer::find()->where(['id' => $markUp->manufacturer_id_imkuh])->select('sites_url');
+
+            $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
+
+            /* Ищем товары в диапозоне цен */
+            $goodsId = Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price', $markUp->from_value])->andWhere(['<=', 'price', $markUp->to_value])->select('id');
+
+            $goods = Goods::findAll($goodsId);
+
+            foreach ($goods as $good) {
+
+                $good->mark_up_price = NULL;
+                $good->save();
+
+            }
+
+        }
+
+        if(isset($markUp->manufacturer_id_holodbar)){
+
+            $urlManuf = Manufacturer::find()->where(['id' => $markUp->manufacturer_id_holodbar])->select('sites_url');
+
+            $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
+
+            /* Ищем товары в диапозоне цен */
+            $goodsId = Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price', $markUp->from_value])->andWhere(['<=', 'price', $markUp->to_value])->select('id');
+
+            $goods = Goods::findAll($goodsId);
+
+            foreach ($goods as $good) {
+
+                $good->mark_up_price = NULL;
+                $good->save();
+
+            }
+
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
