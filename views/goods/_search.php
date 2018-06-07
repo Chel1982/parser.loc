@@ -36,19 +36,24 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'price_to', ['options' => ['class' => 'col-md-4']]) ?>
 
-    <?= DatePicker::widget([
-        'model' => $model,
-        'attribute' => 'from_date',
-        'attribute2' => 'to_date',
-        'options' => ['placeholder' => 'Дата начала поиска'],
-        'options2' => ['placeholder' => 'Дата окончания поиска'],
-        'type' => DatePicker::TYPE_RANGE,
-        'form' => $form,
-        'pluginOptions' => [
-            'format' => 'yyyy-mm-dd',
-            'autoclose' => true,
-        ]
-    ]); ?>
+    <div class="row">
+        <div class="col-md-4">
+            <?php echo '<label>Выберите дату поиска</label>'; ?>
+            <?= DatePicker::widget([
+                'model' => $model,
+                'attribute' => 'from_date',
+                'attribute2' => 'to_date',
+                'options' => ['placeholder' => 'Дата начала поиска'],
+                'options2' => ['placeholder' => 'Дата окончания поиска'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'format' => 'yyyy-mm-dd',
+                    'autoclose' => true,
+                ]
+            ]); ?>
+        </div>
+    </div>
 
     <div class="form-group">
         <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
