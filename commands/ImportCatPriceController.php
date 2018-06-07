@@ -2,6 +2,7 @@
 
 namespace app\commands;
 
+use app\models\ExchangeRates;
 use app\models\Goods;
 use app\models\Groups;
 use app\models\ManufacturerHasGoods;
@@ -56,8 +57,10 @@ class ImportCatPriceController extends Controller
 
                             if ($rowData[0][9] === 'EUR' && is_numeric($rowData[0][10])){
 
-                                $goods->price = $rowData[0][6];
-                                $goods->currency = 'EUR';
+                                $exRat = ExchangeRates::findOne(1);
+
+                                $goods->price = $rowData[0][6] * $exRat->euro;
+                                $goods->currency = 'RUB';
                                 $goods->availability = 1;
                                 $goods->updated_at = date('Y-m-d H:i:s');
                                 $goods->save();
@@ -72,8 +75,10 @@ class ImportCatPriceController extends Controller
 
                             }elseif($rowData[0][8] === 'EUR' && is_numeric($rowData[0][9])){
 
-                                $goods->price = $rowData[0][5];
-                                $goods->currency = 'EUR';
+                                $exRat = ExchangeRates::findOne(1);
+
+                                $goods->price = $rowData[0][5] * $exRat->euro;
+                                $goods->currency = 'RUB';
                                 $goods->availability = 1;
                                 $goods->updated_at = date('Y-m-d H:i:s');
                                 $goods->save();
