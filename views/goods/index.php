@@ -20,25 +20,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
 
-    echo ExportMenu::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-
-            'id',
-            'name_goods',
-            'uri_goods',
-            'sites.name',
-            'groups.name',
-            'descriptions.main',
-            'descriptions.additional',
-            'images.name',
-            'price',
-            'manufacturers.name',
-            'productAttributes.content',
-            'created_at',
-
-        ]
-    ]);
+//    echo ExportMenu::widget([
+//        'dataProvider' => $dataProvider,
+//        'columns' => [
+//
+//            'id',
+//            'name_goods',
+//            'uri_goods',
+//            'sites.name',
+//            'groups.name',
+//            'descriptions.main',
+//            'descriptions.additional',
+//            'images.name',
+//            'price',
+//            'manufacturers.name',
+//            'productAttributes.content',
+//            'created_at',
+//
+//        ]
+//    ]);
     ?>
 
     <?php Pjax::begin() ?>
