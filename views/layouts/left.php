@@ -34,6 +34,7 @@
                     ['label' => 'Скачанные группы товаров', 'url' => ['/groups/index']],
                     ['label' => 'Скачанные производители', 'url' => ['/manufacturer/index']],
                     ['label' => 'Наценки товаров', 'url' => ['/mark-up-goods/index']],
+                    ['label' => 'Курс валют', 'url' => ['/exchange-rates/index']],
                     ['label' => 'Логи парсинга', 'url' => ['/logs/index']],
                     ['label' => 'Логи цены и наличия', 'url' => ['/logs-price-avail/index']],
                 ],
