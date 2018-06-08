@@ -99,10 +99,6 @@ class ImportCatPriceController extends Controller
             }
         }
 
-        Goods::updateAll(
-            ['mark_up_price' => NULL]
-        );
-
         /* Наценки на все товары */
         $markUpPercent = MarkUpGoods::find()->where(['percent' => 1])->asArray()->all();
         $markUpAbsolute = MarkUpGoods::find()->where(['absolute' => 1])->asArray()->all();
