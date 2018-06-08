@@ -15,6 +15,7 @@ use Yii;
  * @property int $in_case
  * @property int $type
  * @property int $parser_status
+ * @property int $parser_goods_id
  * @property int $price
  * @property int $currency
  *
