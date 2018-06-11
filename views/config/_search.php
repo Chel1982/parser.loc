@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\search\ExchangeRatesSearch */
+/* @var $model app\models\search\ConfigSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="exchange-rates-search">
+<div class="config-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -20,9 +20,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'dollar') ?>
+    <?= $form->field($model, 'alias') ?>
 
-    <?= $form->field($model, 'euro') ?>
+    <?= $form->field($model, 'value') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

@@ -5,20 +5,21 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "exchange_rates".
+ * This is the model class for table "config".
  *
  * @property int $id
- * @property double $dollar
- * @property double $euro
+ * @property string $alias
+ * @property string $value
  */
-class ExchangeRates extends \yii\db\ActiveRecord
+class Config extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'exchange_rates';
+        return 'config';
     }
 
     /**
@@ -27,7 +28,7 @@ class ExchangeRates extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dollar', 'euro'], 'number'],
+            [['alias', 'value'], 'string', 'max' => 255],
         ];
     }
 
@@ -38,8 +39,8 @@ class ExchangeRates extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'dollar' => 'Доллар',
-            'euro' => 'Евро',
+            'alias' => 'Алиас',
+            'value' => 'Значение',
         ];
     }
 }

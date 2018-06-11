@@ -4,20 +4,20 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\ExchangeRatesSearch */
+/* @var $searchModel app\models\search\ConfigSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Курс валют';
+$this->title = 'Настройка конфига';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="exchange-rates-index">
+<div class="config-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Создать курс валют', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать конфиг', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -26,9 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-         //   'id',
-            'dollar',
-            'euro',
+          //  'id',
+            'alias',
+            'value',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

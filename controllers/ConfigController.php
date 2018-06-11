@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\ExchangeRates;
-use app\models\search\ExchangeRatesSearch;
+use app\models\Config;
+use app\models\search\ConfigSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ExchangeRatesController implements the CRUD actions for ExchangeRates model.
+ * ConfigController implements the CRUD actions for Config model.
  */
-class ExchangeRatesController extends Controller
+class ConfigController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class ExchangeRatesController extends Controller
     }
 
     /**
-     * Lists all ExchangeRates models.
+     * Lists all Config models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ExchangeRatesSearch();
+        $searchModel = new ConfigSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class ExchangeRatesController extends Controller
     }
 
     /**
-     * Displays a single ExchangeRates model.
+     * Displays a single Config model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,16 +58,16 @@ class ExchangeRatesController extends Controller
     }
 
     /**
-     * Creates a new ExchangeRates model.
+     * Creates a new Config model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ExchangeRates();
+        $model = new Config();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -76,7 +76,7 @@ class ExchangeRatesController extends Controller
     }
 
     /**
-     * Updates an existing ExchangeRates model.
+     * Updates an existing Config model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,7 +87,7 @@ class ExchangeRatesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -96,7 +96,7 @@ class ExchangeRatesController extends Controller
     }
 
     /**
-     * Deletes an existing ExchangeRates model.
+     * Deletes an existing Config model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,15 +110,15 @@ class ExchangeRatesController extends Controller
     }
 
     /**
-     * Finds the ExchangeRates model based on its primary key value.
+     * Finds the Config model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ExchangeRates the loaded model
+     * @return Config the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ExchangeRates::findOne($id)) !== null) {
+        if (($model = Config::findOne($id)) !== null) {
             return $model;
         }
 

@@ -5,12 +5,12 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\ExchangeRates;
+use app\models\Config;
 
 /**
- * ExchangeRatesSearch represents the model behind the search form of `app\models\ExchangeRates`.
+ * ConfigSearch represents the model behind the search form of `app\models\Config`.
  */
-class ExchangeRatesSearch extends ExchangeRates
+class ConfigSearch extends Config
 {
     /**
      * @inheritdoc
@@ -19,7 +19,7 @@ class ExchangeRatesSearch extends ExchangeRates
     {
         return [
             [['id'], 'integer'],
-            [['dollar', 'euro'], 'number'],
+            [['alias', 'value'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ExchangeRatesSearch extends ExchangeRates
      */
     public function search($params)
     {
-        $query = ExchangeRates::find();
+        $query = Config::find();
 
         // add conditions that should always apply here
 
@@ -60,9 +60,10 @@ class ExchangeRatesSearch extends ExchangeRates
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'dollar' => $this->dollar,
-            'euro' => $this->euro,
         ]);
+
+        $query->andFilterWhere(['like', 'alias', $this->alias])
+            ->andFilterWhere(['like', 'value', $this->value]);
 
         return $dataProvider;
     }

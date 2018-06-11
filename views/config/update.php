@@ -3,14 +3,14 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\ExchangeRates */
+/* @var $model app\models\Config */
 
-$this->title = 'Курс валют';
-$this->params['breadcrumbs'][] = ['label' => 'Курс валют', 'url' => ['index']];
+$this->title = 'Обновить конфиг';
+$this->params['breadcrumbs'][] = ['label' => 'Настройка конфига', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Обновить';
 ?>
-<div class="exchange-rates-update">
+<div class="config-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
