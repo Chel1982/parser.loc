@@ -12,8 +12,6 @@ class m180611_123912_create_config_table extends Migration
      */
     public function up()
     {
-        $this->dropTable('exchange_rates');
-
         $this->createTable('config', [
             'id' => $this->primaryKey(),
             'alias' => $this->string(255),
