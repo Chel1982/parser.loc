@@ -11,16 +11,18 @@ use Yii;
  * @property string $name_goods
  * @property string $manufacturer
  * @property string $uri_goods
- * @property double $price
- * @property double $mark_up_price
- * @property string $currency
+ * @property double $price Цена в валюте без наценки
+ * @property double $mark_up_price Наценка
+ * @property double $price_rub Цена в рублях по курсу
  * @property int $availability
  * @property int $groups_id
  * @property int $sites_id
  * @property string $created_at
  * @property string $updated_at
+ * @property int $currency_id
  *
  * @property Description[] $descriptions
+ * @property Currency $currency
  * @property Groups $groups
  * @property Sites $sites
  * @property Images[] $images
@@ -52,14 +54,14 @@ class Goods extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['price', 'mark_up_price'], 'number'],
+            [['price', 'mark_up_price', 'price_rub'], 'number'],
             [['groups_id', 'sites_id'], 'required'],
-            [['groups_id', 'sites_id', 'availability'], 'integer'],
+            [['groups_id', 'sites_id', 'currency_id', 'availability'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['name_goods', 'uri_goods', 'manufacturer'], 'string', 'max' => 255],
-            [['currency'], 'string', 'max' => 45],
-            //[['availability'], 'string', 'max' => 1],
+           // [['availability'], 'string', 'max' => 1],
             [['uri_goods'], 'unique'],
+            [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Currency::class, 'targetAttribute' => ['currency_id' => 'id']],
             [['groups_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::class, 'targetAttribute' => ['groups_id' => 'id']],
             [['sites_id'], 'exist', 'skipOnError' => true, 'targetClass' => Sites::class, 'targetAttribute' => ['sites_id' => 'id']],
         ];
@@ -84,7 +86,7 @@ class Goods extends \yii\db\ActiveRecord
             'price_to' => 'Цена товара (до)',
             'price' => 'Цена',
             'mark_up_price' => 'Наценка',
-            'currency' => 'Валюта',
+            'price_rub' => 'Цена в рублях по курсу',
             'availability' => 'Наличие',
             'manufacturer' => 'Производитель',
         ];
@@ -154,5 +156,13 @@ class Goods extends \yii\db\ActiveRecord
     public function getProductAttributes()
     {
         return $this->hasOne(ProductAttributes::class, ['goods_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCurrency()
+    {
+        return $this->hasOne(Currency::class, ['id' => 'currency_id']);
     }
 }

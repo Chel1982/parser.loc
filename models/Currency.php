@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property string $name
  *
- * @property Price[] $prices
+ * @property Goods[] $goods
  */
 class Currency extends \yii\db\ActiveRecord
 {
@@ -28,7 +28,7 @@ class Currency extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 45],
         ];
     }
 
@@ -39,15 +39,15 @@ class Currency extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Название валюты',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPrices()
+    public function getGoods()
     {
-        return $this->hasMany(Price::className(), ['currency_id' => 'id']);
+        return $this->hasOne(Goods::class, ['currency_id' => 'id']);
     }
 }
