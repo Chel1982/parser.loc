@@ -18,29 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php
-
-//    echo ExportMenu::widget([
-//        'dataProvider' => $dataProvider,
-//        'columns' => [
-//
-//            'id',
-//            'name_goods',
-//            'uri_goods',
-//            'sites.name',
-//            'groups.name',
-//            'descriptions.main',
-//            'descriptions.additional',
-//            'images.name',
-//            'price',
-//            'manufacturers.name',
-//            'productAttributes.content',
-//            'created_at',
-//
-//        ]
-//    ]);
-    ?>
-
     <?php Pjax::begin() ?>
 
     <?= GridView::widget([
@@ -73,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'price',
                 'value' => function ($model) {
                     if (isset($model->price) && $model->price != 0){
-                        return $model->price . ' ' . $model->currency;
+                        return $model->price . ' ' . $model->currency->name;
                     }
                     return '';
                 },
@@ -82,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'mark_up_price',
                 'value' => function ($model) {
                     if (isset($model->mark_up_price)){
-                        return $model->mark_up_price . ' ' . $model->currency;
+                        return $model->mark_up_price . ' RUB';
                     }
                     return '';
                 },
