@@ -2,18 +2,16 @@
 
 namespace app\controllers;
 
-use app\models\Availability;
 use app\models\CategoriesHolodbar;
 use app\models\CategoriesImkuh;
+use app\models\Config;
 use app\models\Goods;
 use app\models\Groups;
 use app\models\Manufacturer;
 use app\models\ManufacturerHasGoods;
 use app\models\MarkUpGoods;
-use app\models\Price;
 use app\models\ProductGroupsHolodbar;
 use app\models\ProductGroupsImkuh;
-use app\models\ProductsImkuh;
 use app\models\Sites;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -228,9 +226,37 @@ class SiteController extends Controller
 
             if (\Yii::$app->request->post('mark_up_price')){
 
+                $countGoods = 0;
+                $countGoodsEUR = 0;
+                $countGoodsUSD = 0;
+
                 Goods::updateAll(
                     ['mark_up_price' => NULL]
                 );
+
+                /* Переводим цены из евро в рубли */
+                $GoodsEUR = Goods::findAll(['currency_id' => 2]);
+
+                $curEUR = Config::findOne(['alias' => 'euro'])->value;
+
+                foreach ($GoodsEUR as $goodEUR){
+
+                    $goodEUR->price_rub = $goodEUR->price * $curEUR;
+                    $goodEUR->save();
+
+                }
+
+                /* Переводим цены из доллара в рубли */
+                $idGoodsDOL = Goods::findAll(['currency_id' => 3]);
+
+                $curDOL = Config::findOne(['alias' => 'dollar'])->value;
+
+                foreach ($idGoodsDOL as $idGoodDOL){
+
+                    $idGoodDOL->price_rub = $idGoodDOL->price * $curDOL;
+                    $idGoodDOL->save();
+
+                }
 
                 $markUpPercent = MarkUpGoods::find()->where(['percent' => 1])->asArray()->all();
                 $markUpAbsolute = MarkUpGoods::find()->where(['absolute' => 1])->asArray()->all();
@@ -243,7 +269,9 @@ class SiteController extends Controller
                     ]);
                 }
 
-                /* Делаем процентную наценку */
+                /*
+                    Делаем процентную наценку
+                */
                 foreach ($markUpPercent as $markPer) {
 
                     $markPerFrom = $markPer['from_value'];
@@ -258,16 +286,46 @@ class SiteController extends Controller
 
                         $idGroups = Groups::find()->where(['categories_imkuh_id' => $markPer['categories_imkuh_id']])->select('id');
 
-                        /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('id');
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price*/
+                        $goodsIdPrice = Goods::find()
+                                            ->where(['groups_id' => $idGroups])
+                                            ->andWhere(['currency_id' => 1])
+                                            ->andWhere(['>=', 'price', $markPerFrom])
+                                            ->andWhere(['<=', 'price', $markPerTo])
+                                            ->select('id');
 
                         /* Делаем наценку на товар */
-                        $goodsPer = Goods::findAll($goodsId);
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                        foreach ($goodsPer as $goodsP) {
+                        foreach ($goodsPerPrice as $goodPerPrice) {
 
-                            $goodsP->mark_up_price = round($goodsP->price * $percent + $goodsP->price );
-                            $goodsP->save();
+                            $goodPerPrice->mark_up_price = round($goodPerPrice->price * $percent + $goodPerPrice->price );
+                            $goodPerPrice->save();
+
+                        }
+
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub */
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['groups_id' => $idGroups])
+                            ->andWhere(['>=', 'price_rub', $markPerFrom])
+                            ->andWhere(['<=', 'price_rub', $markPerTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
+                            $goodIdPriceRub->save();
 
                         }
                     }
@@ -279,16 +337,46 @@ class SiteController extends Controller
 
                         $idGroups = Groups::find()->where(['categories_holodbar_id' => $markPer['categories_holodbar_id']])->select('id');
 
-                        /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('id');
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price*/
+                        $goodsIdPrice = Goods::find()
+                            ->where(['groups_id' => $idGroups])
+                            ->andWhere(['currency_id' => 1])
+                            ->andWhere(['>=', 'price', $markPerFrom])
+                            ->andWhere(['<=', 'price', $markPerTo])
+                            ->select('id');
 
                         /* Делаем наценку на товар */
-                        $goodsPer = Goods::findAll($goodsId);
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                        foreach ($goodsPer as $goodsP) {
+                        foreach ($goodsPerPrice as $goodPerPrice) {
 
-                            $goodsP->mark_up_price = round($goodsP->price * $percent + $goodsP->price );
-                            $goodsP->save();
+                            $goodPerPrice->mark_up_price = round($goodPerPrice->price * $percent + $goodPerPrice->price );
+                            $goodPerPrice->save();
+
+                        }
+
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub*/
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['groups_id' => $idGroups])
+                            ->andWhere(['>=', 'price_rub', $markPerFrom])
+                            ->andWhere(['<=', 'price_rub', $markPerTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
+                            $goodIdPriceRub->save();
 
                         }
                     }
@@ -302,42 +390,109 @@ class SiteController extends Controller
 
                         $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
 
-                        /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('id');
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->count();
+
+                         /* Ищем товары в диапозоне цен поля price*/
+                        $goodsIdPrice = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['currency_id' => 1])
+                            ->andWhere(['>=', 'price', $markPerFrom])
+                            ->andWhere(['<=', 'price', $markPerTo])
+                            ->select('id');
+
 
                         /* Делаем наценку на товар */
-                        $goodsPer = Goods::findAll($goodsId);
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                        foreach ($goodsPer as $goodsP) {
+                        foreach ($goodsPerPrice as $goodPerPrice) {
 
-                            $goodsP->mark_up_price = round($goodsP->price * $percent + $goodsP->price );
-                            $goodsP->save();
+                            $goodPerPrice->mark_up_price = round($goodPerPrice->price * $percent + $goodPerPrice->price );
+                            $goodPerPrice->save();
 
                         }
 
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub*/
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['>=', 'price_rub', $markPerFrom])
+                            ->andWhere(['<=', 'price_rub', $markPerTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
+                            $goodIdPriceRub->save();
+
+                        }
                     }
 
                     /* Наценка на производителя для Holidbar */
                     if (isset($markPer['manufacturer_id_holodbar'])) {
 
-                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markPer['manufacturer_id_holodbar']])->select('goods_id');
+                        $idGoodsHolod = MarkUpGoods::find()->where(['is not', 'manufacturer_id_holodbar', NULL])->select('manufacturer_id_holodbar');
 
-                        /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['id' => $idGoodsMan])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->select('id');
+                        $urlManuf = Manufacturer::find()->where(['id' => $idGoodsHolod])->select('sites_url');
+
+                        $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
+
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markPerFrom])->andWhere(['<=', 'price', $markPerTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price*/
+                        $goodsIdPrice = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['currency_id' => 1])
+                            ->andWhere(['>=', 'price', $markPerFrom])
+                            ->andWhere(['<=', 'price', $markPerTo])
+                            ->select('id');
 
                         /* Делаем наценку на товар */
-                        $goodsPer = Goods::findAll($goodsId);
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                        foreach ($goodsPer as $goodsP) {
+                        foreach ($goodsPerPrice as $goodPerPrice) {
 
-                            $goodsP->mark_up_price = round($goodsP->price * $percent + $goodsP->price );
-                            $goodsP->save();
+                            $goodPerPrice->mark_up_price = round($goodPerPrice->price * $percent + $goodPerPrice->price );
+                            $goodPerPrice->save();
+
+                        }
+
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markPerFrom])->andWhere(['<=', 'price_rub', $markPerTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub*/
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['>=', 'price_rub', $markPerFrom])
+                            ->andWhere(['<=', 'price_rub', $markPerTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
+                            $goodIdPriceRub->save();
 
                         }
                     }
+
                 }
 
-                /* Делаем наценку абсолюной величины */
+                /*
+                    Делаем наценку абсолюной величины
+                */
                 foreach ($markUpAbsolute as $markAbs) {
 
                     $markAbsFrom = $markAbs['from_value'];
@@ -347,19 +502,48 @@ class SiteController extends Controller
                     if (isset($markAbs['categories_imkuh_id'])) {
 
                         /* Выбираем товары из групп */
-
                         $idGroups = Groups::find()->where(['categories_imkuh_id' => $markAbs['categories_imkuh_id']])->select('id');
 
-                        /* Ищем товары в диапозоне цен */
-                        $idPriceGoods = Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('id');
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price*/
+                        $goodsIdPrice = Goods::find()
+                            ->where(['groups_id' => $idGroups])
+                            ->andWhere(['currency_id' => 1])
+                            ->andWhere(['>=', 'price', $markAbsFrom])
+                            ->andWhere(['<=', 'price', $markAbsTo])
+                            ->select('id');
 
                         /* Делаем наценку на товар */
-                        $goodsPer = Goods::findAll($idPriceGoods);
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                        foreach ($goodsPer as $goodsP) {
+                        foreach ($goodsPerPrice as $goodPerPrice) {
 
-                            $goodsP->mark_up_price = $goodsP->price + $markAbs['price_value'];
-                            $goodsP->save();
+                            $goodPerPrice->mark_up_price = $goodPerPrice->price + $markAbs['price_value'];
+                            $goodPerPrice->save();
+
+                        }
+
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub */
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['groups_id' => $idGroups])
+                            ->andWhere(['>=', 'price_rub', $markAbsFrom])
+                            ->andWhere(['<=', 'price_rub', $markAbsTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
+                            $goodIdPriceRub->save();
 
                         }
                     }
@@ -370,16 +554,46 @@ class SiteController extends Controller
                         /* Выбираем товары из групп */
                         $idGroups = Groups::find()->where(['categories_holodbar_id' => $markAbs['categories_holodbar_id']])->select('id');
 
-                        /* Ищем товары в диапозоне цен */
-                        $idPriceGoods = Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('id');
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->count();
 
-                        $goodsPer = Goods::findAll($idPriceGoods);
+                        /* Ищем товары в диапозоне цен поля price */
+                        $goodsIdPrice = Goods::find()
+                            ->where(['groups_id' => $idGroups])
+                            ->andWhere(['currency_id' => 1])
+                            ->andWhere(['>=', 'price', $markAbsFrom])
+                            ->andWhere(['<=', 'price', $markAbsTo])
+                            ->select('id');
 
                         /* Делаем наценку на товар */
-                        foreach ($goodsPer as $goodsP) {
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                            $goodsP->mark_up_price = $goodsP->price + $markAbs['price_value'];
-                            $goodsP->save();
+                        foreach ($goodsPerPrice as $goodPerPrice) {
+
+                            $goodPerPrice->mark_up_price = $goodPerPrice->price + $markAbs['price_value'];
+                            $goodPerPrice->save();
+
+                        }
+
+                        $countGoods += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['groups_id' => $idGroups])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub */
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['groups_id' => $idGroups])
+                            ->andWhere(['>=', 'price_rub', $markAbsFrom])
+                            ->andWhere(['<=', 'price_rub', $markAbsTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
+                            $goodIdPriceRub->save();
 
                         }
                     }
@@ -393,16 +607,46 @@ class SiteController extends Controller
 
                         $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
 
-                        /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('id');
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price */
+                        $goodsIdPrice = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['currency_id' => 1])
+                            ->andWhere(['>=', 'price', $markAbsFrom])
+                            ->andWhere(['<=', 'price', $markAbsTo])
+                            ->select('id');
 
                         /* Делаем наценку на товар */
-                        $goodsPer = Goods::findAll($goodsId);
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                        foreach ($goodsPer as $goodsP) {
+                        foreach ($goodsPerPrice as $goodPerPrice) {
 
-                            $goodsP->mark_up_price = $goodsP->price + $markAbs['price_value'];
-                            $goodsP->save();
+                            $goodPerPrice->mark_up_price = $goodPerPrice->price + $markAbs['price_value'];
+                            $goodPerPrice->save();
+
+                        }
+
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub */
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['>=', 'price_rub', $markAbsFrom])
+                            ->andWhere(['<=', 'price_rub', $markAbsTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
+                            $goodIdPriceRub->save();
 
                         }
 
@@ -411,27 +655,62 @@ class SiteController extends Controller
                     /* Наценка на производителя для Holodbar */
                     if (isset($markAbs['manufacturer_id_holodbar'])) {
 
-                        $idGoodsMan = ManufacturerHasGoods::find()->where(['manufacturer_id' => $markAbs['manufacturer_id_holodbar']])->select('goods_id');
+                        $idCatHolod = MarkUpGoods::find()->where(['is not', 'manufacturer_id_holodbar', NULL])->select('manufacturer_id_holodbar');
 
-                        /* Ищем товары в диапозоне цен */
-                        $goodsId = Goods::find()->where(['id' => $idGoodsMan])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->select('id');
+                        $urlManuf = Manufacturer::find()->where(['id' => $idCatHolod])->select('sites_url');
+
+                        $idSites = Sites::find()->where(['url' => $urlManuf])->select('id');
+
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 1])->andWhere(['>=', 'price', $markAbsFrom])->andWhere(['<=', 'price', $markAbsTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price */
+                        $goodsIdPrice = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['currency_id' => 1])
+                            ->andWhere(['>=', 'price', $markAbsFrom])
+                            ->andWhere(['<=', 'price', $markAbsTo])
+                            ->select('id');
 
                         /* Делаем наценку на товар */
-                        $goodsPer = Goods::findAll($goodsId);
+                        $goodsPerPrice = Goods::findAll($goodsIdPrice);
 
-                        foreach ($goodsPer as $goodsP) {
+                        foreach ($goodsPerPrice as $goodPerPrice) {
 
-                            $goodsP->mark_up_price = $goodsP->price + $markAbs['price_value'];
-                            $goodsP->save();
+                            $goodPerPrice->mark_up_price = $goodPerPrice->price + $markAbs['price_value'];
+                            $goodPerPrice->save();
+
+                        }
+
+                        $countGoods += Goods::find()->where(['sites_id' => $idSites])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsEUR += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 2])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        $countGoodsUSD += Goods::find()->where(['sites_id' => $idSites])->andWhere(['currency_id' => 3])->andWhere(['>=', 'price_rub', $markAbsFrom])->andWhere(['<=', 'price_rub', $markAbsTo])->count();
+
+                        /* Ищем товары в диапозоне цен поля price_rub */
+                        $goodsIdPriceRub = Goods::find()
+                            ->where(['sites_id' => $idSites])
+                            ->andWhere(['>=', 'price_rub', $markAbsFrom])
+                            ->andWhere(['<=', 'price_rub', $markAbsTo])
+                            ->select('id');
+
+                        /* Делаем наценку на товар */
+                        $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
+
+                        foreach ($goodsIdPriceRub as $goodIdPriceRub) {
+
+                            $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
+                            $goodIdPriceRub->save();
 
                         }
                     }
+
                 }
 
-                $resMarkUp = 'Наценки на товары применены успешно';
-
                 return $this->render('index',[
-                    'resMarkUp' => $resMarkUp
+                    'countGoodsUSD' => $countGoodsUSD,
+                    'countGoodsEUR' => $countGoodsEUR,
+                    'countGoods' => $countGoods,
                 ]);
 
             }

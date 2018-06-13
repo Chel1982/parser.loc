@@ -2,8 +2,7 @@
 /* @var $this yii\web\View */
 
 use app\assets\AppAsset;
-use app\models\ProductGroupsHolodbar;
-use app\models\ProductsMainGroupsHolodbar;
+use app\models\Config;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -105,4 +104,16 @@ AppAsset::register($this);
 
 <?php if (isset($resMarkUp)): ?>
     <?= '<h4>' . $resMarkUp . '</h4>'?>
+<?php endif; ?>
+
+<?php if (isset($countGoodsEUR) && $countGoodsEUR != 0): ?>
+    <?= '<h4> Применена наценка к ' . $countGoodsEUR . ' товарам за евро (курс EUR = ' . Config::findOne(['alias' => 'euro'])->value . ')</h4>'?>
+<?php endif; ?>
+
+<?php if (isset($countGoodsUSD) && $countGoodsUSD != 0): ?>
+    <?= '<h4> Применена наценка к ' . $countGoodsUSD . ' товарам за доллары (курс USD = ' . Config::findOne(['alias' => 'dollar'])->value . ')</h4>'?>
+<?php endif; ?>
+
+<?php if (isset($countGoods)): ?>
+    <?= '<h4> Всего наценка применена наценка к ' . $countGoods . ' товарам</h4>'?>
 <?php endif; ?>
