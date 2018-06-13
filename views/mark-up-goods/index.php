@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if ($model->percent == 1){
                         return $model->price_value . ' %';
                     }elseif ($model->absolute == 1){
-                        return $model->price_value . ' (RUB, EUR)';
+                        return $model->price_value . ' RUB';
                     }else{
                         return $model->price_value;
                     }
