@@ -22,7 +22,7 @@ class m180612_115401_update_goods_table extends Migration
 
         $this->addCommentOnColumn('goods','mark_up_price','Наценка');
 
-        $this->addColumn('goods','currency_id','INTEGER');
+        $this->addColumn('goods','currency_id','INTEGER DEFAULT 1 AFTER availability');
 
         $this->createIndex('fk_goods_currency1_idx','goods','currency_id');
 
