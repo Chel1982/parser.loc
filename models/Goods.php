@@ -86,7 +86,7 @@ class Goods extends \yii\db\ActiveRecord
             'price_to' => 'Цена товара (до)',
             'price' => 'Цена',
             'mark_up_price' => 'Наценка',
-            'price_rub' => 'Цена в рублях по курсу',
+            'price_rub' => 'Цена',
             'availability' => 'Наличие',
             'manufacturer' => 'Производитель',
         ];

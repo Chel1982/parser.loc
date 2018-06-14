@@ -46,10 +46,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'price',
+                'attribute' => 'price_rub',
                 'value' => function ($model) {
-                    if (isset($model->price) && $model->price != 0){
-                        return $model->price . ' ' . $model->currency->name;
+                    if (isset($model->price_rub) && $model->price_rub != 0){
+                        return $model->price_rub . ' RUB';
                     }
                     return '';
                 },

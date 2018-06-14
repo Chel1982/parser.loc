@@ -58,9 +58,9 @@ class GoodsSearch extends Goods
         }
 
         if ($this->price_from == NULL){
-            $query->andFilterWhere(['>=','price', 1]);
+            $query->andFilterWhere(['>=','price_rub', 1]);
         }else{
-            $query->andFilterWhere(['>=','price', $this->price_from]);
+            $query->andFilterWhere(['>=','price_rub', $this->price_from]);
         }
 
         // grid filtering conditions
@@ -69,7 +69,7 @@ class GoodsSearch extends Goods
             ->andFilterWhere(['like', 'uri_goods', $this->uri_goods])
             ->andFilterWhere(['like', 'manufacturer', $this->manufacturer])
             ->andFilterWhere(['between','goods.created_at', $this->from_date, $this->to_date])
-            ->andFilterWhere(['<=','price', $this->price_to])
+            ->andFilterWhere(['<=','price_rub', $this->price_to])
             ->andFilterWhere(['like','groups.name', $this->groups_name])
             ->andFilterWhere(['like','manufacturer.name', $this->manufacturers_name])
             ->andFilterWhere(['=','sites_id', $this->sites_id]);
