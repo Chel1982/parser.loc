@@ -128,11 +128,9 @@ class ParserController extends Controller
                         }catch (Exception $e) {
 
                         $goods = Goods::find()->where(['uri_goods' => $link])->with('sites')->one();
-
                         $this->actionLogsFailed($goods->id, $goods->sites->id, 5, 'name', $e);
 
                         }
-
                     }
 
                 }elseif($flag == 'curl'){
@@ -720,8 +718,7 @@ class ParserController extends Controller
                         $price = preg_replace("/[^0-9]/", '', $price);
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
-                        $goods->price = $price;
-                        $goods->currency = 'RUB';
+                        $goods->price_rub = $price;
                         $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');
@@ -749,8 +746,7 @@ class ParserController extends Controller
                         $price = preg_replace("/[^0-9]/", '', $price);
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
-                        $goods->price = $price;
-                        $goods->currency = 'RUB';
+                        $goods->price_rub = $price;
                         $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');
@@ -1216,6 +1212,7 @@ class ParserController extends Controller
             );
         }
 
+        //$spider->getQueueManager()->maxQueueSize = 2;
         // Execute crawl
         $spider->crawl();
 
@@ -1281,8 +1278,6 @@ class ParserController extends Controller
                     }
 
                     $marker[] = $item->value;
-
-
 
                         $link = $baseUrl . $item->value;
 
@@ -1392,8 +1387,6 @@ class ParserController extends Controller
                         }
 
                         $uriGoodPage = $baseUrl . $itemPage->value;
-
-
 
                             if (stristr( $itemPage->value, $baseUrl)) {
                                 $itemPage->value = str_replace($baseUrl, '', $itemPage->value);
