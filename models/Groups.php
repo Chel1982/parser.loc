@@ -95,7 +95,7 @@ class Groups extends \yii\db\ActiveRecord
 
     public function getHierarchyHolod() {
 
-        $parents = ProductsMainGroupsHolodbar::find()->asArray()->all();
+        $parents = ProductsMainGroupsHolodbar::find()->orderBy(['name' => SORT_ASC])->asArray()->all();
 
         foreach($parents as $id => $p) {
             $children = ProductGroupsHolodbar::find()->where(['pmgid' => $p['pmgid']])->orderBy(['name' => SORT_ASC])->asArray()->all();
@@ -110,7 +110,7 @@ class Groups extends \yii\db\ActiveRecord
 
     public function getHierarchyImkuh() {
 
-        $parents = ProductsMainGroupsImkuh::find()->asArray()->all();
+        $parents = ProductsMainGroupsImkuh::find()->orderBy(['name' => SORT_ASC])->asArray()->all();
 
         foreach($parents as $id => $p) {
             $children = ProductGroupsImkuh::find()->where(['pmgid' => $p['pmgid']])->orderBy(['name' => SORT_ASC])->asArray()->all();
