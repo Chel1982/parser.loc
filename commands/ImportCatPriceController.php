@@ -12,6 +12,7 @@ use Exception;
 use app\models\Sites;
 use Yii;
 use yii\console\Controller;
+use yii\db\Expression;
 
 
 class ImportCatPriceController extends Controller
@@ -71,6 +72,7 @@ class ImportCatPriceController extends Controller
                                 $cur = Currency::findOne(['name' => 'RUB']);
 
                                 $goods->price_rub = $rowData[0][6];
+                                $goods->price = $rowData[0][6];
                                 $goods->currency_id = $cur->id;
                                 $goods->availability = 1;
                                 $goods->updated_at = date('Y-m-d H:i:s');
@@ -91,6 +93,7 @@ class ImportCatPriceController extends Controller
                                 $cur = Currency::findOne(['name' => 'RUB']);
 
                                 $goods->price_rub = $rowData[0][5];
+                                $goods->price = $rowData[0][5];
                                 $goods->currency_id = $cur->id;
                                 $goods->availability = 1;
                                 $goods->updated_at = date('Y-m-d H:i:s');
@@ -108,29 +111,19 @@ class ImportCatPriceController extends Controller
             ['mark_up_price' => NULL]
         );
 
-        /* Переводим цены из евро в рубли */
-        $GoodsEUR = Goods::findAll(['currency_id' => 2]);
-
         $curEUR = Config::findOne(['alias' => 'euro'])->value;
 
-        foreach ($GoodsEUR as $goodEUR){
+        /* Переводим цены из евро в рубли */
+        Goods::updateAll(
+            ['price_rub' => new Expression('ROUND(price * ' . $curEUR . ')')], ['currency_id' => 2]
+        );
 
-            $goodEUR->price_rub = $goodEUR->price * $curEUR;
-            $goodEUR->save();
-
-        }
+        $curUSD = Config::findOne(['alias' => 'dollar'])->value;
 
         /* Переводим цены из доллара в рубли */
-        $idGoodsDOL = Goods::findAll(['currency_id' => 3]);
-
-        $curDOL = Config::findOne(['alias' => 'dollar'])->value;
-
-        foreach ($idGoodsDOL as $idGoodDOL){
-
-            $idGoodDOL->price_rub = $idGoodDOL->price * $curDOL;
-            $idGoodDOL->save();
-
-        }
+        Goods::updateAll(
+            ['price_rub' => new Expression('ROUND(price * ' . $curUSD . ')')], ['currency_id' => 3]
+        );
 
         $markUpPercent = MarkUpGoods::find()->where(['percent' => 1])->asArray()->all();
         $markUpAbsolute = MarkUpGoods::find()->where(['absolute' => 1])->asArray()->all();
@@ -157,17 +150,12 @@ class ImportCatPriceController extends Controller
                     ->where(['groups_id' => $idGroups])
                     ->andWhere(['>=', 'price_rub', $markPerFrom])
                     ->andWhere(['<=', 'price_rub', $markPerTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub * ' . $percent . ' + price_rub)') ], ['id' => $goodsIdPriceRub]
+                );
             }
 
             /* Наценка на группы товаров Holodbar */
@@ -182,17 +170,12 @@ class ImportCatPriceController extends Controller
                     ->where(['groups_id' => $idGroups])
                     ->andWhere(['>=', 'price_rub', $markPerFrom])
                     ->andWhere(['<=', 'price_rub', $markPerTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub * ' . $percent . ' + price_rub)') ], ['id' => $goodsIdPriceRub]
+                );
             }
 
             /* Наценка на производителя для Imkuh */
@@ -209,17 +192,12 @@ class ImportCatPriceController extends Controller
                     ->where(['sites_id' => $idSites])
                     ->andWhere(['>=', 'price_rub', $markPerFrom])
                     ->andWhere(['<=', 'price_rub', $markPerTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub * ' . $percent . ' + price_rub)') ], ['id' => $goodsIdPriceRub]
+                );
             }
 
             /* Наценка на производителя для Holidbar */
@@ -236,17 +214,12 @@ class ImportCatPriceController extends Controller
                     ->where(['sites_id' => $idSites])
                     ->andWhere(['>=', 'price_rub', $markPerFrom])
                     ->andWhere(['<=', 'price_rub', $markPerTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = round($goodIdPriceRub->price_rub * $percent + $goodIdPriceRub->price_rub );
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub * ' . $percent . ' + price_rub)') ], ['id' => $goodsIdPriceRub]
+                );
             }
 
         }
@@ -270,17 +243,12 @@ class ImportCatPriceController extends Controller
                     ->where(['groups_id' => $idGroups])
                     ->andWhere(['>=', 'price_rub', $markAbsFrom])
                     ->andWhere(['<=', 'price_rub', $markAbsTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub + ' . $markAbs['price_value'] . ')') ], ['id' => $goodsIdPriceRub]
+                );
             }
 
             /* Наценка на группы товаров Holodbar */
@@ -294,17 +262,12 @@ class ImportCatPriceController extends Controller
                     ->where(['groups_id' => $idGroups])
                     ->andWhere(['>=', 'price_rub', $markAbsFrom])
                     ->andWhere(['<=', 'price_rub', $markAbsTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub + ' . $markAbs['price_value']) . ')'], ['id' => $goodsIdPriceRub]
+                );
             }
 
             /* Наценка на производителя для Imkuh */
@@ -321,17 +284,12 @@ class ImportCatPriceController extends Controller
                     ->where(['sites_id' => $idSites])
                     ->andWhere(['>=', 'price_rub', $markAbsFrom])
                     ->andWhere(['<=', 'price_rub', $markAbsTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub + ' . $markAbs['price_value']) . ')'], ['id' => $goodsIdPriceRub]
+                );
 
             }
 
@@ -349,17 +307,12 @@ class ImportCatPriceController extends Controller
                     ->where(['sites_id' => $idSites])
                     ->andWhere(['>=', 'price_rub', $markAbsFrom])
                     ->andWhere(['<=', 'price_rub', $markAbsTo])
-                    ->select('id');
+                    ->select('id')->asArray()->all();
 
                 /* Делаем наценку на товар */
-                $goodsIdPriceRub = Goods::findAll($goodsIdPriceRub);
-
-                foreach ($goodsIdPriceRub as $goodIdPriceRub) {
-
-                    $goodIdPriceRub->mark_up_price = $goodIdPriceRub->price_rub + $markAbs['price_value'];
-                    $goodIdPriceRub->save();
-
-                }
+                Goods::updateAll(
+                    ['mark_up_price' => new Expression('ROUND(price_rub + ' . $markAbs['price_value'] . ')') ], ['id' => $goodsIdPriceRub]
+                );
             }
 
         }

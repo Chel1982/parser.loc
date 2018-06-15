@@ -15,7 +15,6 @@ use app\models\Images;
 use app\models\Logs;
 use app\models\LogsCurl;
 use app\models\Manufacturer;
-use app\models\ManufacturerHasGoods;
 use app\models\ProductAttributes;
 use app\models\Sites;
 use app\models\Xpath;
@@ -719,6 +718,8 @@ class ParserController extends Controller
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
                         $goods->price_rub = $price;
+                        $goods->price = $price;
+                        $goods->currency_id = 1;
                         $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');
@@ -747,6 +748,8 @@ class ParserController extends Controller
 
                         $goods = Goods::findOne(['uri_goods' => $link]);
                         $goods->price_rub = $price;
+                        $goods->price = $price;
+                        $goods->currency_id = 1;
                         $goods->save();
 
                         $this->actionLogsSuccess($goods->id, 'price');

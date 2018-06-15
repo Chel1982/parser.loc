@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'mark_up_price',
                 'value' => function ($model) {
-                    if (isset($model->mark_up_price)){
+                    if (isset($model->mark_up_price)  && $model->mark_up_price != 0){
                         return $model->mark_up_price . ' RUB';
                     }
                     return '';
